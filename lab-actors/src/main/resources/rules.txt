@@ -1,0 +1,17 @@
+# Rules.txt
+
+# This file defines the rules that are used in the Hedge Fund application.
+# There are currently two required rules: put and call.
+# Each candidate option must satisfy the RHS of the appropriate rule.
+# Note that the variables on the RHS must be defined as a term in the appropriate model,
+#   for example GoogleOptionModel.
+# And, furthermore, the term definition must correspond to a property in the
+#   candidateWithProperties defined in OptionAnalyzer#applyRules
+
+# Note also that you may have any number of (parenthetical) expressions combined with operators:
+#   & (and) or | (or) but
+#   that if there are multiple closing parentheses, these must be at the rightmost end of the string.
+ 
+#put="(strikePrice > 44) & ((strikePrice < 48) & (sharpeRatio > 0.4))"
+put="(strikePrice > 44) & (strikePrice < 48)"
+call=Never
