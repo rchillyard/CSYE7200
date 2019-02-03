@@ -135,6 +135,7 @@ object Movie extends App {
     // 6 points
     // TO BE IMPLEMENTED
     ???
+    x.toList
   }
 
   /**
