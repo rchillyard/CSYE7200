@@ -1,0 +1,38 @@
+package edu.neu.coe.csye7200
+
+package boxOffice
+
+import scala.actors.Actor
+
+/**
+ * @author scalaprof
+ */
+object BoxOffice {
+  val initialState = State(List(Ticket(1,1,100),Ticket(1,2,100)), Nil)
+  def makeTransaction(state: State, sale: Sale): State = ???
+  def main(args: Array[String]): Unit = Tickets(initialState).start    
+}
+
+case class Tickets(var state: State) extends Actor {
+  def act() {
+    while (state.availability) {
+      receive {
+        case sale: Sale => state = BoxOffice.makeTransaction(state,sale)
+        case Status => sender ! state
+        case _ => println("unknown message")
+      }
+    }
+  }
+}
+
+case class State(tickets: List[Ticket], transactions: List[Transaction]) {
+  def availability = tickets.length>0
+}
+
+object Status
+
+case class Ticket(row: Int, seat: Int, price: Int)
+
+case class Sale(tickets: List[Ticket], transaction: Transaction)
+
+case class Transaction(creditCard: Long, total: Int, timestamp: Long, confirmation: String)

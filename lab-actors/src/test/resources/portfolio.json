@@ -1,0 +1,10 @@
+{
+  "name": "Test Portfolio",
+  "positions": [
+    {
+      "symbol": "MSFT",
+      "quantity": 100,
+      "contracts": []
+    }
+  ]
+}
