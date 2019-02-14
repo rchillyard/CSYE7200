@@ -12,7 +12,7 @@ class FibonacciSpec extends FlatSpec with Matchers {
 
   it should "yield correct results from stream" in {
     val target = Fibonacci
-    val stream = target.stream
+    val stream = target.fibonacci
     stream.head shouldBe 0L
     stream(1) shouldBe 1L
     stream(2) shouldBe 1L

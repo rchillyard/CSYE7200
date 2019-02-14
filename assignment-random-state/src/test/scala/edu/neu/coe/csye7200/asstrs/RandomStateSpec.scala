@@ -35,18 +35,21 @@ class RandomStateSpec extends FlatSpec with Matchers {
     val lrs = RandomState(0).toStream.slice(6, 7)
     (lrs head) should matchPattern { case 5082315122564986995L => }
   }
-  "Double stream" should "have zero mean" in {
-    val xs = RandomState(0).map(RandomState.longToDouble).toStream take 10001 toList
-    val mu = mean(xs) //xs.sum/xs.length
-    math.abs(mu) shouldBe <= (2E-2)
+  "longToDouble" should "work" in {
+    val max = RandomState.longToDouble(Long.MaxValue)
+    max shouldBe 1.0 +- 1E-6
+    val min = RandomState.longToDouble(Long.MinValue)
+    min shouldBe -1.0 +- 1E-6
+    val value = RandomState.longToDouble(3487594572834985L)
+    value shouldBe 3.7812576126163456E-4 +- 1E-6
   }
   "0..1 stream" should "have mean = 0.5" in {
     val xs = RandomState(0).map(RandomState.longToDouble).map(RandomState.doubleToUniformDouble).toStream take 1001 toList;
-    math.abs(meanU(xs) - 0.5) shouldBe <=(5E-3)
+    meanU(xs) shouldBe 0.5 +- 5E-3
   }
   "BetterRandomState" should "have mean = 0.5" in {
     val xs = BetterRandomState(0,BetterRandomState.hDouble).toStream take 1001 toList;
-    math.abs(mean(xs) - 0.5) shouldBe <=(5E-3)
+    mean(xs) shouldBe 0.5 +- 5E-3
   }
   "map" should "work" in {
     val rLong: RandomState[Long] = RandomState(0)
@@ -72,6 +75,6 @@ class RandomStateSpec extends FlatSpec with Matchers {
   "for comprehension" should "work" in {
     val r1 = RandomState(0)
     val z: RandomState[Double] = for (x <- r1; _ <- RandomState(x)) yield x.toDouble/Long.MaxValue
-    z.get shouldBe -0.5380644352028887 +- 0.0001
+    z.get shouldBe -0.5380644352028887 +- 1E-6
   }
 }
