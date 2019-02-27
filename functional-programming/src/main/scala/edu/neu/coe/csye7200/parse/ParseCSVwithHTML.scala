@@ -2,8 +2,10 @@ package edu.neu.coe.csye7200.parse
 
 import java.io.{BufferedWriter, File, FileWriter}
 
+import edu.neu.coe.csye7200.{Arg, Args}
+
 import scala.collection.mutable
-import scala.io.{BufferedSource, Source}
+import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
 /**
@@ -23,7 +25,8 @@ case class ParseCSVwithHTML(csvParser: CsvParser) {
   def parseElementIntoHTMLElement(w: String, header: Boolean = false): String = {
     val result = new HTML
     result.tag(if (header) "th" else "td")
-    result.append(w)
+    // Replace the non-breaking space character with proper HTML
+    result.append(w.replaceAll("""\u00A0""", "&#160"))
     result.close()
     result.toString()
   }
@@ -36,6 +39,14 @@ case class ParseCSVwithHTML(csvParser: CsvParser) {
       case Success(ws) => for (w <- ws) result.append(parseElementIntoHTMLElement(w, header))
       case Failure(x) => System.err.println(s"Error parsing `$w`: ${x.getLocalizedMessage}")
     }
+    result.close()
+    result.toString
+  }
+
+  def parseRowProjectionIntoHTMLRow(ws: Seq[String], header: Boolean = false): String = {
+    val result = new HTML
+    result.tag("tr")
+    for (w <- ws) result.append(parseElementIntoHTMLElement(w, header))
     result.close()
     result.toString
   }
@@ -54,12 +65,24 @@ case class ParseCSVwithHTML(csvParser: CsvParser) {
     result.tag("html")
     result.append(preamble(title))
     result.tag("body")
-    result.tag("table")
+    result.tag("table", Some("""border="1""""))
     ws match {
       case header #:: body =>
         result.append(parseRowIntoHTMLRow(header, header = true))
         for (w <- body) result.append(parseRowIntoHTMLRow(w))
     }
+    result.close()
+    result.toString
+  }
+
+  def parseStreamProjectionIntoHTMLTable(columns: Seq[String], wss: Stream[Seq[String]], title: String): String = {
+    val result = new HTML
+    result.tag("html")
+    result.append(preamble(title))
+    result.tag("body")
+    result.tag("table", Some("""border="1""""))
+    result.append(parseRowProjectionIntoHTMLRow(columns, header = true))
+    for (ws <- wss) result.append(parseRowProjectionIntoHTMLRow(ws))
     result.close()
     result.toString
   }
@@ -72,9 +95,13 @@ class HTML() {
   val content = new StringBuilder("")
   val tagStack: mutable.Stack[String] = mutable.Stack[String]()
 
-  def tag(w: String): StringBuilder = {
+  def tag(w: String, ao: Option[String] = None): StringBuilder = {
     tagStack.push(w)
-    content.append(s"<$w>")
+    val attribute = ao match {
+      case Some(a) => " "+a
+      case _ => ""
+    }
+    content.append(s"<$w$attribute>")
   }
 
   def unTag: StringBuilder = content.append(s"</${tagStack.pop()}>")
@@ -90,7 +117,7 @@ class HTML() {
 
 /**
   * Main program which reads a CSV file (specified by the command line argument) and converts it into
-  * an HTNL file which is placed into "output.html".
+  * an HTML file which is placed into "output.html".
   *
   * The delimiter for parsing the CSV file is is currently fixed to be the tab character.
   * The charset is fixed as UTF-16
@@ -98,19 +125,32 @@ class HTML() {
   * The output filename is fixed as "output.html"
   */
 object ParseCSVwithHTML extends App {
-  val parser = ParseCSVwithHTML(CsvParser(delimiter = '\t' + ""))
+  val parser = CsvParser(delimiter = '\t' + "")
+  val csvParser = ParseCSVwithHTML(parser)
   val title = "Report"
-  if (args.length > 0) {
-    val filename = args.head
-    val source: BufferedSource = Source.fromFile(filename, "UTF-16")
-    val w = parser.parseStreamIntoHTMLTable(source.getLines.toStream, title)
+  val parameters: List[Arg[String]] = Args.parse(args).toList
+  parameters match {
+    case Arg(_, Some(filename)) :: argsColumn => parseEncodeAndWriteToFile(filename, argsColumn)
+    case _ => System.err.println("syntax: ParseCSVwithHTML filename [column]*")
+  }
+
+  private def parseEncodeAndWriteToFile(filename: String, columnArgs: List[Arg[String]]): Unit = {
     val file = new File("output.html")
     val bw = new BufferedWriter(new FileWriter(file))
-    bw.write(w)
+    bw.write(parseEncodeAndWriteString(filename, columnArgs))
     bw.close()
     println(s"Successfully written $file")
   }
-  else
-    System.err.println("syntax: ParseCSVwithHTML filename")
 
+  private def parseEncodeAndWriteString(filename: String, columnArgs: Seq[Arg[String]]) = {
+    val stream = Source.fromFile(filename, "UTF-16").getLines.toStream
+    val columnNames = columnArgs.flatMap {
+      case Arg(_, Some(columnName)) => Some(columnName)
+      case _ => None
+    }
+    if (columnNames.isEmpty) println(s"Generate HTML")
+    else println(s"""Generate HTML for only columns ${columnNames.mkString(", ")}""")
+    if (columnNames.isEmpty) csvParser.parseStreamIntoHTMLTable(stream, title)
+    else csvParser.parseStreamProjectionIntoHTMLTable(columnNames, TupleStream(parser, stream).columnsByKey(columnNames), title)
+  }
 }

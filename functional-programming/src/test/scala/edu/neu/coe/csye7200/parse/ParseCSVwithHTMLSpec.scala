@@ -18,7 +18,7 @@ class ParseCSVwithHTMLSpec extends FlatSpec with Matchers {
     wy should matchPattern { case Success(_) => }
     wy.get shouldBe
       s"""<html><head><title>$title</title></head>
-         |<body><table><tr><th>Name</th>
+         |<body><table border="1"><tr><th>Name</th>
          |<th>Notes</th>
          |</tr>
          |<tr><td>Robin</td>

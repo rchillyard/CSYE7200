@@ -198,7 +198,8 @@ trait Derivable[T] {
 class SimpleArgParser extends RegexParsers {
   def parseToken(s: String): Try[Token] = parseAll(token, s) match {
     case Success(t, _) => scala.util.Success(t)
-    case _ => scala.util.Failure(new Exception(s"could not parse '$s' as a token"))
+    case Failure(msg, input) => scala.util.Failure(new Exception(s"Failure: could not parse '$s' as a token because: $msg with input pos=${input.pos}"))
+    case Error(msg, input) => scala.util.Failure(new Exception(s"Error: could not parse '$s' as a token because: $msg with input pos=${input.pos}"))
   }
 
   trait Token {
@@ -216,7 +217,8 @@ class SimpleArgParser extends RegexParsers {
   def argument: Parser[Argument] = argR ^^ (s => Argument(s))
 
   private val cmdR = """[a-z]+""".r
-  private val argR = """\w+""".r
+  private val doubleQuote = """""""
+  private val argR = doubleQuote ~> """[^"]*""".r <~ doubleQuote | """[^-].*""".r | failure("invalid argument")
 }
 
 trait PosixArg {

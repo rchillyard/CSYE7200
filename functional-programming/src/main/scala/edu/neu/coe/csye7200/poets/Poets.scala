@@ -54,7 +54,7 @@ object Poets extends App {
 
   println("JSON: " + poets.toJson)
 
-  def fromJson(string: String) = string.parseJson.convertTo[PoetSeq]
+  private def fromJson(string: String) = string.parseJson.convertTo[PoetSeq]
 
   val source = """[{"names":[{"name":"Wang Wei","language":"en"},{"name":"王維","language":"zh"}]},{"names":[{"name":"Li Bai","language":"en"},{"name":"李白","language":"zh"}]}]"""
 

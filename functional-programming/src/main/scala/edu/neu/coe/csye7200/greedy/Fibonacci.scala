@@ -8,7 +8,7 @@ package edu.neu.coe.csye7200.greedy
   * This object provides a Stream of Fibonacci numbers.
   * In Scala, a Stream is both lazy and memoized.
   */
-object Fibonacci extends App {
+object Fibonacci {
   /**
     * A stream of Fibonacci numbers of form Stream[Long].
     * This formulation is due to http://www.luigip.com/?p=200
@@ -27,7 +27,7 @@ object Fibonacci extends App {
     */
   val fibonacciAlt: Stream[BigInt] = BigInt(0) #:: BigInt(1) #:: fibonacciAlt.zip(fibonacciAlt.tail).map (n => n._1 + n._2)
 
-  println(fibonacciBigInt take 100 toList)
+//  println(fibonacciBigInt take 100 toList)
 
   /**
     * Method to yield that largest Fibonacci number which is less than or equal to x

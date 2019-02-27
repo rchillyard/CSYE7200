@@ -142,6 +142,12 @@ class ArgsSpec extends FlatSpec with Matchers {
     xa.process(processor) should matchPattern { case Success(Seq(1, 2, 3)) => }
   }
 
+  it should """parse "1 a" "2:x" 3""" in {
+    val sa = Args.parse(Array(""""1 a"""", """"2:x"""", "3"))
+    sa.xas.length shouldBe 3
+    sa.xas.head shouldBe Arg(None, Some("1 a"))
+  }
+
   it should "parsePosix 1 2 3" in {
     val sa = Args.parse(Array("1", "2", "3"))
     sa.xas.length shouldBe 3
@@ -229,6 +235,21 @@ class ArgsSpec extends FlatSpec with Matchers {
 
   it should "parse " + argFilename in {
     p.parseToken(argFilename) should matchPattern { case Success(p.Argument(`argFilename`)) => }
+  }
+
+  it should """parse "x y" as an argument""" in {
+    val parser = p
+    parser.parseAll(parser.argument, """"x y"""") should matchPattern { case parser.Success(_, _) => }
+  }
+
+  it should """parse "x y" as a token""" in {
+    val parser = p
+    parser.parseAll(parser.token, """"x y"""") should matchPattern { case parser.Success(_, _) => }
+    """"/Users/rhillyard/Downloads/Mid-term Exam.download.xls-2.csv""""
+  }
+
+  it should """parse "/Users..." as a token""" in {
+    p.parseAll(p.token, """"/Users/rhillyard/Downloads/Mid-term Exam.download.xls-2.csv"""") should matchPattern { case p.Success(_, _) => }
   }
 
   behavior of "PosixArgParser"

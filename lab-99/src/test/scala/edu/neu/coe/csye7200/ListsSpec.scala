@@ -11,37 +11,47 @@ class ListsSpec extends FlatSpec with Matchers {
   private val fib0 = List(1)
   private val fib5 = List(1, 1, 2, 3, 5, 8)
 
-  behavior of "P01"
+  behavior of "P01.last"
+
+  import P01._
   it should "throw an exception for Nil" in {
-    a [NoSuchElementException] should be thrownBy P01.last(Nil)
+    a[NoSuchElementException] should be thrownBy last(Nil)
   }
   it should "get 1 for fib0" in {
-    P01.last(fib0) shouldBe 1
+    last(fib0) shouldBe 1
   }
   it should "get 8 for fib5" in {
-    P01.last(fib5) shouldBe 8
+    last(fib5) shouldBe 8
+  }
+  it should "not suffer stack overflow" in {
+    val list = (Stream.from(1) take 100000).toList
+    last(list) shouldBe 100000
   }
 
-  behavior of "P02"
+  behavior of "P02.penultimate"
+
+  import P02._
   it should "throw an exception for fib0" in {
-    a [NoSuchElementException] should be thrownBy P02.penultimate(fib0)
+    a[NoSuchElementException] should be thrownBy penultimate(fib0)
   }
   it should "get 5 for fib5" in {
-    P02.penultimate(fib5) shouldBe 5
+    penultimate(fib5) shouldBe 5
   }
 
-  behavior of "P03"
+  behavior of "P03.kth"
+
+  import P03._
   it should "throw an exception for 0, Nil" in {
-    a [NoSuchElementException] should be thrownBy P03.kth(0, Nil)
+    a[NoSuchElementException] should be thrownBy kth(0, Nil)
   }
   it should "throw an exception for 1, fib0" in {
-    a [NoSuchElementException] should be thrownBy P03.kth(1, fib0)
+    a[NoSuchElementException] should be thrownBy kth(1, fib0)
   }
   it should "get 3 for 3, fib5" in {
-    P03.kth(3, fib5) shouldBe 3
+    kth(3, fib5) shouldBe 3
   }
 
-  behavior of "P04"
+  behavior of "P04.length"
   it should "get 0 for Nil" in {
     P04.length(Nil) shouldBe 0
   }
@@ -49,29 +59,37 @@ class ListsSpec extends FlatSpec with Matchers {
     P04.length(fib5) shouldBe 6
   }
 
-  behavior of "P05"
+  behavior of "P05.reverse"
+
+  import P05._
   it should "reverse Nil to Nil" in {
-    P05.reverse(Nil) shouldBe Nil
+    reverse(Nil) shouldBe Nil
   }
   it should "reverse singleton list to itself" in {
-    P05.reverse(List(1)) shouldBe List(1)
+    reverse(List(1)) shouldBe List(1)
   }
   it should "reverse fib5 correctly" in {
-    P05.reverse(fib5) shouldBe List(8, 5, 3, 2, 1, 1)
+    reverse(fib5) shouldBe List(8, 5, 3, 2, 1, 1)
+  }
+  it should "reverse long stream correctly" in {
+    val s = (Stream.from(1) take 1000000).toList
+    reverse(reverse(s)) shouldBe s
   }
 
   behavior of "P06"
+
+  import P06._
   it should "be true for Nil" in {
-    P06.isPalindrome(Nil) shouldBe true
+    isPalindrome(Nil) shouldBe true
   }
   it should "be true for fib0" in {
-    P06.isPalindrome(fib0) shouldBe true
+    isPalindrome(fib0) shouldBe true
   }
   it should "be true for palindrome" in {
-    P06.isPalindrome(List(1, 2, 3, 2, 1)) shouldBe true
+    isPalindrome(List(1, 2, 3, 2, 1)) shouldBe true
   }
   it should "be false for fib5" in {
-    P06.isPalindrome(fib5) shouldBe false
+    isPalindrome(fib5) shouldBe false
   }
 
   behavior of "P07"

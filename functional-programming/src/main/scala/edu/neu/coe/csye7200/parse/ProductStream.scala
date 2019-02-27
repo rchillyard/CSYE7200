@@ -194,6 +194,22 @@ case class TupleStream[X <: Product](parser: CsvParser, input: Stream[String]) e
   def column(i: Int): Option[Stream[String]] =
     if (i >= 0) Some(tuples map TupleStream.project[X](i))
     else None
+
+  /**
+    * method to project ("slice") a ProductStream into a sequence of named columns
+    *
+    * @param keys the names of the columns
+    * @return an Stream[Seq[String]
+    */
+  def columnsByKey(keys: Seq[String]): Stream[Seq[String]] = columns(for (key <- keys; i = header.indexOf(key); if i >= 0) yield i)
+
+  /**
+    * method to project ("slice") a ProductStream into a sequence of single columns
+    *
+    * @param is the indices of the columns (0 on the left, n-1 on the right)
+    * @return an Stream[Seq[String]
+    */
+  def columns(is: Seq[Int]): Stream[Seq[String]] = tuples map TupleStream.project[X](is)
 }
 
 object TupleStream {
@@ -212,6 +228,8 @@ object TupleStream {
   def apply[X <: Product](input: URI): TupleStream[X] = apply(CsvParser(), input)
 
   def project[X <: Product](i: Int)(x: X): String = x.productElement(i).asInstanceOf[String]
+
+  def project[X <: Product](is: Seq[Int])(x: X): Seq[String] = for (i <- is) yield x.productElement(i).asInstanceOf[String]
 
   def toTuple[X <: Product](ats: Seq[Try[Any]]): Try[X] = // Assignment6 8 Hint: use MonadOps.sequence; Tuples.toTuple; and asInstanceOf
     ??? // TO BE IMPLEMENTED
@@ -331,7 +349,7 @@ case class CsvParser(
 }
 
 object CsvParser {
-  val dateFormatStrings = Seq("yyyy-MM-dd", "yyyy-MM-dd-hh:mm:ss.s")
+  val dateFormatStrings: Seq[String] = Seq("yyyy-MM-dd", "yyyy-MM-dd-hh:mm:ss.s")
   // etc.
   private[parse] val dateParser = Trial[String, Any]((parseDate _) (dateFormatStrings))
   private[parse] val defaultParser = Trial.none[String, Any] :| { case s@(date0(_) | date4(_) | date1(_)) => dateParser(s) } :^ { case quoted(w) => w } :^ { case whole(s) => s.toInt } :^ { case truth(_) => true } :^ { case untruth(_) => false } :^ {
