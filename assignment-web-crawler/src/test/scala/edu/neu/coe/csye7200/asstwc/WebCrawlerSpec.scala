@@ -22,12 +22,12 @@ class WebCrawlerSpec extends FlatSpec with Matchers with Futures with ScalaFutur
 
   "getURLContent" should s"succeed for $goodURL" taggedAs Slow in {
     val wf = WebCrawler.getURLContent(new URL(goodURL))
-    whenReady(wf, timeout(Span(6, Seconds))) { w => w.length/100 shouldBe 48 }
+    whenReady(wf, timeout(Span(6, Seconds))) { w => w.length/100 shouldBe 50 }
   }
 
   "wget(URL)" should s"succeed for $goodURL" taggedAs Slow in {
     val usfy = for {u <- Try(new URL(goodURL))} yield WebCrawler.wget(u)
-    whenReady(MonadOps.flatten(usfy), timeout(Span(6, Seconds))) { us => us.length shouldBe 33 }
+    whenReady(MonadOps.flatten(usfy), timeout(Span(6, Seconds))) { us => us.length shouldBe 34 }
   }
 
   it should s"not succeed for $badURL" taggedAs Slow in {
@@ -65,7 +65,7 @@ class WebCrawlerSpec extends FlatSpec with Matchers with Futures with ScalaFutur
         val exceptions = mutable.MutableList[Throwable]()
         val usf = MonadOps.flattenRecover(usefs, { x => exceptions += x })
         whenReady(usf, timeout(Span(12, Seconds))) {
-          us2 => us2.distinct.size shouldBe 32
+          us2 => us2.distinct.size shouldBe 33
             exceptions.size shouldBe 0
         }
       case f@_ => fail(f.toString)
@@ -77,7 +77,7 @@ class WebCrawlerSpec extends FlatSpec with Matchers with Futures with ScalaFutur
     val tries = for (arg <- args) yield Try(new URL(arg))
     //    println(s"tries: $tries")
     val usft = for {us <- MonadOps.sequence(tries)} yield WebCrawler.crawler(2, us)
-    whenReady(MonadOps.flatten(usft), timeout(Span(60, Seconds))) { s => Assertions.assert(s.length == 34) }
+    whenReady(MonadOps.flatten(usft), timeout(Span(60, Seconds))) { s => Assertions.assert(s.length == 35) }
   }
 
 //  "crawler(Seq[URL])" should "succeed for test.html, depth 2" in {

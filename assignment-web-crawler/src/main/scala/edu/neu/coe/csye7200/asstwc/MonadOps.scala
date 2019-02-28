@@ -9,7 +9,6 @@ import scala.util._
   */
 object MonadOps {
 
-  // Hint: write as a for-comprehension, using the method asFuture (below).
   def flatten[X](xyf: Future[Try[X]])(implicit executor: ExecutionContext): Future[X] = for (xy <- xyf; x <- asFuture(xy)) yield x
 
   def flatten[X](xfy: Try[Future[X]]): Future[X] =
@@ -18,7 +17,6 @@ object MonadOps {
       case Failure(e) => Future.failed(e)
     }
 
-  // Hint: write as a for-comprehension, using the method Future.sequence
   def flatten[X](xsfs: Seq[Future[Seq[X]]])(implicit ec: ExecutionContext): Future[Seq[X]] = Future.sequence(xsfs) map {
     _ flatten
   }
@@ -35,12 +33,6 @@ object MonadOps {
     for {es <- esf; e = filter(es)} yield e
   }
 
-//  def flatten[X](xfy: Try[Future[X]]): Future[X] =
-//    xfy match {
-//      case Success(xf) => xf
-//      case Failure(e) => (Promise[X] complete (throw e)).future
-//    }
-
   def flatten[K, V](voKm: Map[K, Option[V]]): Map[K, V] = for ((k, vo) <- voKm; v <- vo) yield k -> v
 
 
@@ -49,7 +41,6 @@ object MonadOps {
     case Failure(e) => Future.failed(e)
   }
 
-  // implement.
   def sequence[X](xy: Try[X]): Either[Throwable, X] =
     xy match {
       case Success(s) => Right(s)
@@ -75,7 +66,7 @@ object MonadOps {
     (xso, xo) => for (xs <- xso; x <- xo) yield xs :+ x
   }
 
-  // This one is a little more tricky. Remember what I mentioned about Either not being a pure monad -- it needs projecting
+  // Hint: this one is a little more tricky. Remember what I mentioned about Either not being a pure monad -- it needs projecting
   // 7 points.
   def sequence[X](xe: Either[Throwable, X]): Option[X] = ??? // TO BE IMPLEMENTED
 
