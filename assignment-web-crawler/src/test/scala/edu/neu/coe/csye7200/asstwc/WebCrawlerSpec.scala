@@ -17,7 +17,7 @@ import scala.util._
   */
 class WebCrawlerSpec extends FlatSpec with Matchers with Futures with ScalaFutures with TryValues with Inside {
 
-  val goodURL = "http://www1.coe.neu.edu/~rhillyard/index.html"
+  val goodURL = "http://www1.coe.neu.edu/~rhillyard/indexSafe.html"
   val badURL = "http://www1.coe.neu.edu/junk"
 
   "getURLContent" should s"succeed for $goodURL" taggedAs Slow in {
