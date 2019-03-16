@@ -17,7 +17,7 @@ class JsonYQLParser(blackboard: ActorRef) extends BlackboardActor(blackboard) {
 
   override def receive: PartialFunction[Any, Unit] = {
     case ContentMessage(entity) =>
-      log.debug("JsonYQLParser received ContentMessage")
+      log.info("JsonYQLParser received ContentMessage")
       JsonYQLParser.decode(entity) match {
         case Right(response) => processQuote(response.query.results.quote)
         case Left(message) => log.warning(message.toString)
@@ -30,7 +30,9 @@ class JsonYQLParser(blackboard: ActorRef) extends BlackboardActor(blackboard) {
   def processInstrument(quote: Map[String, Option[String]]): Unit = model.getKey("symbol") match {
     case Some(s) =>
       quote.get(s) match {
-        case Some(Some(symbol)) => updateMarket(symbol, quote)
+        case Some(Some(symbol)) =>
+          updateMarket(symbol, quote)
+          log.info(s"JsonYQLParser updated $symbol with price $quote")
         case _ => log.warning(s"symbol $s is undefined")
       }
     case _ => log.warning("'symbol' is undefined in model")

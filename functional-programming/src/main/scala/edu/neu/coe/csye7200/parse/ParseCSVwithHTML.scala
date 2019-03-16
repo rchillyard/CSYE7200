@@ -2,9 +2,8 @@ package edu.neu.coe.csye7200.parse
 
 import java.io.{BufferedWriter, File, FileWriter}
 
-import edu.neu.coe.csye7200.{Arg, Args}
+import edu.neu.coe.csye7200.{Arg, Args, HTML, Tag}
 
-import scala.collection.mutable
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
@@ -20,100 +19,37 @@ import scala.util.{Failure, Success, Try}
   */
 case class ParseCSVwithHTML(csvParser: CsvParser) {
 
-  val html = new HTML
+  val liftColonPlus: (Try[Tag], Try[Tag]) => Try[Tag] = ParseCSVwithHTML.lift2Try(_ :+ _)
 
-  def parseElementIntoHTMLElement(w: String, header: Boolean = false): String = {
-    val result = new HTML
-    result.tag(if (header) "th" else "td")
+  def parseElementIntoHTMLElement(w: String, header: Boolean = false): Tag =
     // Replace the non-breaking space character with proper HTML
-    result.append(w.replaceAll("""\u00A0""", "&#160"))
-    result.close()
-    result.toString()
+    HTML(if (header) "th" else "td", w.replaceAll("""\u00A0""", "&#160"))
+
+  def parseRowIntoHTMLRow(w: String, header: Boolean = false): Try[Tag] = csvParser.parseRow(w) match {
+    case Success(ws) => Success(ws.foldLeft[Tag](HTML("tr"))(_ :+ parseElementIntoHTMLElement(_, header)))
+    case Failure(x) => Failure(x)
   }
 
-  def parseRowIntoHTMLRow(w: String, header: Boolean = false): String = {
-    val result = new HTML
-    result.tag("tr")
-    val wsy: Try[List[String]] = csvParser.parseRow(w)
-    wsy match {
-      case Success(ws) => for (w <- ws) result.append(parseElementIntoHTMLElement(w, header))
-      case Failure(x) => System.err.println(s"Error parsing `$w`: ${x.getLocalizedMessage}")
-    }
-    result.close()
-    result.toString
-  }
+  def parseRowProjectionIntoHTMLRow(ws: Seq[String], header: Boolean = false): Tag = ws.foldLeft[Tag](HTML("tr"))(_ :+ parseElementIntoHTMLElement(_, header))
 
-  def parseRowProjectionIntoHTMLRow(ws: Seq[String], header: Boolean = false): String = {
-    val result = new HTML
-    result.tag("tr")
-    for (w <- ws) result.append(parseElementIntoHTMLElement(w, header))
-    result.close()
-    result.toString
-  }
+  def preamble(title: String): Tag = HTML("head") :+ HTML("title", title)
 
-  def preamble(w: String): String = {
-    val result = new HTML
-    result.tag("head")
-    result.tag("title")
-    result.append(w)
-    result.close()
-    result.toString
-  }
-
-  def parseStreamIntoHTMLTable(ws: Stream[String], title: String): String = {
-    val result = new HTML
-    result.tag("html")
-    result.append(preamble(title))
-    result.tag("body")
-    result.tag("table", Some("""border="1""""))
-    ws match {
+  def parseStreamIntoHTMLTable(ws: Stream[String], title: String): Try[Tag] = {
+    val table: Try[Tag] = ws match {
       case header #:: body =>
-        result.append(parseRowIntoHTMLRow(header, header = true))
-        for (w <- body) result.append(parseRowIntoHTMLRow(w))
+        val ty = liftColonPlus(Try(HTML("table", Seq("""border="1""""))), parseRowIntoHTMLRow(header, header = true))
+        body.foldLeft(ty)((x, y) => liftColonPlus(x, parseRowIntoHTMLRow(y)))
     }
-    result.close()
-    result.toString
+    liftColonPlus(Try(HTML("html") :+ preamble(title)), liftColonPlus(Try(HTML("body")), table))
   }
 
-  def parseStreamProjectionIntoHTMLTable(columns: Seq[String], wss: Stream[Seq[String]], title: String): String = {
-    val result = new HTML
-    result.tag("html")
-    result.append(preamble(title))
-    result.tag("body")
-    result.tag("table", Some("""border="1""""))
-    result.append(parseRowProjectionIntoHTMLRow(columns, header = true))
-    for (ws <- wss) result.append(parseRowProjectionIntoHTMLRow(ws))
-    result.close()
-    result.toString
+  def parseStreamProjectionIntoHTMLTable(columns: Seq[String], wss: Stream[Seq[String]], title: String): Try[Tag] = Try {
+    val table = HTML("table", Seq("""border="1"""")) :+ parseRowProjectionIntoHTMLRow(columns, header = true)
+    val body = HTML("body") :+ wss.foldLeft(table)((tag, ws) => tag :+ parseRowProjectionIntoHTMLRow(ws))
+    HTML("html") :+ preamble(title) :+ body
   }
 }
 
-/**
-  * Mutable class to form an HTML string
-  */
-class HTML() {
-  val content = new StringBuilder("")
-  val tagStack: mutable.Stack[String] = mutable.Stack[String]()
-
-  def tag(w: String, ao: Option[String] = None): StringBuilder = {
-    tagStack.push(w)
-    val attribute = ao match {
-      case Some(a) => " "+a
-      case _ => ""
-    }
-    content.append(s"<$w$attribute>")
-  }
-
-  def unTag: StringBuilder = content.append(s"</${tagStack.pop()}>")
-
-  def append(w: String): StringBuilder = content.append(w)
-
-  def close(): Unit = while (tagStack.nonEmpty) {
-    unTag
-  }
-
-  override def toString: String = content.toString + "\n"
-}
 
 /**
   * Main program which reads a CSV file (specified by the command line argument) and converts it into
@@ -125,6 +61,10 @@ class HTML() {
   * The output filename is fixed as "output.html"
   */
 object ParseCSVwithHTML extends App {
+  def map2[T1, T2, R](t1y: Try[T1], t2y: Try[T2])(f: (T1, T2) => R): Try[R] = for {t1 <- t1y; t2 <- t2y} yield f(t1, t2)
+
+  def lift2Try[T1, T2, R](f: (T1, T2) => R): (Try[T1], Try[T2]) => Try[R] = map2(_, _)(f)
+
   val parser = CsvParser(delimiter = '\t' + "")
   val csvParser = ParseCSVwithHTML(parser)
   val title = "Report"
@@ -134,12 +74,14 @@ object ParseCSVwithHTML extends App {
     case _ => System.err.println("syntax: ParseCSVwithHTML filename [column]*")
   }
 
-  private def parseEncodeAndWriteToFile(filename: String, columnArgs: List[Arg[String]]): Unit = {
+  private def parseEncodeAndWriteToFile(filename: String, columnArgs: Seq[Arg[String]]): Unit = {
     val file = new File("output.html")
     val bw = new BufferedWriter(new FileWriter(file))
-    bw.write(parseEncodeAndWriteString(filename, columnArgs))
+
+    val ty = parseEncodeAndWriteString(filename, columnArgs)
+    ty.recover { case x: Throwable => System.err.println(s"No output written because: $x") }.foreach(t => bw.write(t.toString))
     bw.close()
-    println(s"Successfully written $file")
+    if (ty.isSuccess) println(s"Successfully written $file")
   }
 
   private def parseEncodeAndWriteString(filename: String, columnArgs: Seq[Arg[String]]) = {

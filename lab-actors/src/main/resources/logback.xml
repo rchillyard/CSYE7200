@@ -1,4 +1,16 @@
 <configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date{ISO8601} %-5level %logger{36} %X{akkaSource} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="deng" level="DEBUG"/>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/filename.log</file>
         <encoder>
@@ -12,9 +24,9 @@
             <maxFileSize>20MB</maxFileSize>
         </triggeringPolicy>
     </appender>
-    <root level="info">
-        <appender-ref ref="FILE"/>
-    </root>
+    <!--<root level="info">-->
+    <!--<appender-ref ref="FILE"/>-->
+    <!--</root>-->
     <root level="debug">
         <appender-ref ref="FILE"/>
     </root>
