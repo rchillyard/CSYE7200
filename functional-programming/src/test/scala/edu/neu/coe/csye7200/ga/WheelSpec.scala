@@ -105,13 +105,13 @@ class WheelSpec extends FlatSpec with Matchers {
 
   it should "be junk" in {
     def length(xs: List[Int]): Int = {
-      var l = 0;
-      var list=xs;
+      var l = 0
+      var list = xs
       while (!list.isEmpty) {
-        l+=1;
+        l += 1
         list=list.tail
       }
-      return l
+      l
     }
     length(Nil) shouldBe 0
   }

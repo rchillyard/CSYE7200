@@ -14,13 +14,13 @@ object Map2 {
   //		case _ => None
   //	}
 
-  def map[B, C](b: Option[B])(f: (B) => C): Option[C] =
+  def map[B, C](b: Option[B])(f: B => C): Option[C] =
     b match {
       case Some(bb) => Some(f(bb))
       case _ => None
     }
 
-  def flatMap[A, B](a: Option[A])(f: (A) => Option[B]): Option[B] =
+  def flatMap[A, B](a: Option[A])(f: A => Option[B]): Option[B] =
     a match {
       case Some(aa) => f(aa)
       case _ => None

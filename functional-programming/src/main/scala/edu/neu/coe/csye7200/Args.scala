@@ -125,6 +125,7 @@ case class Args[X](xas: Seq[Arg[X]]) extends Traversable[Arg[X]] {
   def isDefined(w: String): Boolean = getArg(w).isDefined
 
   def process(fm: Map[String, Option[X] => Unit]): Try[Seq[X]] =
+  // CONSIDER using traverse
     MonadOps.sequence(for (xa <- xas) yield for (x <- xa.process(fm)) yield x) match {
       case Success(xos) => Success(xos.flatten)
       case Failure(x) => Failure(x)
@@ -142,6 +143,7 @@ object Args {
   def parse(args: Array[String]): Args[String] = {
     val p = new SimpleArgParser
 
+    @scala.annotation.tailrec
     def inner(r: Seq[Arg[String]], w: Seq[p.Token]): Seq[Arg[String]] = w match {
       case Nil => r
       case p.Command(c) :: p.Argument(a) :: t => inner(r :+ Arg(c, a), t)
@@ -149,6 +151,7 @@ object Args {
       case p.Argument(a) :: t => inner(r :+ Arg(None, Some(a)), t)
     }
 
+    // CONSIDER using traverse
     val tys = for (a <- args) yield p.parseToken(a)
     val ts = MonadOps.sequence(tys) match {
       case Success(ts_) => ts_
@@ -165,6 +168,7 @@ object Args {
       case x => Seq(x)
     }
 
+    @scala.annotation.tailrec
     def inner(r: Seq[Arg[String]], w: Seq[PosixArg]): Seq[Arg[String]] = w match {
       case Nil => r
       case PosixOptions(o) :: PosixOptionValue(v) :: t => inner(r :+ Arg(o, v), t)
@@ -248,6 +252,8 @@ case class PosixOptionValue(value: String) extends PosixArg
 case class PosixOperand(value: String) extends PosixArg
 
 class PosixArgParser extends RegexParsers {
+
+  def flatten[T](to: Option[List[T]]): List[T] = to.toList.flatten
 
   def parseCommandLine(ws: Seq[String]): Seq[PosixArg] = parseAll(posixCommandLine, ws.mkString("", terminator, terminator)) match {
     case Success(t, _) => t

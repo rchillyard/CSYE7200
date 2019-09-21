@@ -4,7 +4,7 @@
 
 package edu.neu.coe.csye7200.greedy
 
-object Zeckendorf extends ((Long) => List[Long]) {
+object Zeckendorf extends (Long => List[Long]) {
 
   val greedy: Greedy[Long, List[Long]] = Greedy(Fibonacci.getLargest, _ - _, _ +: _, _ <= 0)
 

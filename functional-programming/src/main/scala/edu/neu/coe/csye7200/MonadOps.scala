@@ -1,6 +1,8 @@
 package edu.neu.coe.csye7200
 
-import scala.concurrent.{ExecutionContext, Future}
+import java.util.NoSuchElementException
+
+import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.language.postfixOps
 import scala.util._
 
@@ -34,6 +36,7 @@ object MonadOps {
         case Left(x) => f(x); false;
         case _ => true
       })} yield use
+      // CONSIDER using traverse
       val uss = for {use <- uses2; uso = sequence(use); us <- uso} yield us
       uss flatten
     }
@@ -59,6 +62,35 @@ object MonadOps {
 
   def sequence[X](xf: Future[X])(implicit executor: ExecutionContext): Future[Either[Throwable, X]] =
     xf transform( { s => Right(s) }, { f => f }) recoverWith[Either[Throwable, X]] { case f => Future(Left(f)) }
+
+  /**
+    * Sequence an Option[Future[X] to a Future[Option[X]
+    * @param xfo the input
+    * @param executor the (implicit) execution context
+    * @tparam X the underlying type
+    * @return a Future[Option[X]
+    */
+  def sequence[X](xfo: Option[Future[X]])(implicit executor: ExecutionContext): Future[Option[X]] = xfo match {
+    case Some(xf) => xf map (Some(_))
+    case None => Future.successful(None)
+  }
+
+  /**
+    * Sequence a Future[Option[X] to an Option[Future[X]
+    * @param xof the input
+    * @param executor the (implicit) execution context
+    * @tparam X the underlying type
+    * @return an Option[Future[X]
+    */
+  def sequence[X](xof: Future[Option[X]])(implicit executor: ExecutionContext): Option[Future[X]] = {
+    val p: Promise[X] = Promise[X]
+    xof.onComplete {
+      case Success(Some(x)) => p.complete(Success(x))
+      case Success(None) => p.complete(Failure(new NoSuchElementException))
+      case Failure(x) => p.complete(Failure(x))
+    }
+    Some(p.future)
+  }
 
   // Hint: write as a for-comprehension, using the method sequence (above).
   // 6 points.

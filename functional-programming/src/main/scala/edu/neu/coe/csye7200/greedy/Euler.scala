@@ -1,7 +1,8 @@
 package edu.neu.coe.csye7200.greedy
 
+import scala.Stream._
+import scala.language.postfixOps
 import scala.util.Random
-import Stream._
 
 object Euler extends App {
 

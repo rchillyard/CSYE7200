@@ -4,11 +4,13 @@ import scala.annotation.tailrec
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.{implicitConversions, postfixOps}
 
-case class Sorted[T](ts: Seq[T])(implicit f: Comparer[T]) extends (() => Seq[T]) {
+case class Sorted[T: Comparer](ts: Seq[T]) extends (() => Seq[T]) {
 
-  implicit val ordering: Ordering[T] = f.toOrdering
+  private val ct = implicitly[Comparer[T]]
 
-  def sort(o: Comparer[T]): Sorted[T] = Sorted(ts)(f orElse o)
+  implicit val ordering: Ordering[T] = ct.toOrdering
+
+  def sort(o: Comparer[T]): Sorted[T] = Sorted(ts)(ct orElse o)
 
   def apply: Seq[T] = ts.sorted
 

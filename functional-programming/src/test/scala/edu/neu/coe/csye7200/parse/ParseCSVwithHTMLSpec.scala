@@ -43,7 +43,11 @@ class ParseCSVwithHTMLSpec extends FlatSpec with Matchers {
   }
 
   private def parseResource(parser: ParseCSVwithHTML, resource: String, title: String) = Option(getClass.getResource(resource)) match {
-    case Some(u) => parser.parseStreamIntoHTMLTable(Source.fromFile(u.toURI).getLines.toStream, title)
+    case Some(u) =>
+      val source = Source.fromFile(u.toURI)
+      val result = parser.parseStreamIntoHTMLTable(source.getLines.toStream, title)
+      source.close()
+      result
     case None => Failure(new FileNotFoundException(s"cannot get resource $resource"))
   }
 }

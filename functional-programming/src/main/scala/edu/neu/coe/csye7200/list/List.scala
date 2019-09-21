@@ -166,7 +166,7 @@ case class Cons[+A](head: A, tail: List[A]) extends List[A] {
   def foldLeft[B](z: B)(f: (B, A) => B): B = tail.foldLeft(f(z, head))(f)
 }
 
-abstract class Counter[-A] extends ((A) => Int)
+abstract class Counter[-A] extends (A => Int)
 
 object List {
   type IntList = List[Int]

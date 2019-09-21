@@ -131,6 +131,7 @@ abstract class MasterBase[K1, V1, K2, V2, V3](config: Config, f: (K1,V1)=>(K2,V2
     val rs = Stream.continually(reducers.toStream).flatten
     val v2sK2s = for ((k2,v2s) <- v2sK2m.toSeq) yield (k2,v2s)
     val v3XeK2fs = for (((k2,v2s),a) <- (v2sK2s zip rs)) yield (a ? Intermediate(k2,v2s)).mapTo[(K2,Either[Throwable,V3])]
+    // CONSIDER using traverse
     for (v3XeK2s <- Future.sequence(v3XeK2fs)) yield v3XeK2s.toMap
   }
 }

@@ -126,7 +126,7 @@ case class MyCons[+A](head: A, tail: MyList[A]) extends MyList[A] {
   }
 }
 
-abstract class Counter[-A] extends ((A) => Int)
+abstract class Counter[-A] extends (A => Int)
 
 object MyList {
   type IntList = MyList[Int]

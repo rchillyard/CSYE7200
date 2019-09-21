@@ -6,7 +6,7 @@ package edu.neu.coe.csye7200.benchmark
 
 import scala.annotation.tailrec
 
-object Factorial {
+object Factorial extends App {
 
   def factorial(n: Int): BigInt = {
     @tailrec
@@ -16,5 +16,7 @@ object Factorial {
     }
     inner(1, n)
   }
+
+  println(factorial(47).toString.length)
 
 }

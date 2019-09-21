@@ -32,7 +32,7 @@ import scala.util._
  */
 class Mapper[K1,V1,K2,V2](f: (K1,V1)=>(K2,V2)) extends Actor with ActorLogging {
   
-  override def receive = {
+  override def receive: PartialFunction[Any, Unit] = {
     case  i: Incoming[K1,V1] =>
       log.info(s"received $i")
       log.debug(s"with map ${i.m}")
@@ -46,12 +46,12 @@ class Mapper[K1,V1,K2,V2](f: (K1,V1)=>(K2,V2)) extends Actor with ActorLogging {
     Master.sequence(v2k2ts) match {
       case Success(v2k2s) =>
         val v2sK2m = mutable.HashMap[K2,Seq[V2]]() // mutable
-        for ((k2,v2) <- v2k2s) v2sK2m put(k2, v2+:v2sK2m.getOrElse((k2), (Nil)))
+        for ((k2,v2) <- v2k2s) v2sK2m put(k2, v2+:v2sK2m.getOrElse(k2, Nil))
         Success(v2sK2m.toMap)
-      case f @ Failure(x) => f
+      case f @ Failure(_) => f
     }
   }
-  override def postStop = {
+  override def postStop: Unit = {
     log.debug("has shut down")
   }
   
@@ -64,19 +64,20 @@ class Mapper[K1,V1,K2,V2](f: (K1,V1)=>(K2,V2)) extends Actor with ActorLogging {
  * 
  * @author scalaprof
  *
- * @tparam K1
- * @tparam V1
- * @tparam K2
- * @tparam V2
+ * @tparam K1 the K1 type.
+ * @tparam V1 the V1 type.
+ * @tparam K2 the K2 type.
+ * @tparam V2 the V2 type.
  */
 class Mapper_Forgiving[K1,V1,K2,V2](f: (K1,V1)=>(K2,V2)) extends Mapper[K1,V1,K2,V2](f) {
   
-  override def prepareReply(v2k2ts: Seq[Try[(K2,V2)]]) = {
+  override def prepareReply(v2k2ts: Seq[Try[(K2,V2)]]): (Map[K2, Seq[V2]], Seq[Throwable]) = {
       val v2sK2m = mutable.HashMap[K2,Seq[V2]]() // mutable
       val xs = Seq[Throwable]() // mutable
-      for (v2k2t <- v2k2ts; v2k2e = Master.sequence(v2k2t))
+    // CONSIDER using traverse
+    for (v2k2t <- v2k2ts; v2k2e = Master.sequence(v2k2t))
         v2k2e match {
-          case Right((k2,v2)) => v2sK2m put(k2, v2+:v2sK2m.getOrElse((k2), (Nil)))
+          case Right((k2,v2)) => v2sK2m put(k2, v2+:v2sK2m.getOrElse(k2, Nil))
           case Left(x) => xs :+ x
       }
       (v2sK2m.toMap, xs)

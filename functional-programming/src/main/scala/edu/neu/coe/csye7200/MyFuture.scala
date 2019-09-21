@@ -24,13 +24,13 @@ case class Successful[T](t: T) extends MyFuture[T] {
 
   def get: Option[T] = ???
 
-  def onComplete[U](f: (T) => U)(implicit executor: ExecutionContext): Unit = ???
+  def onComplete[U](f: T => U)(implicit executor: ExecutionContext): Unit = ???
 
-  def onException[U](e: (Throwable) => U)(implicit executor: ExecutionContext): Unit = ???
+  def onException[U](e: Throwable => U)(implicit executor: ExecutionContext): Unit = ???
 
   def unit(t: => T)(implicit executor: ExecutionContext): MyFuture[T] = ???
 
-  def map[U](f: (T) => U)(implicit executor: ExecutionContext): MyFuture[U] = ???
+  def map[U](f: T => U)(implicit executor: ExecutionContext): MyFuture[U] = ???
 
   def await: T = ???
 }

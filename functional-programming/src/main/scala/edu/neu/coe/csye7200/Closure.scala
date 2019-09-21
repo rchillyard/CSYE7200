@@ -2,7 +2,10 @@ package edu.neu.coe.csye7200
 
 object Closure extends App {
 
-  // Not a closure
+  // NOTE: this is suspicious
+  // XXX I'm not sure what I intended here.
+  // But as written it is a closure becuse it closes on y, albeit a forward reference.
+  // Not a closure--this is false.
   val f0: Double=>String = x => (x/y).toString
 
   // A closure

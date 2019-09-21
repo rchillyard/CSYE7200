@@ -83,7 +83,7 @@ object Pets extends App {
 
   // Here we create a new type X which involves both covariant and contravariant types.
   // Then we create a function of type X based on asDog
-  type X[+S, -T] = (T) => S
+  type X[+S, -T] = T => S
   val x: X[Dog, Chihuahua] = asDog
 
   val bentley = Chihuahua("Bentley", female = false, "black")

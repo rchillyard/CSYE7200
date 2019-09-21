@@ -23,6 +23,7 @@ object Sum extends App {
     x
   }
 
+  // CONSIDER using traverse
   val xfs = for (i <- 0 to 9) yield asyncSum(integers(i * chunk + 1, chunk))
   val xsf = Future.sequence(xfs)
   val xf: Future[BigInt] = for (ls <- xsf) yield sum(ls.toStream)

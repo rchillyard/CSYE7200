@@ -37,14 +37,14 @@ case class ParseCSVwithHTML(csvParser: CsvParser) {
   def parseStreamIntoHTMLTable(ws: Stream[String], title: String): Try[Tag] = {
     val table: Try[Tag] = ws match {
       case header #:: body =>
-        val ty = liftColonPlus(Try(HTML("table", Seq("""border="1""""))), parseRowIntoHTMLRow(header, header = true))
+        val ty = liftColonPlus(Try(HTML("table", Map("border"->"1"))), parseRowIntoHTMLRow(header, header = true))
         body.foldLeft(ty)((x, y) => liftColonPlus(x, parseRowIntoHTMLRow(y)))
     }
     liftColonPlus(Try(HTML("html") :+ preamble(title)), liftColonPlus(Try(HTML("body")), table))
   }
 
   def parseStreamProjectionIntoHTMLTable(columns: Seq[String], wss: Stream[Seq[String]], title: String): Try[Tag] = Try {
-    val table = HTML("table", Seq("""border="1"""")) :+ parseRowProjectionIntoHTMLRow(columns, header = true)
+    val table = HTML("table", Map("border"->"1")) :+ parseRowProjectionIntoHTMLRow(columns, header = true)
     val body = HTML("body") :+ wss.foldLeft(table)((tag, ws) => tag :+ parseRowProjectionIntoHTMLRow(ws))
     HTML("html") :+ preamble(title) :+ body
   }

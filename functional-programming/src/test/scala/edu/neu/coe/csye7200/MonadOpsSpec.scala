@@ -71,6 +71,25 @@ class MonadOpsSpec extends FlatSpec with Matchers with Futures with ScalaFutures
     }
   }
 
+  behavior of "sequence"
+  it should "convert Future[Option[X]] to Option[Future[X]]" in {
+    val xof: Future[Some[Int]] = Future(Some(1))
+    val xfo: Option[Future[Int]] = sequence(xof)
+    xfo should matchPattern { case Some(_) => }
+    whenReady(xfo.get) { x =>
+      x should matchPattern { case 1 => }
+    }
+  }
+
+  it should "convert Option[Future[X]] to Future[[OptionX]]" in {
+    val xfo = Some(Future(1))
+    val xof = sequence(xfo)
+    whenReady(xof) { xo =>
+      xo should matchPattern { case Some(_) => }
+      xo.get shouldBe 1
+    }
+  }
+
   behavior of "flatten"
   it should "succeed" in {
     val ifs: Seq[Future[Seq[Int]]] = Seq(Future(Seq(1, 2)))
