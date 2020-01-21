@@ -37,4 +37,3 @@ object WaveFunctionTest extends App {
   val wy = fLift(Try(1.0))
   println(wy.get)
 }
-

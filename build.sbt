@@ -2,7 +2,7 @@ name := "CSYE7200"
 
 version := "1.0"
 
-scalaVersion := "2.12.8"
+scalaVersion := "2.12.10"
 
 lazy val asstfc = project in file("assignment-functional-composition")
 

@@ -4,7 +4,7 @@ name := "Numerics"
 
 version := "1.0.0-SNAPSHOT"
 
-scalaVersion := "2.12.7"
+scalaVersion := "2.12.10"
 
 val scalaTestVersion = "3.0.1"
 

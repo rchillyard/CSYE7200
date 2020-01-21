@@ -4,9 +4,10 @@
 
 package edu.neu.coe.csye7200
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec
+import org.scalatest.matchers.should
 
-class ListsSpec extends FlatSpec with Matchers {
+class ListsSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   private val fib0 = List(1)
   private val fib5 = List(1, 1, 2, 3, 5, 8)
@@ -24,7 +25,7 @@ class ListsSpec extends FlatSpec with Matchers {
     last(fib5) shouldBe 8
   }
   it should "not suffer stack overflow" in {
-    val list = (Stream.from(1) take 100000).toList
+    val list = (LazyList.from(1) take 100000).toList
     last(list) shouldBe 100000
   }
 
@@ -72,7 +73,7 @@ class ListsSpec extends FlatSpec with Matchers {
     reverse(fib5) shouldBe List(8, 5, 3, 2, 1, 1)
   }
   it should "reverse long stream correctly" in {
-    val s = (Stream.from(1) take 1000000).toList
+    val s = (LazyList.from(1) take 1000000).toList
     reverse(reverse(s)) shouldBe s
   }
 

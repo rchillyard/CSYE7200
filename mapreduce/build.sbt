@@ -2,7 +2,7 @@ name := "MapReduce"
 
 version := "1.0.0-SNAPSHOT"
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.12.10"
 
 //mainClass in (Compile, run) := Some("edu.neu.coe.scala.mapreduce.MapReduce")
 
@@ -34,7 +34,7 @@ libraryDependencies ++= Seq(
   akkaGroup %% "akka-actor" % akkaVersion,
   akkaGroup %% "akka-testkit" % akkaVersion % "test",
   akkaGroup %% "akka-slf4j" % akkaVersion,
-  "com.typesafe" % "config" % "1.3.0",
+  "com.typesafe" % "config" % "1.4.0",
   //	"com.github.nscala-time" %% "nscala-time" % "2.0.0",
   "ch.qos.logback" % "logback-classic" % "1.0.0" % "runtime",
   // xml and tagsoup are for WebCrawler example
