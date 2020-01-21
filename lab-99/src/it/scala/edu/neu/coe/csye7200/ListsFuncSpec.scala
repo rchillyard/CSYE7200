@@ -4,11 +4,14 @@
 
 package edu.neu.coe.csye7200
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec
+import org.scalatest.matchers.should
 
-class ListsFuncSpec extends FlatSpec with Matchers {
+import scala.language.postfixOps
 
-  val fibonacci: Stream[Long] = 1L #:: fibonacci.scanLeft(1L)(_ + _)
+class ListsFuncSpec extends flatspec.AnyFlatSpec with should.Matchers {
+
+  val fibonacci: LazyList[Long] = 1L #:: fibonacci.scanLeft(1L)(_ + _)
 
   behavior of "P01"
   it should "get 817770325994397771L for fib1000" in {

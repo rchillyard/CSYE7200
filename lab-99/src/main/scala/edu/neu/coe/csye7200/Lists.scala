@@ -6,6 +6,7 @@ package edu.neu.coe.csye7200
 
 object P00 {
   def flatten[X](xss: List[List[X]]): List[X] = {
+    @scala.annotation.tailrec
     def inner(r: List[X], wss: List[List[X]]): List[X] = wss match {
       case Nil => r
       case h :: t => inner(r ++ h, t)
@@ -15,6 +16,7 @@ object P00 {
   }
 
   def fill[X](n: Int)(x: X): List[X] = {
+    @scala.annotation.tailrec
     def inner(r: List[X], l: Int): List[X] = if (l <= 0) r else inner(r :+ x, l - 1)
 
     inner(Nil, n)
@@ -23,16 +25,19 @@ object P00 {
 
 object P01 {
 
+  @scala.annotation.tailrec
   def last[X](xs: List[X]): X = ??? // TO BE IMPLEMENTED
 }
 
 object P02 {
 
+  @scala.annotation.tailrec
   def penultimate[X](xs: List[X]): X = ??? // TO BE IMPLEMENTED
 }
 
 object P03 {
 
+  @scala.annotation.tailrec
   def kth[X](k: Int, xs: List[X]): X = ??? // TO BE IMPLEMENTED
 }
 
@@ -60,9 +65,9 @@ object P06 {
 
 object P07 {
 
-  type Listuence = List[Any]
+  type ListAny = List[Any]
 
-  def flatten(xs: Listuence): Listuence = {
+  def flatten(xs: ListAny): ListAny = {
     // TO BE IMPLEMENTED
     ???
   }

@@ -4,10 +4,11 @@
 
 package edu.neu.coe.csye7200
 
-import org.scalatest.{FlatSpec, Matchers}
-import S99Int._
+import edu.neu.coe.csye7200.Arithmetic._
+import org.scalatest._
+import org.scalatest.matchers.should
 
-class ArithmeticSpec extends FlatSpec with Matchers {
+class ArithmeticSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   behavior of "P31"
   it should "get true for 7" in {
@@ -16,7 +17,7 @@ class ArithmeticSpec extends FlatSpec with Matchers {
 
   behavior of "P32"
   it should "get 9 for 36,63" in {
-    gcd(36,63) shouldBe 9
+    gcd(36, 63) shouldBe 9
   }
 
   behavior of "P33"
@@ -51,7 +52,7 @@ class ArithmeticSpec extends FlatSpec with Matchers {
 
   behavior of "P39"
   it should "get 7, 11, 13, 17, 19, 23, 29, 31 for 7,31" in {
-    listPrimesinRange(7 to 31) shouldBe List(7, 11, 13, 17, 19, 23, 29, 31)
+    listPrimesInRange(7 to 31) shouldBe List(7, 11, 13, 17, 19, 23, 29, 31)
   }
 
   behavior of "P40"

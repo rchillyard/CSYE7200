@@ -1,22 +1,25 @@
 /*
- * Copyright (c) 2018. Phasmid Software
+ * Copyright (c) 2018, 2020. Phasmid Software
  */
 
 package edu.neu.coe.csye7200.asstll
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.matchers.should
+import org.scalatest.{Matchers, flatspec}
 
-class LazyListSpec extends FlatSpec with Matchers {
+import scala.language.postfixOps
+
+class MyLazyListSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   behavior of "Cons"
   it should "produce a single of 1" in {
-    val x: ListLike[Int] = LazyList(1, () => EmptyList)
+    val x: ListLike[Int] = MyLazyList(1, () => EmptyList)
     x.head shouldBe 1
     x.tail shouldBe EmptyList
   }
 
   it should "produce a stream of xs using Cons directly" in {
-    lazy val x: ListLike[String] = LazyList("x", () => x)
+    lazy val x: ListLike[String] = MyLazyList("x", () => x)
     val y = x.take(3).toSeq
     y.size shouldBe 3
     y.head shouldBe "x"
@@ -25,17 +28,17 @@ class LazyListSpec extends FlatSpec with Matchers {
 
   behavior of "toSeq"
   it should "produce a single 1" in {
-    val x: ListLike[Int] = LazyList(1, () => EmptyList)
+    val x: ListLike[Int] = MyLazyList(1, () => EmptyList)
     x.toSeq shouldBe Seq(1)
   }
   it should "produce a sequence of 1, 2" in {
-    val x = LazyList(1, () => LazyList(2, () => EmptyList))
+    val x = MyLazyList(1, () => MyLazyList(2, () => EmptyList))
     x.toSeq shouldBe Seq(1, 2)
   }
 
   behavior of "ones"
   it should "produce a stream of 1s" in {
-    val x: ListLike[Int] = LazyList.ones
+    val x: ListLike[Int] = MyLazyList.ones
     val y = x.take(3).toSeq
     y.size shouldBe 3
     y.head shouldBe 1
@@ -44,19 +47,19 @@ class LazyListSpec extends FlatSpec with Matchers {
 
   behavior of "take"
   it should "take zero from a finite stream" in {
-    LazyList(1).take(0).toSeq shouldBe Nil
+    MyLazyList(1).take(0).toSeq shouldBe Nil
   }
 
   it should "take zero from an infinite stream" in {
-    LazyList.continually(1).take(0).toSeq shouldBe Nil
+    MyLazyList.continually(1).take(0).toSeq shouldBe Nil
   }
 
   it should "take 3 from a finite stream of actual length 1" in {
-    (LazyList(1) take 3).toSeq shouldBe Seq(1)
+    (MyLazyList(1) take 3).toSeq shouldBe Seq(1)
   }
 
   it should "take 3 from an infinite stream" in {
-    (LazyList.continually(1) take 3).toSeq shouldBe Seq(1, 1, 1)
+    (MyLazyList.continually(1) take 3).toSeq shouldBe Seq(1, 1, 1)
   }
 
   it should "take 3 from an infinite stream of 1s that counts" in {
@@ -65,7 +68,7 @@ class LazyListSpec extends FlatSpec with Matchers {
       count = count + 1
       1
     }
-    val lazyList = LazyList.continually(incrementCountAndProvideValue) take 3
+    val lazyList = MyLazyList.continually(incrementCountAndProvideValue) take 3
     count shouldBe 1
     lazyList.toSeq shouldBe Seq(1, 1, 1)
     // LazyList is not memorizing the elements that have been evaluated already.
@@ -78,7 +81,7 @@ class LazyListSpec extends FlatSpec with Matchers {
       count = count + 1
       count
     }
-    val lazyList = LazyList.continually(incrementCountAndProvideValue) take 3
+    val lazyList = MyLazyList.continually(incrementCountAndProvideValue) take 3
     count shouldBe 1
     lazyList.toSeq shouldBe Seq(1, 2, 3)
     // LazyList is not memorizing the elements that have been evaluated already.
@@ -87,7 +90,7 @@ class LazyListSpec extends FlatSpec with Matchers {
 
   behavior of "drop"
   it should "work correctly" in {
-    val x = LazyList.from(1)
+    val x = MyLazyList.from(1)
     val y = x drop 3 take 3
     y.toSeq shouldBe Seq(4, 5, 6)
   }
@@ -100,7 +103,7 @@ class LazyListSpec extends FlatSpec with Matchers {
   }
   it should "join a stream with an Empty stream" in {
     val empty = EmptyList
-    val ones = LazyList.continually(1)
+    val ones = MyLazyList.continually(1)
     val y = ones.++(empty)
     val z = y.take(3).toSeq
     z.size shouldBe 3
@@ -108,14 +111,14 @@ class LazyListSpec extends FlatSpec with Matchers {
   }
   it should "join an Empty stream with a stream" in {
     val x: ListLike[Int] = EmptyList.asInstanceOf[ListLike[Int]]
-    val ones = LazyList.continually(1)
+    val ones = MyLazyList.continually(1)
     val y = x.++(ones)
     (y take 3).toSeq shouldBe Seq(1, 1, 1)
   }
 
   behavior of "map"
   it should "produce a stream of 2s" in {
-    lazy val x: ListLike[Int] = LazyList(1, () => x)
+    lazy val x: ListLike[Int] = MyLazyList(1, () => x)
     val y = x map (_ * 2)
     assert(y.head == 2)
     assert(y.tail.head == 2)
@@ -124,16 +127,16 @@ class LazyListSpec extends FlatSpec with Matchers {
 
   behavior of "flatMap"
   it should "produce a stream of 2s from a single element 1" in {
-    val x = LazyList(1)
-    val y = x flatMap (z => LazyList.continually(z * 2))
+    val x = MyLazyList(1)
+    val y = x flatMap (z => MyLazyList.continually(z * 2))
     assert(y.head == 2)
     assert(y.tail.head == 2)
     (y take 4).toSeq shouldBe Seq(2, 2, 2, 2)
   }
 
   it should "produce a stream of 2s from a stream of 1s" in {
-    lazy val x: ListLike[Int] = LazyList(1, () => x)
-    val y = x flatMap (z => LazyList.continually(z * 2))
+    lazy val x: ListLike[Int] = MyLazyList(1, () => x)
+    val y = x flatMap (z => MyLazyList.continually(z * 2))
     assert(y.head == 2)
     assert(y.tail.head == 2)
     (y take 4).toSeq shouldBe Seq(2, 2, 2, 2)
@@ -141,12 +144,12 @@ class LazyListSpec extends FlatSpec with Matchers {
 
   behavior of "from"
   it should "get a Seq(2, 4, 6, 8)" in {
-    val x = LazyList.from(2, 2)
+    val x = MyLazyList.from(2, 2)
     (x take 4 toSeq) shouldBe Seq(2, 4, 6, 8)
   }
 
   it should "get a Seq(1, -1, -3, -5)" in {
-    val x = LazyList.from(1, -2)
+    val x = MyLazyList.from(1, -2)
     (x take 4 toSeq) shouldBe Seq(1, -1, -3, -5)
   }
 
@@ -154,7 +157,7 @@ class LazyListSpec extends FlatSpec with Matchers {
   it should "produce a stream of even numbers using from(1)" in {
     def even(x: Int): Boolean = x % 2 == 0
 
-    val y = LazyList.from(1) filter even
+    val y = MyLazyList.from(1) filter even
     assert(y.head == 2)
     assert(y.tail.head == 4)
     (y take 4).toSeq shouldBe Seq(2, 4, 6, 8)
@@ -163,7 +166,7 @@ class LazyListSpec extends FlatSpec with Matchers {
   it should "produce a stream of even numbers using from(2,2)" in {
     def even(x: Int): Boolean = x % 2 == 0
 
-    val y = LazyList.from(2, 2) filter even
+    val y = MyLazyList.from(2, 2) filter even
     assert(y.head == 2)
     assert(y.tail.head == 4)
     (y take 4).toSeq shouldBe Seq(2, 4, 6, 8)
@@ -173,7 +176,7 @@ class LazyListSpec extends FlatSpec with Matchers {
   it should "produce a stream of even numbers using from(1)" in {
     def odd(x: Int): Boolean = x % 2 != 0
 
-    val y = LazyList.from(1) filterNot odd
+    val y = MyLazyList.from(1) filterNot odd
     assert(y.head == 2)
     assert(y.tail.head == 4)
     (y take 4).toSeq shouldBe Seq(2, 4, 6, 8)
@@ -182,7 +185,7 @@ class LazyListSpec extends FlatSpec with Matchers {
   it should "produce a stream of even numbers using from(2,2)" in {
     def odd(x: Int): Boolean = x % 2 != 0
 
-    val y = LazyList.from(2, 2) filterNot odd
+    val y = MyLazyList.from(2, 2) filterNot odd
     assert(y.head == 2)
     assert(y.tail.head == 4)
     (y take 4).toSeq shouldBe Seq(2, 4, 6, 8)
@@ -193,43 +196,43 @@ class LazyListSpec extends FlatSpec with Matchers {
     EmptyList.zip(EmptyList) shouldBe EmptyList
   }
   it should "zip together a stream and an empty stream" in {
-    LazyList.continually(1).zip(EmptyList) shouldBe EmptyList
+    MyLazyList.continually(1).zip(EmptyList) shouldBe EmptyList
   }
   it should "zip together an empty stream and a stream" in {
-    EmptyList.zip(LazyList.continually(1)) shouldBe EmptyList
+    EmptyList.zip(MyLazyList.continually(1)) shouldBe EmptyList
   }
   it should "zip together two non-empty streams" in {
-    val x = LazyList.from(1).zip(LazyList.from(2))
+    val x = MyLazyList.from(1).zip(MyLazyList.from(2))
     x.head shouldBe(1, 2)
     x.tail.head shouldBe(2, 3)
   }
 
   behavior of "apply"
   it should "produce a stream of a single 1" in {
-    val y = LazyList(1) take 3
+    val y = MyLazyList(1) take 3
     y.toSeq shouldBe Seq(1)
   }
 
   behavior of "continually"
   it should "produce a stream of 1s" in {
-    val y = LazyList.continually(1) take 3
+    val y = MyLazyList.continually(1) take 3
     y.toSeq shouldBe Seq(1, 1, 1)
   }
 
   it should "produce a stream of 1 thru 3" in {
-    val x = LazyList.from(1)
+    val x = MyLazyList.from(1)
     val y = x take 3
     y.toSeq shouldBe Seq(1, 2, 3)
   }
 
-  behavior of "LazyList as a monad"
+  behavior of "MyLazyList as a monad"
   it should "support a for-comprehension" in {
-    val zs = for (x <- LazyList.from(1); y <- LazyList(Seq(1, 2, 3))) yield (x, y)
+    val zs = for (x <- MyLazyList.from(1); y <- MyLazyList(Seq(1, 2, 3))) yield (x, y)
     (zs take 5).toSeq shouldBe Seq(1 -> 1, 1 -> 2, 1 -> 3, 2 -> 1, 2 -> 2)
   }
 
   it should "support a for-comprehension with filter" in {
-    val zs = for (x <- LazyList.from(1); if x > 1; y <- LazyList(Seq(1, 2, 3)); if y == 2) yield (x, y)
+    val zs = for (x <- MyLazyList.from(1); if x > 1; y <- MyLazyList(Seq(1, 2, 3)); if y == 2) yield (x, y)
     (zs take 3).toSeq shouldBe Seq(2 -> 2, 3 -> 2, 4 -> 2)
   }
 }

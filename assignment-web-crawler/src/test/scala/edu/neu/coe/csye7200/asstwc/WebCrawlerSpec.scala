@@ -1,6 +1,5 @@
 package edu.neu.coe.csye7200.asstwc
 
-import java.io.FileNotFoundException
 import java.net.{MalformedURLException, URL}
 
 import org.scalatest.concurrent.{Futures, ScalaFutures}
@@ -33,7 +32,7 @@ class WebCrawlerSpec extends FlatSpec with Matchers with Futures with ScalaFutur
   it should s"not succeed for $badURL" taggedAs Slow in {
     val usfy = for {u <- Try(new URL(badURL))} yield WebCrawler.wget(u)
     val usf = MonadOps.flatten(usfy)
-    whenReady(usf.failed, timeout(Span(6, Seconds))) { e => e shouldBe a[FileNotFoundException] }
+    whenReady(usf.failed, timeout(Span(6, Seconds))) { e => e shouldBe a[WebCrawlerException] }
   }
 
   it should s"not succeed for $goodURL" taggedAs Slow in {
@@ -74,10 +73,10 @@ class WebCrawlerSpec extends FlatSpec with Matchers with Futures with ScalaFutur
 
   "crawler(Seq[URL])" should s"succeed for $goodURL, depth 2" taggedAs Slow in {
     val args = List(s"$goodURL")
-    val tries = for (arg <- args) yield Try(new URL(arg))
-    //    println(s"tries: $tries")
-    val usft = for {us <- MonadOps.sequence(tries)} yield WebCrawler.crawler(2, us)
-    whenReady(MonadOps.flatten(usft), timeout(Span(60, Seconds))) { s => Assertions.assert(s.length == 35) }
+    val uys = for (arg <- args) yield Try(new URL(arg))
+    val usft = for {us <- MonadOps.sequenceForgiving(uys)} yield WebCrawler.crawler(2, us)
+    val usf = MonadOps.flatten(usft)
+    whenReady(usf, timeout(Span(60, Seconds))) { s => Assertions.assert(s.length == 35) }
   }
 
 //  "crawler(Seq[URL])" should "succeed for test.html, depth 2" in {

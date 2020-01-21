@@ -2,7 +2,7 @@ name := "Cache"
 
 version := "1.0"
 
-scalaVersion := "2.12.6"
+scalaVersion := "2.12.10"
 
 lazy val scalaModules = "org.scala-lang.modules"
 

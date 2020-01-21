@@ -2,7 +2,7 @@ package edu.neu.coe.csye7200.factorial
 
 import edu.neu.coe.csye7200.Args
 
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 trait Ring[X] {
   def plus(x1: X, x2: X): X
@@ -33,25 +33,21 @@ object SumOfSquares extends App {
 
 
   def sumOfSquares(n: Long): BigInt = {
+    @scala.annotation.tailrec
     def inner(r: BigInt, x: Long): BigInt = if (x<=0) r else inner(r + x * x, x - 1)
+
     inner(BigInt(0), n)
   }
 
   // The following version is limited to 1 million
-//  def sumOfSquares(xs: Seq[Long]) = xs map(x => x*x) sum
+  //  def sumOfSquares(xs: Seq[Long]) = xs map(x => x*x) sum
 
   // Syntax: sumOfSquares N | x1, x2, x3 ... xN
   // If N is provided then the sequence to be processed is the numbers 1 through N
   // Else if x1, x2... are provided, then these will be the sequence
   // Unless said sequence is empty, in which case we use 1, 2, ... 5 as a default
-  val (no: Option[Long], xs: Seq[Long]) = Args.parse(args).map[Long](_.toLong).process(Map[String, Option[Long] => Unit]()) match {
-    case Success(xs_) =>
-      if (xs_.size == 1) (Some(xs_.head), 1L to xs_.head)
-      else if (xs_.nonEmpty) (None, xs_)
-      else (Some(5), Seq(1, 2, 3, 4, 5))
-    case Failure(x) => throw x
-  }
-
+  private val lsy = Args.parse(args).map[Long](_.toLong).process(Map[String, Option[Long] => Unit]())
+  private val (no, xs) = createXtuple[Long](lsy, (Some(5), Seq(1, 2, 3, 4, 5)))
   private val result: BigInt = sumOfSquares(xs)
   println(s"sum of $xs is $result")
   no match {
@@ -61,4 +57,14 @@ object SumOfSquares extends App {
       else println(s"but it should be $expected")
     case None =>
   }
+
+  private def createXtuple[X: Numeric](xsy: Try[Seq[X]], defaultValue: (Some[X], Seq[X])): (Option[X], Seq[X]) = xsy match {
+    case Success(xs) =>
+      val xn = implicitly[Numeric[X]]
+      if (xs.size == 1) (Some(xs.head), (1 to xn.toInt(xs.head)).map(xn.fromInt))
+      else if (xs.nonEmpty) (None, xs)
+      else defaultValue
+    case Failure(x) => throw x
+  }
+
 }
