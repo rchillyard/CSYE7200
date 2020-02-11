@@ -43,7 +43,7 @@ trait RandomState[T] {
     */
   // Hint: This a recursively method and it concatenate current element with following elements.
   // 12 points
-  def toStream: Stream[T] = ??? // TO BE IMPLEMENTED
+  def toStream: LazyList[T] = ??? // TO BE IMPLEMENTED
 }
 
 /**
@@ -83,7 +83,7 @@ object RandomState {
   def apply(): RandomState[Long] = apply(System.currentTimeMillis)
   // Hint: This is a easy one, remember that it not only convert a Long to a Double but also scale down the number to -1 ~ 1.
   // 4 points
-  val longToDouble: Long=>Double = ??? // TO BE IMPLEMENTED
+  val longToDouble: Long=>Double = _ / Long.MaxValue // TO BE IMPLEMENTED
   val doubleToUniformDouble: Double=>UniformDouble = {x => UniformDouble((x+1)/2)}
 }
 

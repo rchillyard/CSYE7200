@@ -40,7 +40,6 @@ object Arithmetic {
   val primes: LazyList[Int] = ??? // TO BE IMPLEMENTED
 
   // P32
-  @scala.annotation.tailrec
   def gcd(m: Int, n: Int): Int = ??? // TO BE IMPLEMENTED
 
     // P39

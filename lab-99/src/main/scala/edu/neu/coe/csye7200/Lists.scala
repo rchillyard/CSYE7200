@@ -25,19 +25,16 @@ object P00 {
 
 object P01 {
 
-  @scala.annotation.tailrec
   def last[X](xs: List[X]): X = ??? // TO BE IMPLEMENTED
 }
 
 object P02 {
 
-  @scala.annotation.tailrec
   def penultimate[X](xs: List[X]): X = ??? // TO BE IMPLEMENTED
 }
 
 object P03 {
 
-  @scala.annotation.tailrec
   def kth[X](k: Int, xs: List[X]): X = ??? // TO BE IMPLEMENTED
 }
 
