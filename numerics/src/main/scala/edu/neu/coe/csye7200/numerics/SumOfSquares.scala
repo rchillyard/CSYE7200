@@ -8,5 +8,5 @@ import scala.language.postfixOps
 object SumOfSquares extends App {
   def sumOfSquares(xs: Seq[Double]) = xs map (x => x * x) sum
 
-  println(sumOfSquares(Seq(1,2,3,4,5)))
+  println(sumOfSquares(Seq(1, 2, 3, 4, 5)))
 }

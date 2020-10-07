@@ -13,10 +13,10 @@ class IngestSpec extends FlatSpec with Matchers {
   behavior of "ingest"
 
   it should "work for Int" in {
-    trait IngestibleInt extends Ingestible[Int] {
-      def fromString(w: String): Try[Int] = Try(w.toInt)
+    trait ParsableInt$ extends Parsable[Int] {
+      def parse(w: String): Try[Int] = Try(w.toInt)
     }
-    implicit object IngestibleInt extends IngestibleInt
+    implicit object ParsableInt$ extends ParsableInt$
     val source = Source.fromChars(Array('x', '\n', '4', '2'))
     val ingester = new Ingest[Int]()
     val xys = ingester(source).toSeq
@@ -31,17 +31,16 @@ class IngestSpec extends FlatSpec with Matchers {
     Try(Source.fromResource("movie_metadata.csv")) match {
       case Success(source) =>
         val ingester = new Ingest[Movie]()
-        val mys: Seq[Try[Movie]] = (for (my <- ingester(source)) yield my.transform(
-          { m => Success(m) }, { e => System.err.println(e); my }
-        )).toSeq
-        val mos: Seq[Option[Movie]] = for (my <- mys) yield for (m <- my.toOption; if m.production.country == "New Zealand") yield m
+        val mys = for (my <- ingester(source)) yield my.recoverWith {
+          case e: ParseException => System.err.println(e); my
+        }
+        val mos = for (my <- mys) yield for (m <- my.toOption; if m.production.country == "New Zealand") yield m
         val ms = mos.flatten
         ms.size shouldBe 4
-        ms foreach { println(_) }
+        ms foreach println
         source.close()
       case Failure(x) =>
         fail(x)
     }
   }
-
 }

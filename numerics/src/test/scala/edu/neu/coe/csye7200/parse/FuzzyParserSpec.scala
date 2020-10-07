@@ -1,12 +1,13 @@
 package edu.neu.coe.csye7200.parse
 
-import org.scalatest.{ FlatSpec, Matchers }
 import edu.neu.coe.csye7200.numerics._
+import org.scalatest.flatspec
+import org.scalatest.matchers.should
 
 /**
- * @author scalaprof
- */
-class FuzzyParserSpec extends FlatSpec with Matchers {
+  * @author scalaprof
+  */
+class FuzzyParserSpec extends flatspec.AnyFlatSpec with should.Matchers {
   "integer" should "parse 1" in {
     val parser = new FuzzyParser
     val r = parser.parseAll(parser.wholeNumber, "1")
@@ -55,12 +56,12 @@ class FuzzyParserSpec extends FlatSpec with Matchers {
     r.get shouldBe "2"
   }
   "nominal" should "parse 1" in {
-	val parser = new FuzzyParser
-	val r = parser.parseAll(parser.nominal, "1")
-	r should matchPattern { case parser.Success(_, _) => }
-	r.get._1 shouldBe "1"
-	r.get._2 shouldBe None
-	r.get._3 shouldBe None
+    val parser = new FuzzyParser
+    val r = parser.parseAll(parser.nominal, "1")
+    r should matchPattern { case parser.Success(_, _) => }
+    r.get._1 shouldBe "1"
+    r.get._2 shouldBe None
+    r.get._3 shouldBe None
   }
   it should "parse 6.67408" in {
     val parser = new FuzzyParser
@@ -120,14 +121,14 @@ class FuzzyParserSpec extends FlatSpec with Matchers {
     val parser = new FuzzyParser
     val r = parser.parseAll(parser.fuzzy, "1")
     r should matchPattern { case parser.Success(_, _) => }
-    r.get should matchPattern { case (Exact(1)) => }
+    r.get should matchPattern { case Exact(1) => }
   }
   it should "parse 6.67408(31)E−11" in {
     val parser = new FuzzyParser
     val r = parser.parseAll(parser.fuzzy, "6.67408(31)E-11")
     r should matchPattern { case parser.Success(_, _) => }
     r.get match {
-      case Gaussian(m,s) => assert(math.abs(m-6.67408E-11) < 1E-5); assert(math.abs(s-3.1E-14) < (1E-10))
+      case Gaussian(m, s) => assert(math.abs(m - 6.67408E-11) < 1E-5); assert(math.abs(s - 3.1E-14) < 1E-10)
       case _ => fail("should be Gaussian")
     }
   }
@@ -136,8 +137,8 @@ class FuzzyParserSpec extends FlatSpec with Matchers {
     val r = parser.parseAll(parser.fuzzy, "3.1415927(01)")
     r should matchPattern { case parser.Success(_, _) => }
     r.get match {
-      case Gaussian(m,s) => assert(math.abs(m-3.1415927) < 1E-5); assert(math.abs(s-0.000001) < (1E-10))
-      case f @ _ => fail(s"should be Gaussian but is $f")
+      case Gaussian(m, s) => assert(math.abs(m - 3.1415927) < 1E-5); assert(math.abs(s - 0.000001) < 1E-10)
+      case f@_ => fail(s"should be Gaussian but is $f")
     }
   }
   it should "parse 3.1415927" in {
@@ -145,8 +146,8 @@ class FuzzyParserSpec extends FlatSpec with Matchers {
     val r = parser.parseAll(parser.fuzzy, "3.1415927")
     r should matchPattern { case parser.Success(_, _) => }
     r.get match {
-      case Exact(x) => assert(math.abs(x-3.1415927) < 1E-5)
-      case f @ _ => fail(s"should be Exact but is $f")
+      case Exact(x) => assert(math.abs(x - 3.1415927) < 1E-5)
+      case f@_ => fail(s"should be Exact but is $f")
     }
   }
 }

@@ -1,6 +1,6 @@
 name := "lab-akka-streams"
-organization    := "com.phasmidsoftware",
-scalaVersion    := "2.11.9",
+organization    := "com.phasmidsoftware"
+scalaVersion    := "2.11.9"
 version :="0.1.0-SNAPSHOT"
 
 val akkaGroup = "com.typesafe.akka"

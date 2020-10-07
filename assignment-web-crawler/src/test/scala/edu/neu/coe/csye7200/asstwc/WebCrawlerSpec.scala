@@ -2,26 +2,27 @@ package edu.neu.coe.csye7200.asstwc
 
 import java.net.{MalformedURLException, URL}
 
+import org.scalatest._
 import org.scalatest.concurrent.{Futures, ScalaFutures}
+import org.scalatest.matchers.should
 import org.scalatest.tagobjects.Slow
 import org.scalatest.time._
-import org.scalatest.{FlatSpec, Matchers, _}
 
 import scala.collection.mutable
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util._
 
 /**
-  * @author scalaprof
-  */
-class WebCrawlerSpec extends FlatSpec with Matchers with Futures with ScalaFutures with TryValues with Inside {
+ * @author scalaprof
+ */
+class WebCrawlerSpec extends FlatSpec with should.Matchers with Futures with ScalaFutures with TryValues with Inside {
 
   val goodURL = "http://www1.coe.neu.edu/~rhillyard/indexSafe.html"
   val badURL = "http://www1.coe.neu.edu/junk"
 
   "getURLContent" should s"succeed for $goodURL" taggedAs Slow in {
     val wf = WebCrawler.getURLContent(new URL(goodURL))
-    whenReady(wf, timeout(Span(6, Seconds))) { w => w.length/100 shouldBe 50 }
+    whenReady(wf, timeout(Span(6, Seconds))) { w => w.length / 100 shouldBe 50 }
   }
 
   "wget(URL)" should s"succeed for $goodURL" taggedAs Slow in {
@@ -32,7 +33,7 @@ class WebCrawlerSpec extends FlatSpec with Matchers with Futures with ScalaFutur
   it should s"not succeed for $badURL" taggedAs Slow in {
     val usfy = for {u <- Try(new URL(badURL))} yield WebCrawler.wget(u)
     val usf = MonadOps.flatten(usfy)
-    whenReady(usf.failed, timeout(Span(6, Seconds))) { e => e shouldBe a[WebCrawlerException] }
+    whenReady(usf.failed, timeout(Span(6, Seconds))) { e => e shouldBe a[WebCrawlerURLException] }
   }
 
   it should s"not succeed for $goodURL" taggedAs Slow in {
@@ -61,7 +62,7 @@ class WebCrawlerSpec extends FlatSpec with Matchers with Futures with ScalaFutur
     MonadOps.sequence(uys) match {
       case Success(us1) =>
         val usefs = WebCrawler.wget(us1)
-        val exceptions = mutable.MutableList[Throwable]()
+        val exceptions = mutable.ArrayDeque[Throwable]()
         val usf = MonadOps.flattenRecover(usefs, { x => exceptions += x })
         whenReady(usf, timeout(Span(12, Seconds))) {
           us2 => us2.distinct.size shouldBe 33

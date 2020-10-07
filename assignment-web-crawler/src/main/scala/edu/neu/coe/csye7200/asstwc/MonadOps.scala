@@ -53,7 +53,7 @@ object MonadOps {
 
   // Hint: write as a for-comprehension, using the method sequence (above).
   // 6 points.
-  def sequence[X](xfs: Seq[Future[X]])(implicit executor: ExecutionContext): Seq[Future[Either[Throwable, X]]] = ??? // TO BE IMPLEMENTED
+  def mapFuture[X](xfs: Seq[Future[X]])(implicit executor: ExecutionContext): Seq[Future[Either[Throwable, X]]] = ??? // TO BE IMPLEMENTED
 
   /**
    * Sequence the Seq of Try of X into a Try of Seq of X such that if any of the input elements is a Failure,
@@ -71,7 +71,7 @@ object MonadOps {
   def sequenceWithLogging[X](xys: Seq[Try[X]])(onSubsequentFailure: Throwable => Unit): Try[Seq[X]] = (Try(Seq[X]()) /: xys) (combineStrict(_, _)(onSubsequentFailure))
 
   // TODO Fix deprecation
-  def sequence[X](xys: Stream[Try[X]]): Try[Stream[X]] = (Try(Stream[X]()) /: xys) {
+  def sequence[X](xys: LazyList[Try[X]]): Try[LazyList[X]] = (Try(LazyList[X]()) /: xys) {
     (xsy, xy) => for (xs <- xsy; x <- xy) yield xs :+ x
   }
 
@@ -92,11 +92,18 @@ object MonadOps {
 
   def zip[A, B](ao: Option[A], bo: Option[B]): Option[(A, B)] = for (a <- ao; b <- bo) yield (a, b)
 
+  def zip[A, B](ao: Try[A], bo: Try[B]): Try[(A, B)] = for (a <- ao; b <- bo) yield (a, b)
+
+  def zip[A, B](ao: Future[A], bo: Future[B]): Future[(A, B)] = {
+    import scala.concurrent.ExecutionContext.Implicits.global
+    for (a <- ao; b <- bo) yield (a, b)
+  }
+
   def optionToTry[X](xo: Option[X], t: => Throwable): Try[X] = Try(xo.get).recoverWith { case _: java.util.NoSuchElementException => Failure[X](t) }
 
   def optionToTry[X](xo: Option[X]): Try[X] = Try(xo.get)
 
-  def map2[T, U](ty1: Try[T], ty2: Try[T])(f: (T, T) => U): Try[U] = for {t1 <- ty1; t2 <- ty2} yield f(t1, t2)
+  def map2[T1, T2, U](ty1: Try[T1], ty2: Try[T2])(f: (T1, T2) => U): Try[U] = for {t1 <- ty1; t2 <- ty2} yield f(t1, t2)
 
   def liftTry[T, U](f: T => U): Try[T] => Try[U] = _ map f
 

@@ -110,10 +110,10 @@ class FunctionSpec extends FlatSpec with Matchers{
 
   behavior of "uncurried2"
     it should "work" in{
-     
-      def a:Int => Int=> Int=> Int = {a => b=> c=> a*b+c}
 
-      def aux = Function.uncurried2(a)
+      lazy val a:Int => Int=> Int=> Int = {a => b=> c=> a*b+c}
+
+      lazy val aux = Function.uncurried2(a)
 
       a(1)(2)(3) shouldBe 5
       aux(1,2)(3) shouldBe 5

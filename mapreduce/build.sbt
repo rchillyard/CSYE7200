@@ -15,7 +15,7 @@ val scalaTestVersion = "3.0.1"
 
 //ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
 
-resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
+resolvers += "Typesafe Repository" at "https://repo.typesafe.com/typesafe/releases/"
 
 //libraryDependencies ++= List("spray-client") map {c => sprayGroup %% c % sprayVersion}
 libraryDependencies ++= List("spray-json") map {c => sprayGroup %% c % sprayJsonVersion}

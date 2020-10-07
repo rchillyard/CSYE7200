@@ -14,6 +14,8 @@ import scala.annotation.tailrec
   * @tparam X the underlying type of the stream, and of the value <code>x</code>.
   */
 case class MyLazyList[X](x: X, lazyTail: () => ListLike[X]) extends LazyListLike[X] {
+
+
   /**
     * Concatenate this ListLike with ys.
     *
@@ -25,7 +27,7 @@ case class MyLazyList[X](x: X, lazyTail: () => ListLike[X]) extends LazyListLike
 
   def head: X = x
 
-  def tail = lazyTail()
+  def tail: ListLike[X] = lazyTail()
 
   /**
     * The "flatMap" function.
@@ -163,6 +165,10 @@ case class MyLazyList[X](x: X, lazyTail: () => ListLike[X]) extends LazyListLike
     case _ => MyLazyList(ys)
   }
 
+  override def iterator: Iterator[X] = Iterator.unfold[X, ListLike[X]](this) {
+    case EmptyList => None
+    case MyLazyList(x, f) => Some(x -> f())
+  }
 }
 
 /**
@@ -170,6 +176,11 @@ case class MyLazyList[X](x: X, lazyTail: () => ListLike[X]) extends LazyListLike
   */
 case object EmptyList extends LazyListLike[Nothing] {
 
+  /**
+   * Method to indicate whether it's possible to cheaply calculate the length of this object.
+   * @return -1
+   */
+  override def knownSize: Int = -1
 
   def head = throw LazyListException("empty")
 
@@ -286,6 +297,8 @@ case object EmptyList extends LazyListLike[Nothing] {
     case h :: t => MyLazyList(h, t)
     case _ => MyLazyList(ys)
   }
+
+  override def iterator: Iterator[Nothing] = Iterator.empty
 }
 
 abstract class LazyListLike[+X] extends ListLike[X] {
@@ -372,6 +385,14 @@ object MyLazyList {
     * A lazy val definition of a stream of 1s.
     */
   lazy val ones: ListLike[Int] = MyLazyList(1, () => ones)
+
+  /**
+   * Method to yield a singleton LazyList
+   * @param x the single value.
+   * @tparam X the underlying type of x.
+   * @return a MyLazyList with just x as a value.
+   */
+  def singleton[X](x: => X): ListLike[X] = MyLazyList(x, () => EmptyList)
 
   /**
     * Construct a stream of Integers starting with <code>start</code> and with successive elements being

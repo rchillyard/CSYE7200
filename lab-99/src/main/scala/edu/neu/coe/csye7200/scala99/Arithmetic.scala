@@ -2,14 +2,15 @@
  * Copyright (c) 2019. Phasmid Software
  */
 
-package edu.neu.coe.csye7200
+package edu.neu.coe.csye7200.scala99
 
 class Arithmetic(val start: Int) {
 
   import Arithmetic._
 
     // P31
-    def isPrime: Boolean = ??? // TO BE IMPLEMENTED
+    def isPrime: Boolean = (start > 1) &&
+      primes.takeWhile(_ <= Math.sqrt(start)).forall(start % _ != 0)
 
   // P33
   def isCoprimeTo(n: Int): Boolean = ??? // TO BE IMPLEMENTED
@@ -37,9 +38,10 @@ object Arithmetic {
   implicit def int2S99Int(i: Int): Arithmetic = new Arithmetic(i)
 
   // P31
-  val primes: LazyList[Int] = ??? // TO BE IMPLEMENTED
+  lazy val primes: LazyList[Int] = 2 #:: LazyList.from(3, 2).filter(_.isPrime)
 
   // P32
+  @scala.annotation.tailrec
   def gcd(m: Int, n: Int): Int = ??? // TO BE IMPLEMENTED
 
     // P39

@@ -1,5 +1,6 @@
 package edu.neu.coe.csye7200.asstfc
 
+import scala.collection.immutable
 import scala.util.Try
 
 /**
@@ -194,4 +195,7 @@ object Function {
   def sequence[X](xys: Seq[Try[X]]): Try[Seq[X]] = (Try(Seq[X]()) /: xys) {
     (xsy, xy) => for (xs <- xsy; x <- xy) yield xs :+ x
   }
+
+//  val m = new immutable.HashMap[String, Int]
+//  def put[K >: String,V](k: K, v: V): Map[K, V] = m.updated(k, v)
 }

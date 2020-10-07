@@ -51,7 +51,7 @@ class PostCode extends JavaTokenParsers {
     * digit ::= [0-9]
     * letter ::= [A-Z]
     */
-  def postCode: Parser[PostCode] = outwardCode ~ " " ~ inwardCode ^^ { case o ~ " " ~ i => PostCode(o, i) }
+  def postCode: Parser[PostCode] = outwardCode ~ (" " ~> inwardCode) ^^ { case o ~ i => PostCode(o, i) }
 
   def outwardCode: Parser[OutwardCode] = area ~ district ^^ { case a ~ d => OutwardCode(a, d) }
 

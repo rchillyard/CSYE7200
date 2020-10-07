@@ -2,7 +2,9 @@
  * Copyright (c) 2018. Phasmid Software
  */
 
-package edu.neu.coe.csye7200
+package edu.neu.coe.csye7200.scala99
+
+import scala.annotation.tailrec
 
 object P00 {
   def flatten[X](xss: List[List[X]]): List[X] = {
@@ -25,24 +27,33 @@ object P00 {
 
 object P01 {
 
+  @scala.annotation.tailrec
   def last[X](xs: List[X]): X = ??? // TO BE IMPLEMENTED
 }
 
 object P02 {
 
+  @scala.annotation.tailrec
   def penultimate[X](xs: List[X]): X = ??? // TO BE IMPLEMENTED
 }
 
 object P03 {
 
+  @scala.annotation.tailrec
   def kth[X](k: Int, xs: List[X]): X = ??? // TO BE IMPLEMENTED
 }
 
 object P04 {
 
   def length[X](xs: List[X]): Int = {
-    // TO BE IMPLEMENTED
-    ???
+    @tailrec
+    def inner(result: Int, _xs: List[X]): Int = {
+      _xs match {
+        case Nil => result
+        case _ :: t => inner(result + 1, t)
+      }
+    }
+    inner(0, xs)
   }
 }
 

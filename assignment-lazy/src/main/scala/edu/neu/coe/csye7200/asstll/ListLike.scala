@@ -11,7 +11,7 @@ package edu.neu.coe.csye7200.asstll
   *
   * @tparam X the underlying type of this Monad
   */
-trait ListLike[+X] extends Monadic[X] {
+trait ListLike[+X] extends Monadic[X] with IterableOnce[X] {
   self =>
 
   /**

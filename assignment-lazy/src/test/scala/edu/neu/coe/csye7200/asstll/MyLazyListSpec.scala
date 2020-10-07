@@ -235,4 +235,34 @@ class MyLazyListSpec extends flatspec.AnyFlatSpec with should.Matchers {
     val zs = for (x <- MyLazyList.from(1); if x > 1; y <- MyLazyList(Seq(1, 2, 3)); if y == 2) yield (x, y)
     (zs take 3).toSeq shouldBe Seq(2 -> 2, 3 -> 2, 4 -> 2)
   }
+
+  behavior of "singleton"
+  it should "allow for 1" in {
+    val x = MyLazyList.singleton(1)
+    x.toSeq shouldBe Seq(1)
+  }
+
+  behavior of "Iterator"
+  it should "support EmptyList" in {
+    val x = EmptyList
+    val i = x.iterator
+    i.hasNext shouldBe false
+  }
+
+  it should "support from" in {
+    val x = MyLazyList.from(1)
+    val i = x.iterator
+    i.hasNext shouldBe true
+    i.next() shouldBe 1
+    i.hasNext shouldBe true
+    i.next() shouldBe 2
+  }
+
+  it should "support singleton" in {
+    val x = MyLazyList.singleton(1)
+    val i = x.iterator
+    i.hasNext shouldBe true
+    i.next() shouldBe 1
+    i.hasNext shouldBe false
+  }
 }

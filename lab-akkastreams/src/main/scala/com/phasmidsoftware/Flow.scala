@@ -319,7 +319,7 @@ case class Status(code: Int, isSuccess: Boolean, attribute: String = "", cause: 
     *
     * @return
     */
-  def logIt: Int = if (!isSuccess) {
+  lazy val logIt: Int = if (!isSuccess) {
     logger.debug(s"""Status: failure: code=$code, attribute="$attribute"""", cause)
     0
   }

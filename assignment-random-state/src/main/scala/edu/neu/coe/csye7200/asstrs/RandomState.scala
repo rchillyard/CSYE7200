@@ -61,21 +61,21 @@ case class JavaRandomState[T](n: Long, g: Long=>T) extends RandomState[T] {
   def get: T = ??? // TO BE IMPLEMENTED
   // Hint: This one need function composition.
   // 13 points
-  def map[U](f: (T) => U): RandomState[U] = ??? // TO BE IMPLEMENTED
+  def map[U](f: T => U): RandomState[U] = ??? // TO BE IMPLEMENTED
 }
 
 case class DoubleRandomState(n: Long) extends RandomState[Double] {
   val r = new Random(n)
   def next: RandomState[Double] = DoubleRandomState(r.nextLong())
   def get: Double = r.nextDouble()
-  def map[U](f: (Double) => U): RandomState[U] = JavaRandomState[U](n,RandomState.longToDouble.andThen(f))
+  def map[U](f: Double => U): RandomState[U] = JavaRandomState[U](n,RandomState.longToDouble.andThen(f))
 }
 
 case class BetterRandomState[T](n: Long, h: Random=>T) extends RandomState[T] {
   val r = new Random(n)
   def next: RandomState[T] = BetterRandomState(r.nextLong(),h)
   def get: T = h(r)
-  def map[U](f: (T) => U): RandomState[U] = BetterRandomState[U](n, h andThen f)
+  def map[U](f: T => U): RandomState[U] = BetterRandomState[U](n, h andThen f)
 }
 
 object RandomState {
@@ -83,7 +83,7 @@ object RandomState {
   def apply(): RandomState[Long] = apply(System.currentTimeMillis)
   // Hint: This is a easy one, remember that it not only convert a Long to a Double but also scale down the number to -1 ~ 1.
   // 4 points
-  val longToDouble: Long=>Double = _ / Long.MaxValue // TO BE IMPLEMENTED
+  val longToDouble: Long=>Double = ??? // TO BE IMPLEMENTED
   val doubleToUniformDouble: Double=>UniformDouble = {x => UniformDouble((x+1)/2)}
 }
 

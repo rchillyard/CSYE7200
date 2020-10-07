@@ -11,8 +11,8 @@ import scala.collection.immutable.Map
  */
 class ConcordanceParser extends RegexParsers {
   private val rWord = """[\w’]+[,;\.\-\?\!\—]?""".r
-  def word: Parser[PositionalString] = positioned(regex(rWord) ^^ {w => PositionalString(w)})
-  def sentence: Parser[Seq[PositionalString]] = rep(word)
+  lazy val word: Parser[PositionalString] = positioned(regex(rWord) ^^ {w => PositionalString(w)})
+  lazy val sentence: Parser[Seq[PositionalString]] = rep(word)
 }
 
 case class PositionalString(s: String) extends Positional

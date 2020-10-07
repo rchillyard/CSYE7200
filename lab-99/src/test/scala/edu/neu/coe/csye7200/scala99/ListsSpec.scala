@@ -2,7 +2,7 @@
  * Copyright (c) 2018. Phasmid Software
  */
 
-package edu.neu.coe.csye7200
+package edu.neu.coe.csye7200.scala99
 
 import org.scalatest.flatspec
 import org.scalatest.matchers.should
@@ -14,7 +14,7 @@ class ListsSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   behavior of "P01.last"
 
-  import P01._
+  import edu.neu.coe.csye7200.scala99.P01._
   it should "throw an exception for Nil" in {
     a[NoSuchElementException] should be thrownBy last(Nil)
   }
@@ -31,7 +31,7 @@ class ListsSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   behavior of "P02.penultimate"
 
-  import P02._
+  import edu.neu.coe.csye7200.scala99.P02._
   it should "throw an exception for fib0" in {
     a[NoSuchElementException] should be thrownBy penultimate(fib0)
   }
@@ -41,7 +41,7 @@ class ListsSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   behavior of "P03.kth"
 
-  import P03._
+  import edu.neu.coe.csye7200.scala99.P03._
   it should "throw an exception for 0, Nil" in {
     a[NoSuchElementException] should be thrownBy kth(0, Nil)
   }
@@ -62,7 +62,7 @@ class ListsSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   behavior of "P05.reverse"
 
-  import P05._
+  import edu.neu.coe.csye7200.scala99.P05._
   it should "reverse Nil to Nil" in {
     reverse(Nil) shouldBe Nil
   }
@@ -79,7 +79,7 @@ class ListsSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   behavior of "P06"
 
-  import P06._
+  import edu.neu.coe.csye7200.scala99.P06._
   it should "be true for Nil" in {
     isPalindrome(Nil) shouldBe true
   }

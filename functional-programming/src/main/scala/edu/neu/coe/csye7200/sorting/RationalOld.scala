@@ -4,8 +4,8 @@ import scala.annotation.tailrec
 import scala.language.implicitConversions
 
 /**
-  * @author scalaprof
-  */
+ * @author scalaprof
+ */
 case class Rational(n: Long, d: Long) extends Fractional[Rational] {
 
   // Pre-conditions
@@ -33,7 +33,7 @@ case class Rational(n: Long, d: Long) extends Fractional[Rational] {
   def ^(that: Int): Rational = power(that)
 
   // Members declared in scala.math.Numeric
-  def fromInt(x: Int) = Rational.apply(x)
+  def fromInt(x: Int): Rational = Rational.apply(x)
 
   def minus(x: Rational, y: Rational): Rational = plus(x, negate(y))
 
@@ -63,7 +63,7 @@ case class Rational(n: Long, d: Long) extends Fractional[Rational] {
   // Other methods appropriate to Rational
   def signum: Int = math.signum(n).toInt
 
-  def invert = Rational(d, n)
+  def invert: Rational = Rational(d, n)
 
   def isWhole: Boolean = d == 1L
 
@@ -125,10 +125,10 @@ object Rational {
     }
   }
 
-  val zero = Rational(0)
+  val zero: Rational = Rational(0)
   val infinity: Rational = zero.invert
-  val one = Rational(1)
-  val ten = Rational(10)
+  val one: Rational = Rational(1)
+  val ten: Rational = Rational(10)
   val half: Rational = Rational("1/2")
 
   def apply(x: Int): Rational = apply(x.toLong)
@@ -143,7 +143,7 @@ object Rational {
     Rational(x.toLongExact)
 
   def apply(x: String): Rational = {
-    val rRat = """^\s*(\d+)\s*(\/\s*(\d+)\s*)?$""".r
+    val rRat = """^\s*(\d+)\s*(/\s*(\d+)\s*)?$""".r
     val rDec = """^-?(\d|(\d+,?\d+))*(\.\d+)?(e\d+)?$""".r
     x match {
       // XXX I don't understand why we need this first line -- but it IS necessary

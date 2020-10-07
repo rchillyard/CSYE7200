@@ -264,7 +264,7 @@ abstract class CsvParserBase(f: String => Try[Any]) extends JavaTokenParsers {
     * @return the trial function that will convert a String into Try[Any]
     *         This method is referenced only by CSV class (not by TupleStream, which does no element conversion).
     */
-  def elementParser: String => Try[Any] = f
+  lazy val elementParser: String => Try[Any] = f
 }
 
 case class CsvParser(
@@ -292,7 +292,7 @@ case class CsvParser(
     *
     * @return a Parser of List of String
     */
-  def row: Parser[List[String]] = // Assignment6 3: row ::= term { delimiter term }
+  lazy val row: Parser[List[String]] = // Assignment6 3: row ::= term { delimiter term }
     ??? // TO BE IMPLEMENTED
 
   /**
@@ -302,7 +302,7 @@ case class CsvParser(
     *
     * @return a Parser of String
     */
-  def term: Parser[String] = // Assignment6 7: term ::= quoteChar text quoteChar | text
+  lazy val term: Parser[String] = // Assignment6 7: term ::= quoteChar text quoteChar | text
     ??? // TO BE IMPLEMENTED
 
   /**
@@ -311,7 +311,7 @@ case class CsvParser(
     *
     * @return a Parser of String
     */
-  def stringInQuotes: Parser[String] = quoteChar ~> quotedString <~ quoteChar
+  lazy val stringInQuotes: Parser[String] = quoteChar ~> quotedString <~ quoteChar
 
   /**
     * Internal parser method to parse a quoted string.
@@ -321,7 +321,7 @@ case class CsvParser(
     *
     * @return a Parser of String
     */
-  def quotedString: Parser[String] = containingEscapedQuotes | nonQuotes
+  lazy val quotedString: Parser[String] = containingEscapedQuotes | nonQuotes
 
   /**
     * This parser succeeds on a sequence of strings, each made up of non-quote characters, and delimited
@@ -329,14 +329,14 @@ case class CsvParser(
     *
     * @return a parser of String where the input has had the quote character pairs replaced by a single quote character.
     */
-  def containingEscapedQuotes: Parser[String] = repsep(nonQuotes, quoteChar + quoteChar) ^^ { xs: Seq[String] => xs.reduceLeft(_ + quoteChar + _) }
+  lazy val containingEscapedQuotes: Parser[String] = repsep(nonQuotes, quoteChar + quoteChar) ^^ { xs: Seq[String] => xs.reduceLeft(_ + quoteChar + _) }
 
   /**
     * This parser succeeds on a sequence of characters which do not include the quote character
     *
     * @return a Parser of String
     */
-  def nonQuotes: Parser[String] =
+  lazy val nonQuotes: Parser[String] =
     s"""[^$quoteChar]*""".r
 
   /**
@@ -344,7 +344,7 @@ case class CsvParser(
     *
     * @return a Parser of String
     */
-  def nonDelimiters: Parser[String] =
+  lazy val nonDelimiters: Parser[String] =
     s"""[^$delimiter]+""".r
 }
 

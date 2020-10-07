@@ -21,7 +21,7 @@ case class Arg[X](name: Option[String], value: Option[X]) extends Ordered[Arg[X]
 
   def map[Y](f: X => Y): Arg[Y] = Arg(name, value map f)
 
-  def asMaybeTuple: Option[(String, Option[X])] = name match {
+  lazy val asMaybeTuple: Option[(String, Option[X])] = name match {
     case Some(w) => Some(w, value)
     case _ => None
   }

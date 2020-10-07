@@ -68,7 +68,7 @@ object WebCrawler extends App {
 
   private def sourceToString(source: BufferedSource, errorMsg: String): Try[String] =
     try Success(source mkString) catch {
-      case NonFatal(e) => Failure(WebCrawlerException(errorMsg, e))
+      case NonFatal(e) => Failure(WebCrawlerURLException(errorMsg, e))
     }
 
   private def getURL(resource: String): Try[URL] = createURL(null, resource)
@@ -77,13 +77,19 @@ object WebCrawler extends App {
     try Success(new URL(context.orNull, resource)) catch {
       case NonFatal(e) =>
         val message: String = s"""Bad URL: ${if (context.isDefined) "context: " + context else ""} resource=$resource"""
-        Failure(WebCrawlerException(message, e))
+        Failure(WebCrawlerURLException(message, e))
     }
 
   private def SourceFromURL(resource: URL): Try[BufferedSource] =
     try Success(Source.fromURL(resource)) catch {
-      case NonFatal(e) => Failure(WebCrawlerException(s"""Cannot get source from URL: $resource""", e))
+      case NonFatal(e) => Failure(WebCrawlerURLException(s"""Cannot get source from URL: $resource""", e))
     }
 }
 
-case class WebCrawlerException(url: String, cause: Throwable) extends Exception(s"Web Crawler could not decode URL: $url", cause)
+case class WebCrawlerURLException(url: String, cause: Throwable) extends Exception(s"Web Crawler could not decode URL: $url", cause)
+
+case class WebCrawlerException(msg: String, cause: Throwable) extends Exception(msg, cause)
+
+object WebCrawlerException {
+  def apply(msg: String): WebCrawlerException = apply(msg, null)
+}
