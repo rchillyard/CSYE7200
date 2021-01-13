@@ -10,3 +10,6 @@ api/
 
 output\.html
 /CSYEoutput.html
+/.bsp/
+sbt.json
+
