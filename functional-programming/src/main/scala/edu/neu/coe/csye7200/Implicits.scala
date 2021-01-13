@@ -1,5 +1,7 @@
 package edu.neu.coe.csye7200
 
+import scala.language.implicitConversions
+
 /**
   * @author scalaprof
   */
@@ -39,3 +41,4 @@ object T {
 }
 
 case class U(u: Int)
+

@@ -1,9 +1,10 @@
 package edu.neu.coe.csye7200.hackerRank
 
-import org.scalatest.{FlatSpec, Matchers}
-import Solution._
+import edu.neu.coe.csye7200.hackerRank.BigSorting._
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class BigSortingTest extends FlatSpec with Matchers {
+class BigSortingTest extends AnyFlatSpec with Matchers {
 
   behavior of "BigSorting"
 

@@ -11,7 +11,7 @@ abstract class LazyFunction[X: Numeric] extends (X => X) {
   /**
     * Compose two functions, such that, when applied, parameter f is applied first
     */
-  def composeX(f: X ⇒ X): X ⇒ X =
+  def composeX(f: X => X): X => X =
     if (isInstanceOf[Known[X]])
       LazyFunction.merge(this.asInstanceOf[Known[X]], f) match {
         case Some(g) => g
@@ -60,7 +60,7 @@ case class ComposedDifferentiable[X: Numeric](g1: DiFunc[X], g2: DiFunc[X]) exte
   def arity: Int = if (g1.arity == g2.arity) g1.arity else throw new UnsupportedOperationException(s"composed differentiable function with different arities: ${g1.arity}, ${g2.arity}")
 
   // This is the so-called "Chain Rule" of differentiation
-  def df_dx(i: Int): X ⇒ Double = { x => g1.df_dx(i)(g2.f(x)) * g2.df_dx(i)(x) }
+  def df_dx(i: Int): X => Double = { x => g1.df_dx(i)(g2.f(x)) * g2.df_dx(i)(x) }
 
   // TODO check the order here
   def f: X => X = g1.f.compose(g2.f)

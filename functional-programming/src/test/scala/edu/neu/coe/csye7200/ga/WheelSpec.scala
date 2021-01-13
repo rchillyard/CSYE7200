@@ -1,6 +1,7 @@
 package edu.neu.coe.csye7200.ga
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.collection.mutable
 import scala.language.postfixOps
@@ -9,7 +10,7 @@ import scala.util.Random
 /**
   * @author scalaprof
   */
-class WheelSpec extends FlatSpec with Matchers {
+class WheelSpec extends AnyFlatSpec with Matchers {
 
   class Frequencies extends mutable.HashMap[String,Int]() {
     def increment(k: String) = put(k, getOrElse(k, 0)+1)

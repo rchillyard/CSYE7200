@@ -1,11 +1,12 @@
 package edu.neu.coe.csye7200.parse
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
   * @author scalaprof
   */
-class ArithSpec extends FlatSpec with Matchers {
+class ArithSpec extends AnyFlatSpec with Matchers {
   behavior of "Arith.factor"
   val fp1 = "1"
   val fp2 = "2"

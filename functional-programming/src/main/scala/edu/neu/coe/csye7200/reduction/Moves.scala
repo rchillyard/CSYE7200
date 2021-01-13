@@ -151,3 +151,4 @@ case class Moves3(s: Point) extends Moves {
 object Moves3 extends App {
   def apply(x: Int, y: Int): Moves3 = apply(Point(x, y))
 }
+

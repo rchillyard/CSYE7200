@@ -33,7 +33,7 @@ case class Async[X](f: Seq[X] => X, name: String)(implicit executor: ExecutionCo
   * Created by scalaprof on 2/17/17.
   */
 object FutureExercise extends App {
-  def integers(i: Int, n: Int): Stream[BigInt] = Stream.from(i).map(BigInt(_)) take n
+  def integers(i: Int, n: Int): LazyList[BigInt] = LazyList.from(i).map(BigInt(_)) take n
 
   import scala.concurrent.ExecutionContext.Implicits.global
   import scala.concurrent.duration._

@@ -9,3 +9,4 @@ import scala.language.implicitConversions
 object Benchmark extends App {
   println(s"ave time for 40! is ${10000.times(Factorial.factorial(40))} nanosecs")
 }
+

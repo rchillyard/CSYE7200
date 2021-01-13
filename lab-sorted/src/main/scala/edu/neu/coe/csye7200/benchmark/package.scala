@@ -1,6 +1,7 @@
 package edu.neu.coe.csye7200
 
 package object benchmark {
+
   implicit class Rep(n: Int) {
     /**
       * Method which can be invoked, provided that Benchmark._ has been imported.
@@ -12,10 +13,11 @@ package object benchmark {
       */
     def times[A](f: => A): Double = {
       // Warmup phase: do at least 20% of repetitions before starting the clock
-      1 to (1+n/5) foreach (_ => f)
+      1 to (1 + n / 5) foreach (_ => f)
       val start = System.nanoTime()
       1 to n foreach (_ => f)
       (System.nanoTime() - start) / n.toDouble
     }
   }
+
 }

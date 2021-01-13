@@ -1,13 +1,14 @@
 package edu.neu.coe.csye7200.minidatabase2
 
-import org.scalatest.{FlatSpec, Inside, Matchers}
-
+import org.scalatest.Inside
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import scala.util._
 
 /**
   * @author scalaprof
   */
-class MiniDatabaseSpec2 extends FlatSpec with Inside with Matchers {
+class MiniDatabaseSpec2 extends AnyFlatSpec with Inside with Matchers {
 
   "map2" should "succeed for two Success values" in {
     val t1 = Success(1)

@@ -1,11 +1,12 @@
 package edu.neu.coe.csye7200
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
   * @author scalaprof
   */
-class DocumentSpec extends FlatSpec with Matchers {
+class DocumentSpec extends AnyFlatSpec with Matchers {
   "Document(1)" should "be Leaf(1)" in {
     Document(1) should matchPattern { case Leaf(1) => }
   }

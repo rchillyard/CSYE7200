@@ -1,8 +1,9 @@
 package edu.neu.coe.csye7200.hackerRank
 
 import java.io._
+import scala.annotation.tailrec
 
-object Solution {
+object BigSorting {
 
   // Complete the bigSorting function below.
   def bigSorting(unsorted: Array[String]): Array[String] = {
@@ -20,11 +21,13 @@ object Solution {
     * @return the result.
     */
   def insertionSort(array: Array[String], index: Int): Array[String] = {
+    @tailrec
     def inner(i: Int, j: Int): Unit = {
       j match {
         case -1 =>
         case _ => if (less(array(i), array(j), index)) {
-          swap(array, i, j); inner(i - 1, j - 1)
+          swap(array, i, j)
+          inner(i - 1, j - 1)
         }
       }
     }
@@ -52,7 +55,9 @@ object Solution {
     * @param j second index
     */
   def swap[X](x: Array[X], i: Int, j: Int): Unit = if (i != j) {
-    val temp = x(i); x(i) = x(j); x(j) = temp
+    val temp = x(i)
+    x(i) = x(j)
+    x(j) = temp
   }
 
   /**
@@ -73,17 +78,17 @@ object Solution {
     }
   }
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     val stdin = scala.io.StdIn
 
     val printWriter = new PrintWriter(System.out)
 
-    val n = stdin.readLine.trim.toInt
+    val n = stdin.readLine().trim.toInt
 
     val unsorted = Array.ofDim[String](n)
 
     for (i <- 0 until n) {
-      val unsortedItem = stdin.readLine
+      val unsortedItem = stdin.readLine()
       unsorted(i) = unsortedItem
     }
 

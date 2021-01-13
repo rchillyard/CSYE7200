@@ -9,7 +9,9 @@ import scala.language.implicitConversions
 case class Rational(n: Long, d: Long) extends Fractional[Rational] {
 
   // Pre-conditions
-  require(Rational.gcd(math.abs(n), math.abs(d)) == 1, s"Rational($n,$d): arguments have common factor: ${Rational.gcd(n, d)}")
+  require(d.signum >= 0, s"Rational denominator is negative: $d")
+
+  require(n == 0L && d == 0L || Rational.gcd(math.abs(n), math.abs(d)) == 1, s"Rational($n,$d): arguments have common factor: ${Rational.gcd(n, d)}")
 
   // Operators
   def +(that: Rational): Rational = plus(this, that)
@@ -96,22 +98,23 @@ case class Rational(n: Long, d: Long) extends Fractional[Rational] {
   def isExactDouble: Boolean = toBigDecimal.isExactDouble // Only work with Scala 2.11 or above
 
   override def toString: String = if (isWhole) toLong.toString else if (d > 100000L || isExactDouble) toDouble.toString else toRationalString
+
+  override def parseString(str: String): Option[Rational] = ???
 }
 
 class RationalException(s: String) extends Exception(s)
 
 object Rational {
-
   implicit class RationalHelper(val sc: StringContext) extends AnyVal {
     def r(args: Any*): Rational = {
       val strings = sc.parts.iterator
       val expressions = args.iterator
       val sb = new StringBuffer()
       while (strings.hasNext) {
-        val s = strings.next
+        val s = strings.next()
         if (s.isEmpty) {
           if (expressions.hasNext)
-            sb.append(expressions.next)
+            sb.append(expressions.next())
           else
             throw new RationalException("r: logic error: missing expression")
         }
@@ -119,13 +122,14 @@ object Rational {
           sb.append(s)
       }
       if (expressions.hasNext)
-        throw new RationalException(s"r: ignored: ${expressions.next}")
+        throw new RationalException(s"r: ignored: ${expressions.next()}")
       else
         Rational(sb.toString)
     }
   }
 
   val zero: Rational = Rational(0)
+  val NaN: Rational = Rational(0L, 0L);
   val infinity: Rational = zero.invert
   val one: Rational = Rational(1)
   val ten: Rational = Rational(10)
@@ -157,16 +161,21 @@ object Rational {
     }
   }
 
-  def normalize(n: Long, d: Long): Rational = {
-    val g = gcd(math.abs(n), math.abs(d))
-    apply(n / g, d / g)
+  def normalize(n: Long, d: Long) = {
+    val g = gcd(math.abs(n),math.abs(d))
+    g match {
+      case 0 => Rational.NaN
+      case _ => apply(n/g,d/g)
+    }
   }
 
   @tailrec private def gcd(a: Long, b: Long): Long = if (b == 0) a else gcd(b, a % b)
 
   private def longAbs(a: Long): Long = if (a < 0) -a else a
 
-  implicit object RationalNumeric extends RationalIsFractional
+  implicit object RationalNumeric extends RationalIsFractional {
+    override def parseString(str: String): Option[Rational] = ???
+  }
 
   implicit def intToRational(x: Int): Rational = Rational(x)
 

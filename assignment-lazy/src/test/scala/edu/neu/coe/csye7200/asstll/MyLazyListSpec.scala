@@ -4,8 +4,8 @@
 
 package edu.neu.coe.csye7200.asstll
 
+import org.scalatest.flatspec
 import org.scalatest.matchers.should
-import org.scalatest.{Matchers, flatspec}
 
 import scala.language.postfixOps
 
@@ -64,10 +64,12 @@ class MyLazyListSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   it should "take 3 from an infinite stream of 1s that counts" in {
     var count = 0
+
     def incrementCountAndProvideValue: Int = {
       count = count + 1
       1
     }
+
     val lazyList = MyLazyList.continually(incrementCountAndProvideValue) take 3
     count shouldBe 1
     lazyList.toSeq shouldBe Seq(1, 1, 1)
@@ -77,10 +79,12 @@ class MyLazyListSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   it should "take 3 from an infinite incrementing stream that counts" in {
     var count = 0
+
     def incrementCountAndProvideValue: Int = {
       count = count + 1
       count
     }
+
     val lazyList = MyLazyList.continually(incrementCountAndProvideValue) take 3
     count shouldBe 1
     lazyList.toSeq shouldBe Seq(1, 2, 3)

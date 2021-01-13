@@ -1,9 +1,8 @@
 package edu.neu.coe.csye7200.numerics
 
-import java.lang.Math._
-
 import edu.neu.coe.csye7200.parse.{RationalParser, RationalParserException}
 
+import java.lang.Math._
 import scala.annotation.tailrec
 import scala.language.implicitConversions
 import scala.util.control.NonFatal
@@ -459,6 +458,7 @@ object Rational {
 
   private def toInt(x: Rational): Int = (narrow(x, Int.MaxValue) map (_.toInt)).get
 
+  // CONSIDER making this public
   private def toBigInt(x: Rational): Try[BigInt] = if (x.isWhole) Success(x.n) else Failure(RationalException(s"toBigInt: $x is " + (if (x.d == 0L)
     "infinite" else "not whole")))
 

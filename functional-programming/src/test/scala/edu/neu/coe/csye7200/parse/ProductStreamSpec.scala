@@ -4,16 +4,17 @@ import java.io.{File, FileInputStream}
 
 import edu.neu.coe.csye7200.util.Lift
 import org.joda.time._
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.util._
 
 /**
   * @author scalaprof
   */
-class ProductStreamSpec extends FlatSpec with Matchers {
+class ProductStreamSpec extends AnyFlatSpec with Matchers {
   """"Hello", "World!"""" should "be (String) stream via CSV" in {
-    val c = CSV[Tuple1[String]](Stream("x",""""Hello"""", """"World!""""))
+    val c = CSV[Tuple1[String]](LazyList("x",""""Hello"""", """"World!""""))
     c.header shouldBe List("x")
     val wts = c.tuples
     wts.head match {
@@ -24,7 +25,7 @@ class ProductStreamSpec extends FlatSpec with Matchers {
     }
   }
   it should "be (String) stream via TupleStream" in {
-    val wts = TupleStream[Tuple1[String]](Stream("x",""""Hello"""", """"World!"""")).tuples
+    val wts = TupleStream[Tuple1[String]](LazyList("x",""""Hello"""", """"World!"""")).tuples
     wts.head match {
       case Tuple1(s) => assert(s == "Hello")
     }
@@ -33,17 +34,17 @@ class ProductStreamSpec extends FlatSpec with Matchers {
     }
   }
   it should "convert to list properly" in {
-    val c = CSV[Tuple1[String]](Stream("x",""""Hello"""", """"World!""""))
+    val c = CSV[Tuple1[String]](LazyList("x",""""Hello"""", """"World!""""))
     val wts = c.asList
     wts.size should be(2)
   }
   it should "convert to map properly" in {
-    val c = CSV[Tuple1[String]](Stream("x",""""Hello"""", """"World!""""))
+    val c = CSV[Tuple1[String]](LazyList("x",""""Hello"""", """"World!""""))
     val wtIm = c toMap { case Tuple1(s) => s.hashCode }
     wtIm.get("Hello".hashCode) should matchPattern { case Some(Tuple1("Hello")) => }
   }
   it should "have column x of type String" in {
-    val c = CSV[Tuple1[String]](Stream("x",""""Hello"""", """"World!""""))
+    val c = CSV[Tuple1[String]](LazyList("x",""""Hello"""", """"World!""""))
     c column[String] "x" match {
       case Some(xs) =>
         xs.take(2).toList.size should be(2)
@@ -53,7 +54,7 @@ class ProductStreamSpec extends FlatSpec with Matchers {
     }
   }
   """"3,5", "8,13"""" should "be (Int,Int) stream" in {
-    val iIts = CSV[(Int, Int)](Stream("x,y", "3,5", "8,13")).tuples
+    val iIts = CSV[(Int, Int)](LazyList("x,y", "3,5", "8,13")).tuples
     iIts.head match {
       case (x, y) => assert(x == 3 && y == 5)
     }
@@ -62,7 +63,7 @@ class ProductStreamSpec extends FlatSpec with Matchers {
     }
   }
   it should "be (String,String) stream via TupleStream" in {
-    val wWts = TupleStream[(String, String)](Stream("x,y", "3,5", "8,13")).tuples
+    val wWts = TupleStream[(String, String)](LazyList("x,y", "3,5", "8,13")).tuples
     wWts.head match {
       case (x, y) => assert(x == "3" && y == "5")
     }
@@ -71,7 +72,7 @@ class ProductStreamSpec extends FlatSpec with Matchers {
     }
   }
   it should "map into (Int,Int) via TupleStream" in {
-    val wWts = TupleStream[(String, String)](Stream("x,y", "3,5", "8,13"))
+    val wWts = TupleStream[(String, String)](LazyList("x,y", "3,5", "8,13"))
     val iIts = wWts map { case (x, y) => (x.toInt, y.toInt) }
     iIts.tuples.head match {
       case (x, y) => assert(x == 3 && y == 5)
@@ -79,7 +80,7 @@ class ProductStreamSpec extends FlatSpec with Matchers {
     }
   }
   it should "have column y of type Int" in {
-    CSV[(Int, Int)](Stream("x,y", "3,5", "8,13")) column[Int] "y" match {
+    CSV[(Int, Int)](LazyList("x,y", "3,5", "8,13")) column[Int] "y" match {
       case Some(ys) =>
         ys.take(2).toList.size should be(2)
         ys.head shouldBe 5
@@ -88,12 +89,12 @@ class ProductStreamSpec extends FlatSpec with Matchers {
     }
   }
   it should "convert to map properly" in {
-    val c = CSV[(Int, Int)](Stream("x,y", "3,5", "8,13"))
+    val c = CSV[(Int, Int)](LazyList("x,y", "3,5", "8,13"))
     val iItIm = c toMap { case (x, _) => x }
     iItIm.get(8) should matchPattern { case Some((8, 13)) => }
   }
   it should "map into (Double,Double) properly" in {
-    val c = CSV[(Int, Int)](Stream("x,y", "3,5", "8,13"))
+    val c = CSV[(Int, Int)](LazyList("x,y", "3,5", "8,13"))
     val doubles = c map { case (x, y) => (x.toDouble, y.toDouble) }
     val dDts = doubles.tuples
     dDts.head match {
@@ -101,12 +102,12 @@ class ProductStreamSpec extends FlatSpec with Matchers {
     }
   }
   it should "convert into maps properly" in {
-    val zWms = CSV[(Int, Int)](Stream("x,y", "3,5", "8,13")).asMaps
+    val zWms = CSV[(Int, Int)](LazyList("x,y", "3,5", "8,13")).asMaps
     zWms.head should be(Map("x" -> 3, "y" -> 5))
     zWms(1) should be(Map("x" -> 8, "y" -> 13))
   }
   """"3,5.0", "8,13.5"""" should "be (Int,Double) stream" in {
-    val dIts = CSV[(Int, Double)](Stream("x,y", "3,5.0", "8,13.5")).tuples
+    val dIts = CSV[(Int, Double)](LazyList("x,y", "3,5.0", "8,13.5")).tuples
     dIts.head match {
       case (x, y) => assert(x == 3 && y == 5.0)
     }
@@ -119,7 +120,7 @@ class ProductStreamSpec extends FlatSpec with Matchers {
     dp("2016-03-15") should matchPattern { case Success(_) => }
   }
   """"milestone 1, 2016-03-08", "milestone 2, 2016-03-15"""" should "be (String,Datetime) stream" in {
-    val dIts = CSV[(String, DateTime)](Stream("event,date", "milestone 1,2016-03-08", "milestone 2,2016-03-15")).tuples
+    val dIts = CSV[(String, DateTime)](LazyList("event,date", "milestone 1,2016-03-08", "milestone 2,2016-03-15")).tuples
     dIts.head match {
       case (x, y) => assert(x == "milestone 1" && y == new DateTime("2016-03-08"))
     }
@@ -162,7 +163,7 @@ class ProductStreamSpec extends FlatSpec with Matchers {
   }
 }
 
-class CsvParserSpec extends FlatSpec with Matchers {
+class CsvParserSpec extends AnyFlatSpec with Matchers {
   val defaultParser = CsvParser()
   "CsvParser()" should """parse "x" as Success(List("x"))""" in {
     defaultParser.parseRow(""""x"""") should matchPattern { case scala.util.Success(List("x")) => }

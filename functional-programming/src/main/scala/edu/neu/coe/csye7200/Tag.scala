@@ -4,6 +4,8 @@ import com.phasmidsoftware.parse.CellParser
 
 import scala.language.implicitConversions
 
+import scala.compat.Platform.EOL
+
 case class Attribute(key: String, value: String) {
   override def toString: String = s"""$key="$value""""
 }

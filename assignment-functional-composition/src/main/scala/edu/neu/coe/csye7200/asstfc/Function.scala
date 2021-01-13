@@ -1,6 +1,5 @@
 package edu.neu.coe.csye7200.asstfc
 
-import scala.collection.immutable
 import scala.util.Try
 
 /**
@@ -188,14 +187,13 @@ object Function {
     */
   // If you can do uncurried3, then you can do this one
   def uncurried7[T1, T2, T3, T4, T5, T6, T7, T8, R](f: T1 => T2 => T3 => T4 => T5 => T6 => T7 => T8 => R): (T1, T2, T3, T4, T5, T6, T7) => T8 => R =
-    ??? // TO BE IMPLEMENTED
+  ??? // TO BE IMPLEMENTED
 
 
-
-  def sequence[X](xys: Seq[Try[X]]): Try[Seq[X]] = (Try(Seq[X]()) /: xys) {
+  def sequence[X](xys: Seq[Try[X]]): Try[Seq[X]] = xys.foldLeft(Try(Seq[X]())) {
     (xsy, xy) => for (xs <- xsy; x <- xy) yield xs :+ x
   }
 
-//  val m = new immutable.HashMap[String, Int]
-//  def put[K >: String,V](k: K, v: V): Map[K, V] = m.updated(k, v)
+  //  val m = new immutable.HashMap[String, Int]
+  //  def put[K >: String,V](k: K, v: V): Map[K, V] = m.updated(k, v)
 }

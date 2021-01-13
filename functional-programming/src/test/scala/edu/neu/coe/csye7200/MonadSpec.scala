@@ -5,14 +5,15 @@
 package edu.neu.coe.csye7200
 
 import org.scalatest.concurrent._
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.util._
 
 /**
   * @author scalaprof
   */
-class MonadSpec extends FlatSpec with Matchers with Futures with ScalaFutures {
+class MonadSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutures {
 
   import Functor._
 

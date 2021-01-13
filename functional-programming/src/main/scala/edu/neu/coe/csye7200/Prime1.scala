@@ -1,10 +1,10 @@
 package edu.neu.coe.csye7200
 
 object Prime1 extends App {
-  def buildPrime(k: Int): Stream[Int] = k match {
+  def buildPrime(k: Int): LazyList[Int] = k match {
     case i if i <= 0 => throw new NoSuchElementException(s"No such element for $k")
     case _ =>
-      2 #:: Stream.from(3).filter(x => {
+      2 #:: LazyList.from(3).filter(x => {
         !(2 until x).exists(x % _ == 0)
       }).take(k - 1)
   }

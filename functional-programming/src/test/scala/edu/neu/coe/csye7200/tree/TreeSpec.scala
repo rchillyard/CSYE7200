@@ -1,11 +1,12 @@
 package edu.neu.coe.csye7200.tree
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
   * Created by scalaprof on 10/19/16.
   */
-class TreeSpec extends FlatSpec with Matchers {
+class TreeSpec extends AnyFlatSpec with Matchers {
 
   behavior of "UnsortedTree"
   it should "apply correctly with varargs" in {

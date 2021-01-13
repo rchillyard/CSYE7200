@@ -4,7 +4,7 @@ package edu.neu.coe.csye7200.assthw
   * This is the second part of assignment "helloworld."
   * You should be able to run this program with provided csv file using sbt run.
   * You task is to replace line 38 with the following line of code:
-  *   println((for (m <- ingester(source); if (m.properties(20)=="New Zealand")) yield m).size)
+  * println((for (m <- ingester(source); if (m.properties(20)=="New Zealand")) yield m).size)
   * Run this program with provided csv file, and submit a screenshot of the result.
   * It should print the number of Kiwi (New Zealand) Movies.
   */
@@ -16,7 +16,7 @@ trait Ingestible[X] {
 }
 
 class Ingest[T: Ingestible] extends (Source => Iterator[T]) {
-  def apply(source: Source): Iterator[T] = source.getLines.toSeq.map(e => implicitly[Ingestible[T]].fromStrings(e.split(",").toList)).iterator
+  def apply(source: Source): Iterator[T] = source.getLines().toSeq.map(e => implicitly[Ingestible[T]].fromStrings(e.split(",").toList)).iterator
 }
 
 case class Movie(properties: Seq[String])

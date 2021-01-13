@@ -1,11 +1,12 @@
 package edu.neu.coe.csye7200.poets
 
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
  * @author scalaprof
  */
-class PoetsSpec extends FlatSpec with Matchers {
+class PoetsSpec extends AnyFlatSpec with Matchers {
   
   "toXML" should "work for Li Bai" in {
     val xml = <poet><name language="en">Li Bai</name><name language="zh">李白</name></poet>

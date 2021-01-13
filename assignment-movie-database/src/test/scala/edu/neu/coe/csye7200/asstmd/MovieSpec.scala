@@ -1,13 +1,14 @@
 package edu.neu.coe.csye7200.asstmd
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
   * Created by scalaprof on 9/13/16.
   */
-class MovieSpec extends FlatSpec with Matchers {
+class MovieSpec extends AnyFlatSpec with Matchers {
 
-  val phi = (math.sqrt(5) + 1) / 2
+  private val phi = (math.sqrt(5) + 1) / 2
 
   behavior of "Name"
 
@@ -76,10 +77,10 @@ class MovieSpec extends FlatSpec with Matchers {
     }
   }
   it should "work for PG-0" in {
-    an [Exception] should be thrownBy Rating("PG-XX")
+    an[Exception] should be thrownBy Rating("PG-XX")
   }
   it should "work for PG-XX" in {
-    an [Exception] should be thrownBy Rating("PG-XX")
+    an[Exception] should be thrownBy Rating("PG-XX")
   }
 
   behavior of "Format"

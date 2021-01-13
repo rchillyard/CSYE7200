@@ -4,12 +4,13 @@
 
 package edu.neu.coe.csye7200.list
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
   * @author scalaprof
   */
-class ListSpec extends FlatSpec with Matchers {
+class ListSpec extends AnyFlatSpec with Matchers {
 
   "Nil" should "have zero length" in {
     Nil.length should be(0)

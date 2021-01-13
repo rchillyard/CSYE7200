@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200.greedy
 
-import scala.Stream._
+import scala.LazyList._
 import scala.language.postfixOps
 import scala.util.Random
 

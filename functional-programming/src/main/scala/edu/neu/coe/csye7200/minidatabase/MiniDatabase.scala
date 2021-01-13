@@ -15,7 +15,7 @@ object MiniDatabase {
     sy match {
       case Success(s) =>
         println(s)
-        val result = s.getLines.toList.map(e => Entry(e.split(",")))
+        val result = s.getLines().toList.map(e => Entry(e.split(",")))
         s.close()
         result
       case Failure(x) =>

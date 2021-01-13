@@ -1,11 +1,12 @@
 package edu.neu.coe.csye7200.cache
 
 import org.scalatest.concurrent.{Futures, ScalaFutures}
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.util.{Failure, Success}
 
-class StockReaderSpec extends FlatSpec with Matchers with Futures with ScalaFutures {
+class StockReaderSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutures {
 
   implicit val resource: String = "stocks.txt"
 

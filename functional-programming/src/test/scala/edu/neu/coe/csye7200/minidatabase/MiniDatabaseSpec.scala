@@ -1,11 +1,12 @@
 package edu.neu.coe.csye7200.minidatabase
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
   * @author scalaprof
   */
-class MiniDatabaseSpec extends FlatSpec with Matchers {
+class MiniDatabaseSpec extends AnyFlatSpec with Matchers {
 
   "Height" should "parse 6 ft 5 in" in {
     Height("6 ft 5 in")

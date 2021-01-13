@@ -8,13 +8,14 @@
 //import com.phasmidsoftware.render._
 //import edu.neu.coe.csye7200.parse.ParseCSVwithHTML.parseEncodeAndWriteString
 //import edu.neu.coe.csye7200.{Attribute, HTML, Tag, TagRules}
-//import org.scalatest.{FlatSpec, Matchers}
+//import org.scalatest.flatspec.AnyFlatSpec
+//import org.scalatest.matchers.should.Matchers
 //
 //import scala.io.Codec
 //import scala.util._
 //import scala.util.matching.Regex
 //
-//class ParseCSVtoHTMLSpec extends FlatSpec with Matchers {
+//class ParseCSVtoHTMLSpec extends AnyFlatSpec with Matchers {
 //
 //  behavior of "Table"
 //

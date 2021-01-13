@@ -1,9 +1,8 @@
 package edu.neu.coe.csye7200.parse
 
-import java.io.{BufferedWriter, File, FileWriter}
-
 import edu.neu.coe.csye7200.{Arg, Args, HTML, Tag}
 
+import java.io.{BufferedWriter, File, FileWriter}
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
@@ -34,17 +33,17 @@ case class ParseCSVwithHTML(csvParser: CsvParser) {
 
   def preamble(title: String): Tag = HTML("head") :+ HTML("title", title)
 
-  def parseStreamIntoHTMLTable(ws: Stream[String], title: String): Try[Tag] = {
+  def parseStreamIntoHTMLTable(ws: LazyList[String], title: String): Try[Tag] = {
     val table: Try[Tag] = ws match {
       case header #:: body =>
-        val ty = liftColonPlus(Try(HTML("table", Map("border"->"1"))), parseRowIntoHTMLRow(header, header = true))
+        val ty = liftColonPlus(Try(HTML("table", Map("border" -> "1"))), parseRowIntoHTMLRow(header, header = true))
         body.foldLeft(ty)((x, y) => liftColonPlus(x, parseRowIntoHTMLRow(y)))
     }
     liftColonPlus(Try(HTML("html") :+ preamble(title)), liftColonPlus(Try(HTML("body")), table))
   }
 
-  def parseStreamProjectionIntoHTMLTable(columns: Seq[String], wss: Stream[Seq[String]], title: String): Try[Tag] = Try {
-    val table = HTML("table", Map("border"->"1")) :+ parseRowProjectionIntoHTMLRow(columns, header = true)
+  def parseStreamProjectionIntoHTMLTable(columns: Seq[String], wss: LazyList[Seq[String]], title: String): Try[Tag] = Try {
+    val table = HTML("table", Map("border" -> "1")) :+ parseRowProjectionIntoHTMLRow(columns, header = true)
     val body = HTML("body") :+ wss.foldLeft(table)((tag, ws) => tag :+ parseRowProjectionIntoHTMLRow(ws))
     HTML("html") :+ preamble(title) :+ body
   }
@@ -65,7 +64,7 @@ object ParseCSVwithHTML extends App {
 
   def lift2Try[T1, T2, R](f: (T1, T2) => R): (Try[T1], Try[T2]) => Try[R] = map2(_, _)(f)
 
-  val parser = CsvParser(delimiter = '\t' + "")
+  val parser = CsvParser(delimiter = s"""\t""")
   val csvParser = ParseCSVwithHTML(parser)
   val title = "Report"
   val parameters: List[Arg[String]] = Args.parse(args).toList
@@ -85,7 +84,7 @@ object ParseCSVwithHTML extends App {
   }
 
   private def parseEncodeAndWriteString(filename: String, columnArgs: Seq[Arg[String]]) = {
-    val stream = Source.fromFile(filename, "UTF-16").getLines.toStream
+    val stream = Source.fromFile(filename, "UTF-16").getLines().to(LazyList)
     val columnNames = columnArgs.flatMap {
       case Arg(_, Some(columnName)) => Some(columnName)
       case _ => None

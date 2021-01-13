@@ -4,9 +4,10 @@
 
 package edu.neu.coe.csye7200.greedy
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class ZeckendorfSpec extends FlatSpec with Matchers {
+class ZeckendorfSpec extends AnyFlatSpec with Matchers {
 
   behavior of "Zeckendorf"
 

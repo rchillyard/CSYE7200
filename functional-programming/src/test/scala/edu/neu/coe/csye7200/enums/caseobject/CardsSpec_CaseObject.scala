@@ -1,12 +1,13 @@
 package edu.neu.coe.csye7200.enums.caseobject
 
 import org.scalatest._
-
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 /**
   * @author scalaprof
   */
 //noinspection NameBooleanParameters
-class CardsSpec_CaseObject extends FlatSpec with Matchers with Inside {
+class CardsSpec_CaseObject extends AnyFlatSpec with Matchers with Inside {
   "ranks" should "be ordered properly" in {
     assert(Ace > King)
     val ranks = List(Ace, Trey, Four, Queen, Knave, Nine, Seven, Six, Deuce, Five, King, Ten, Eight)
@@ -51,3 +52,4 @@ class CardsSpec_CaseObject extends FlatSpec with Matchers with Inside {
   }
 
 }
+  

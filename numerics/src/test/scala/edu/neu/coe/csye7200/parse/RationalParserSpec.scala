@@ -49,7 +49,7 @@ class RationalParserSpec extends flatspec.AnyFlatSpec with should.Matchers {
   behavior of "number"
   it should "parse 1/2" in {
     val parser = new RationalParser
-    val r = parser.parseAll(parser.number, "1/2")
+    val r = parser.parseAll(parser.rationalNumber, "1/2")
     r should matchPattern { case parser.Success(_, _) => }
     val ry: Try[Rational] = r.get.value
     ry should matchPattern { case scala.util.Success(_) => }
@@ -57,7 +57,7 @@ class RationalParserSpec extends flatspec.AnyFlatSpec with should.Matchers {
   }
   it should "parse 1" in {
     val parser = new RationalParser
-    val r = parser.parseAll(parser.number, "1")
+    val r = parser.parseAll(parser.rationalNumber, "1")
     r should matchPattern { case parser.Success(_, _) => }
     val ry: Try[Rational] = r.get.value
     ry should matchPattern { case scala.util.Success(_) => }
@@ -65,7 +65,7 @@ class RationalParserSpec extends flatspec.AnyFlatSpec with should.Matchers {
   }
   it should "parse 3.1415927" in {
     val parser = new RationalParser
-    val r = parser.parseAll(parser.number, "3.1415927")
+    val r = parser.parseAll(parser.rationalNumber, "3.1415927")
     r should matchPattern { case parser.Success(_, _) => }
     val ry: Try[Rational] = r.get.value
     ry should matchPattern { case scala.util.Success(_) => }

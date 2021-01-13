@@ -13,7 +13,7 @@ object StockReader {
 
   private def readPrice(symbol: String)(implicit resource: String): Try[Double] = {
     def readMatchingPrices = {
-      val ws = Source.fromInputStream(getClass.getResourceAsStream(resource)).getLines
+      val ws = Source.fromInputStream(getClass.getResourceAsStream(resource)).getLines()
       val was = for (w <- ws.toSeq) yield w.split("""\s+""")
       for (wa <- was; if wa.length > 1; x = wa.head; if x == symbol) yield wa.last
     }

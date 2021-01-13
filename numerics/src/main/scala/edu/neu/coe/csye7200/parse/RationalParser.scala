@@ -17,7 +17,7 @@ trait RationalNumber {
 
 class RationalParser extends JavaTokenParsers {
 
-  def parse(w: String): Try[RationalNumber] = parseAll(number, w) match {
+  def parse[R](p: Parser[R], w: String): Try[R] = parseAll(p, w) match {
     case Success(t, _) => scala.util.Success(t)
     case Failure(m, _) => scala.util.Failure(RationalParserException(m))
     case Error(m, _) => scala.util.Failure(RationalParserException(m))
@@ -43,7 +43,7 @@ class RationalParser extends JavaTokenParsers {
     }
   }
 
-  def number: Parser[RationalNumber] = realNumber | ratioNumber
+  def rationalNumber: Parser[RationalNumber] = realNumber | ratioNumber
 
   def ratioNumber: Parser[RatioNumber] = simpleNumber ~ opt("/" ~> simpleNumber) ^^ { case n ~ maybeD => RatioNumber(n, maybeD.getOrElse(WholeNumber.one)) }
 
@@ -57,7 +57,7 @@ class RationalParser extends JavaTokenParsers {
 object RationalParser {
   val parser = new RationalParser
 
-  def parse(s: String): Try[Rational] = parser.parse(s).flatMap(_.value)
+  def parse(s: String): Try[Rational] = parser.parse(parser.rationalNumber, s).flatMap(_.value)
 }
 
 case class RationalParserException(m: String) extends Exception(m)

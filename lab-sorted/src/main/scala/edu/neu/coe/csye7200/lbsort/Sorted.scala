@@ -12,9 +12,9 @@ case class Sorted[T: Comparer](ts: Seq[T]) extends (() => Seq[T]) {
 
   def sort(o: Comparer[T]): Sorted[T] = Sorted(ts)(ct orElse o)
 
-  def apply: Seq[T] = ts.sorted
+  def apply(): Seq[T] = ts.sorted
 
-  def async(implicit ec: ExecutionContext): Future[Seq[T]] = Future(apply)
+  def async(implicit ec: ExecutionContext): Future[Seq[T]] = Future(apply())
 
   def parSort(implicit ec: ExecutionContext): Future[Seq[T]] = Sorted.mergeSort(ts)
 }

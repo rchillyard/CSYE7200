@@ -1,8 +1,9 @@
 package edu.neu.coe.csye7200.ast
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class DecisionTreeSpec extends FlatSpec with Matchers {
+class DecisionTreeSpec extends AnyFlatSpec with Matchers {
 
   behavior of "render"
   it should "work" in {

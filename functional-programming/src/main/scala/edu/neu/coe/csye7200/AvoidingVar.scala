@@ -27,7 +27,7 @@ object AvoidingVar extends App {
   printStatistics(data)
   println(getStatistics(data))
 
-  def printStatistics(xs: Seq[Double]) {
+  def printStatistics(xs: Seq[Double]): Unit = {
     var c = 0
     var s = 0.0
     var v = 0.0

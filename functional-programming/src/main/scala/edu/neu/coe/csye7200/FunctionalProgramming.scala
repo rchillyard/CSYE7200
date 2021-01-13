@@ -11,7 +11,7 @@ object FunctionalProgramming extends App {
 
   val x = evaluate_3_tenths
   val y = multiply_by_10_over_3(x)
-  println(y + " != 1")
+  println(s"${y} != 1")
 
   //  val t = Try[String](throw new RuntimeException("my"))
 

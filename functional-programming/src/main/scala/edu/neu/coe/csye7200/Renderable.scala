@@ -9,7 +9,7 @@ trait Renderable {
   def render: String
 }
 
-case class RenderableTraversable(xs: Traversable[_]) extends Renderable {
+case class RenderableTraversable(xs: Iterable[_]) extends Renderable {
   def render: String = {
     def addString(b: StringBuilder, start: String, sep: String, end: String): StringBuilder = {
       var first = true
@@ -58,7 +58,7 @@ object Renderable {
 
   import scala.language.implicitConversions
 
-  implicit def renderableTraversable(xs: Traversable[_]): Renderable = RenderableTraversable(xs)
+  implicit def renderableTraversable(xs: Iterable[_]): Renderable = RenderableTraversable(xs)
 
   implicit def renderableOption(xo: Option[_]): Renderable = RenderableOption(xo)
 
@@ -68,7 +68,7 @@ object Renderable {
 
   def renderElem(elem: Any): String = elem match {
     case xo: Option[_] => renderableOption(xo).render
-    case xs: Traversable[_] => renderableTraversable(xs).render
+    case xs: Iterable[_] => renderableTraversable(xs).render
     case xy: Try[_] => renderableTry(xy).render
     case e: Either[_, _] => renderableEither(e).render
     case r: Renderable => r.render

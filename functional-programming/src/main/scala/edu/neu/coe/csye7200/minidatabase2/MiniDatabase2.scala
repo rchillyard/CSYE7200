@@ -9,14 +9,21 @@ import scala.util._
 object MiniDatabase2 extends App {
 
   // Similar to the map2 you already know (4 points)
-  def map3[A, B, C, D](a: Option[A], b: Option[B], c: Option[C])(f: (A, B, C) => D): Option[D] = ??? // TO BE IMPLEMENTED
+  def map3[A, B, C, D](a: Option[A], b: Option[B], c: Option[C])(f: (A, B, C) => D): Option[D] = /*SOLUTION*/for {
+    aa <- a
+    bb <- b
+    cc <- c
+  } yield f(aa, bb, cc)/*END*/
 
   // Similar to the map2 you already know (4 points)
-  def map2[A, B, C](a: Try[A], b: Try[B])(f: (A, B) => C): Try[C] = ??? // TO BE IMPLEMENTED
+  def map2[A, B, C](a: Try[A], b: Try[B])(f: (A, B) => C): Try[C] = /*SOLUTION*/for {
+    aa <- a
+    bb <- b
+  } yield f(aa, bb)/*END*/
 
   def load(filename: String) = {
     val src = Source.fromFile(filename)
-    val database = src.getLines.toList.map(e => Entry.parse(e.split(",")))
+    val database = src.getLines().toList.map(e => Entry.parse(e.split(",")))
     val result = database
     src.close
     result

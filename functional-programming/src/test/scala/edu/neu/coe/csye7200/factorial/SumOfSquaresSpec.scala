@@ -1,8 +1,9 @@
 package edu.neu.coe.csye7200.factorial
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class SumOfSquaresSpec extends FlatSpec with Matchers {
+class SumOfSquaresSpec extends AnyFlatSpec with Matchers {
 
   behavior of "sumOfSquares"
   it should "work for 1..N" in {

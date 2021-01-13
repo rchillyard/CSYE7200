@@ -1,12 +1,11 @@
 package edu.neu.coe.csye7200.patternmatching
 
-import org.scalatest.FunSuite
-
+import org.scalatest.funsuite.AnyFunSuite
 /**
   * Created by scalaprof on 9/10/16.
   */
 //noinspection NameBooleanParameters
-class Document$Test extends FunSuite {
+class Document$Test extends AnyFunSuite {
 
   test("singleton Document") {
     val t1: Document[String, Int] = SingletonDocument(42)
