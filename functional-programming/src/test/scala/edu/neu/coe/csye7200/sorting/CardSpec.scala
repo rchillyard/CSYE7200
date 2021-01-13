@@ -1,8 +1,9 @@
 package edu.neu.coe.csye7200.sorting
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class CardSpec extends FlatSpec with Matchers {
+class CardSpec extends AnyFlatSpec with Matchers {
 
   behavior of "rank"
 

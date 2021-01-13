@@ -36,7 +36,7 @@ trait Comparison extends (() => Option[Boolean]) {
     */
   def ||(c: => Comparison): Comparison
 
-  override def toString(): String = apply.toString
+  override def toString(): String = apply().toString
 
   /**
     * Method to return the Java-style value of this Comparison
@@ -52,7 +52,7 @@ trait Comparison extends (() => Option[Boolean]) {
     * @param c the other Comparison (lazily evaluated).
     * @return the composition of this and c.
     */
-  def orElse(c: => Comparison): Comparison = Comparison(apply.orElse(c()))
+  def orElse(c: => Comparison): Comparison = Comparison(apply().orElse(c()))
 
   /**
     * Method to flip (i.e. negate) this Comparison.
@@ -63,7 +63,7 @@ trait Comparison extends (() => Option[Boolean]) {
 }
 
 case class Different(less: Boolean) extends Comparison {
-  def apply: Option[Boolean] = Some(less)
+  def apply(): Option[Boolean] = Some(less)
 
   def &&(c: => Comparison): Comparison = if (less) this else c
 
@@ -75,7 +75,7 @@ case class Different(less: Boolean) extends Comparison {
 }
 
 case object Same extends Comparison {
-  def apply: Option[Boolean] = None
+  def apply(): Option[Boolean] = None
 
   def &&(c: => Comparison): Comparison = c & this
 
@@ -87,8 +87,8 @@ case object Same extends Comparison {
 }
 
 object Comparison {
-  val more = Different(false)
-  val less = Different(true)
+  val more: Different = Different(false)
+  val less: Different = Different(true)
 
   def apply(b: Boolean): Comparison = Different(b)
 

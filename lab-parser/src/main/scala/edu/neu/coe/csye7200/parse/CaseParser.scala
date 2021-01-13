@@ -86,7 +86,7 @@ class CaseParser extends FunctionParser {
 }
 
 case class BooleanTerm(op: BooleanOp, e: Expression) extends Renderable {
-  def render(indent: Int)(implicit tab: (Int) => Prefix): String = op.toString + " " + InvocationBase.renderExpression(e, indent + 1)
+  def render(indent: Int)(implicit tab: Int => Prefix): String = op.toString + " " + InvocationBase.renderExpression(e, indent + 1)
 }
 
 trait BooleanOp
@@ -117,3 +117,5 @@ object CaseParser {
   val sOr: Regex = """(?i)OR""".r
   val sBetween: Regex = """(?i)BETWEEN""".r
 }
+
+

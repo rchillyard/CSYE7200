@@ -2,6 +2,7 @@ package edu.neu.coe.csye7200.factorial
 
 import edu.neu.coe.csye7200.Args
 
+import scala.Specializable.Arg
 import scala.util.{Failure, Success, Try}
 
 trait Ring[X] {
@@ -46,7 +47,7 @@ object SumOfSquares extends App {
   // If N is provided then the sequence to be processed is the numbers 1 through N
   // Else if x1, x2... are provided, then these will be the sequence
   // Unless said sequence is empty, in which case we use 1, 2, ... 5 as a default
-  private val lsy = Args.parse(args).map[Long](_.toLong).process(Map[String, Option[Long] => Unit]())
+  private val lsy: Try[Seq[Long]] = Args.parse(args).map{ x: String => x.toLong}.process(Map[String, Option[Long] => Unit]())
   private val (no, xs) = createXtuple[Long](lsy, (Some(5), Seq(1, 2, 3, 4, 5)))
   private val result: BigInt = sumOfSquares(xs)
   println(s"sum of $xs is $result")

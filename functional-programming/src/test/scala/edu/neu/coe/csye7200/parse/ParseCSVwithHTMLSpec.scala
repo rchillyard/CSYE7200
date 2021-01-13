@@ -1,15 +1,16 @@
 package edu.neu.coe.csye7200.parse
 
-import java.io.FileNotFoundException
-
 import edu.neu.coe.csye7200.Tag
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
+import java.io.FileNotFoundException
 import scala.io.Source
 import scala.util._
 
-class ParseCSVwithHTMLSpec extends FlatSpec with Matchers {
+class ParseCsvWithHTMLSpec extends AnyFlatSpec with Matchers {
 
+  // todo need to fix this
   behavior of "it"
   it should "work" in {
     val parser = ParseCSVwithHTML(CsvParser())
@@ -45,9 +46,10 @@ class ParseCSVwithHTMLSpec extends FlatSpec with Matchers {
   private def parseResource(parser: ParseCSVwithHTML, resource: String, title: String) = Option(getClass.getResource(resource)) match {
     case Some(u) =>
       val source = Source.fromFile(u.toURI)
-      val result = parser.parseStreamIntoHTMLTable(source.getLines.toStream, title)
+      val result = parser.parseStreamIntoHTMLTable(source.getLines().to(LazyList), title)
       source.close()
       result
     case None => Failure(new FileNotFoundException(s"cannot get resource $resource"))
   }
 }
+

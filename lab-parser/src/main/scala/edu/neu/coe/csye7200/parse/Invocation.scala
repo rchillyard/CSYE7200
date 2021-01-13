@@ -98,7 +98,7 @@ abstract class InvocationBase(n: String, es: List[Expression]) extends Invocatio
 
   import Renderable.renderableTraversable
 
-  def render(indent: Int)(implicit tab: (Int) => Prefix): String = name + es.render(indent + 1)
+  def render(indent: Int)(implicit tab: Int => Prefix): String = name + es.render(indent + 1)
 
   /**
     * If you want the more compact form of String, then just comment this override out.
@@ -200,7 +200,7 @@ case class InvocationPF(x: Expression, f: Invocation) extends InvocationBase("In
   //    case _ => throw ParserException(s"Logic error: asClosure not implemented for InvocationPF($x,$f)") // CHECK
   //  }
 
-  override def render(indent: Int = 0)(implicit tab: (Int) => Prefix): String =
+  override def render(indent: Int = 0)(implicit tab: Int => Prefix): String =
     name + "(\n" + tab(indent + 1) + x.render(indent + 1) + " " + f.render(indent + 1) + ")"
 }
 
@@ -270,7 +270,7 @@ case class InvocationBooleanExpression(first: Expression, terms: List[BooleanTer
   //  override def asClosure[T: ClassTag, R: ClassTag](implicit functionLibrary: FunctionLibrary): Try[InvocationClosure[R]] =
   //    terms.foldLeft[Invocation](InvocationP(first))(accumulate).asClosure(implicitly[ClassTag[T]], implicitly[ClassTag[R]], functionLibrary)
 
-  override def render(indent: Int)(implicit tab: (Int) => Prefix): String =
+  override def render(indent: Int)(implicit tab: Int => Prefix): String =
     s"$name(${terms.foldLeft(first.render(indent + 1))(_ + " " + _.render(indent + 1))})"
 }
 

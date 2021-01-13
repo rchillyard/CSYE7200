@@ -62,7 +62,7 @@ object Arg {
   def apply(c: String, a: String): Arg[String] = Arg(Some(c), Some(a))
 }
 
-case class Args[X](xas: Seq[Arg[X]]) extends Traversable[Arg[X]] {
+case class Args[X](xas: Seq[Arg[X]]) extends Iterable[Arg[X]] {
 
   def validate(w: String): Args[X] = validate(new PosixSynopsisParser().parseSynopsis(Some(w)))
 
@@ -133,7 +133,7 @@ case class Args[X](xas: Seq[Arg[X]]) extends Traversable[Arg[X]] {
 
   def iterator: Iterator[Arg[X]] = xas.iterator
 
-  def foreach[U](f: Arg[X] => U): Unit = xas foreach f
+  override def foreach[U](f: Arg[X] => U): Unit = xas foreach f
 
 }
 

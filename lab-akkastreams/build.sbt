@@ -3,6 +3,8 @@ organization    := "com.phasmidsoftware"
 scalaVersion    := "2.11.9"
 version :="0.1.0-SNAPSHOT"
 
+scalacOptions in(Compile, doc) ++= Seq("-groups", "-implicits", "-deprecation")
+
 val akkaGroup = "com.typesafe.akka"
 val sprayGroup = "io.spray"
 val sprayVersion = "1.3.4"

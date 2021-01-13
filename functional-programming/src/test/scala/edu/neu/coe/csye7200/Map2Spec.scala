@@ -1,11 +1,12 @@
 package edu.neu.coe.csye7200
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
   * @author scalaprof
   */
-class Map2Spec extends FlatSpec with Matchers {
+class Map2Spec extends AnyFlatSpec with Matchers {
 
   "map2right" should "return Left(bad) for Right(1), Left(bad)" in {
     val x: Either[String, Int] = Right(1)

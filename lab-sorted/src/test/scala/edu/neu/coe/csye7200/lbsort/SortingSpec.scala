@@ -6,14 +6,13 @@ package edu.neu.coe.csye7200.lbsort
 
 import edu.neu.coe.csye7200.util.RandomState
 import org.scalatest.concurrent.{Futures, ScalaFutures}
-import org.scalatest.{FlatSpec, Matchers}
-
-import scala.util.Random
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
   * @author scalaprof
   */
-class SortingSpec extends FlatSpec with Matchers with Futures with ScalaFutures {
+class SortingSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutures {
 
   behavior of "Insertion Sort"
 

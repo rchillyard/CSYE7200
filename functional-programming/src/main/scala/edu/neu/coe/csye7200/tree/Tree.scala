@@ -375,3 +375,4 @@ abstract class Punctuation(x: String) extends Node[Nothing] {
 case object Open extends Punctuation("{")
 
 case object Close extends Punctuation("}")
+

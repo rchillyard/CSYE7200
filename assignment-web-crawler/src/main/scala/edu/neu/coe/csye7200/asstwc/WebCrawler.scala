@@ -1,7 +1,6 @@
 package edu.neu.coe.csye7200.asstwc
 
 import java.net.URL
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 import scala.concurrent.duration._
@@ -12,8 +11,8 @@ import scala.util.control.NonFatal
 import scala.xml.Node
 
 /**
- * @author scalaprof
- */
+  * @author scalaprof
+  */
 object WebCrawler extends App {
 
   def getURLContent(u: URL): Future[String] =

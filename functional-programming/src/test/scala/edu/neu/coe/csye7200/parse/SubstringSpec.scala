@@ -4,9 +4,10 @@
 
 package edu.neu.coe.csye7200.parse
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class SubstringSpec extends FlatSpec with Matchers {
+class SubstringSpec extends AnyFlatSpec with Matchers {
 
   import Substring._
 

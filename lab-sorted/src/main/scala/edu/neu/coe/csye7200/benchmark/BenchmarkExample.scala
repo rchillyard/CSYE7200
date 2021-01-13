@@ -5,6 +5,7 @@
 package edu.neu.coe.csye7200.benchmark
 
 import scala.language.implicitConversions
+
 /**
   * Declaration of implicit class Rep within Benchmark.
   *
@@ -13,3 +14,4 @@ import scala.language.implicitConversions
 object BenchmarkExample extends App {
   println(s"ave time for 40! is ${10000.times(Factorial.factorial(40))} nanosecs")
 }
+

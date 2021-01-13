@@ -1,6 +1,7 @@
 package edu.neu.coe.csye7200.asstmd
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.io.{Codec, Source}
 import scala.util._
@@ -8,7 +9,7 @@ import scala.util._
 /**
   * Created by scalaprof on 9/13/16.
   */
-class IngestSpec extends FlatSpec with Matchers {
+class IngestSpec extends AnyFlatSpec with Matchers {
 
   behavior of "ingest"
 

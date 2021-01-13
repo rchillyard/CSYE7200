@@ -2,12 +2,13 @@ package edu.neu.coe.csye7200
 
 import java.util.Date
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
   * @author scalaprof
   */
-class LocaleDependentSpec extends FlatSpec with Matchers {
+class LocaleDependentSpec extends AnyFlatSpec with Matchers {
 
   "today" should "equal today" in {
     //noinspection ScalaDeprecation

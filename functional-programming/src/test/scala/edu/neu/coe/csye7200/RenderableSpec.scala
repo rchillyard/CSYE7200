@@ -1,7 +1,8 @@
 package edu.neu.coe.csye7200
 
-import org.scalatest.{FlatSpec, Inside, Matchers}
-
+import org.scalatest.Inside
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import scala.util.Try
 
 case class Scalar(s: String) extends Renderable {
@@ -13,7 +14,7 @@ case class Scalar(s: String) extends Renderable {
   *
   * @author scalaprof
   */
-class RenderableSpec extends FlatSpec with Matchers with Inside {
+class RenderableSpec extends AnyFlatSpec with Matchers with Inside {
   behavior of "Renderable"
   it should "render simple values like toString" in {
     Scalar("x").render shouldBe "X"

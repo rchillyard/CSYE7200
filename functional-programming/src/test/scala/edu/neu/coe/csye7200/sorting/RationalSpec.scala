@@ -3,14 +3,15 @@ package edu.neu.coe.csye7200.sorting
 // We really do need the following: import edu.neu.coe.csye7200.Rational.RationalHelper
 //import edu.neu.coe.csye7200.sorting.{Rational, RationalException}
 import edu.neu.coe.csye7200.sorting.Rational.RationalHelper
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.language.postfixOps
 
 /**
   * @author scalaprof
   */
-class RationalSpec extends FlatSpec with Matchers {
+class RationalSpec extends AnyFlatSpec with Matchers {
 
   "0" should "be OK" in {
     Rational(0)
@@ -23,7 +24,7 @@ class RationalSpec extends FlatSpec with Matchers {
     Rational(0) shouldBe Rational.zero
   }
   it should "be whole" in {
-    Rational.zero shouldBe 'whole
+    Rational.zero shouldBe Symbol("whole")
   }
 //  it should "be zero" in {
 //    Rational.zero shouldBe 'zero
@@ -32,7 +33,7 @@ class RationalSpec extends FlatSpec with Matchers {
     Rational.zero.toInt should be(0)
   }
   it should "equal infinity when inverted" in {
-    Rational.zero.invert shouldBe 'infinity
+    Rational.zero.invert shouldBe Symbol("infinity")
   }
   it should "equal BigDecimal.zero" in {
     Rational.zero.toBigDecimal shouldBe BigDecimal(0)
@@ -69,16 +70,16 @@ class RationalSpec extends FlatSpec with Matchers {
     Rational.one.signum shouldBe 1
   }
   it should "be whole" in {
-    Rational.one shouldBe 'whole
+    Rational.one shouldBe Symbol("whole")
   }
   it should "be unity" in {
-    Rational.one shouldBe 'unity
+    Rational.one shouldBe Symbol("unity")
   }
   it should "equal 1" in {
     Rational.one.toInt should be(1)
   }
   it should "not equal infinity when inverted" in {
-    Rational.one.invert should not be 'infinity
+    Rational.one.invert should not be Symbol("infinity")
   }
   it should "equal itself when inverted" in {
     Rational.one.invert should be(Rational.one)
@@ -109,10 +110,10 @@ class RationalSpec extends FlatSpec with Matchers {
     Rational(10) shouldBe Rational.ten
   }
   it should "be whole" in {
-    Rational.ten shouldBe 'whole
+    Rational.ten shouldBe Symbol("whole")
   }
   it should "not be zero" in {
-    Rational.ten should not be 'zero
+    Rational.ten should not be Symbol("zero")
   }
   it should "equal 10" in {
     Rational.ten.toInt should be(10)
@@ -144,7 +145,7 @@ class RationalSpec extends FlatSpec with Matchers {
     Rational(2, 3).compare(Rational.one) should be(-1)
   }
   it should "not be whole" in {
-    Rational(2, 3) should not be 'whole
+    Rational(2, 3) should not be Symbol("whole")
   }
   it should "equal 2 when multiplied by 3" in {
     (Rational(2, 3) * 3 toInt) should be(2)
@@ -179,7 +180,7 @@ class RationalSpec extends FlatSpec with Matchers {
   "Floating Point Problem" should "be OK" in {
     val x = Rational(1, 10) + Rational.normalize(2, 10)
     val y = x * 10 / 3
-    y shouldBe 'unity
+    y shouldBe Symbol("unity")
   }
 
   "BigDecimal" should "convert to Rational" in {

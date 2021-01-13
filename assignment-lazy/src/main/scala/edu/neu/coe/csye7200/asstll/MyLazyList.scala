@@ -177,9 +177,10 @@ case class MyLazyList[X](x: X, lazyTail: () => ListLike[X]) extends LazyListLike
 case object EmptyList extends LazyListLike[Nothing] {
 
   /**
-   * Method to indicate whether it's possible to cheaply calculate the length of this object.
-   * @return -1
-   */
+    * Method to indicate whether it's possible to cheaply calculate the length of this object.
+    *
+    * @return -1
+    */
   override def knownSize: Int = -1
 
   def head = throw LazyListException("empty")
@@ -387,11 +388,12 @@ object MyLazyList {
   lazy val ones: ListLike[Int] = MyLazyList(1, () => ones)
 
   /**
-   * Method to yield a singleton LazyList
-   * @param x the single value.
-   * @tparam X the underlying type of x.
-   * @return a MyLazyList with just x as a value.
-   */
+    * Method to yield a singleton LazyList
+    *
+    * @param x the single value.
+    * @tparam X the underlying type of x.
+    * @return a MyLazyList with just x as a value.
+    */
   def singleton[X](x: => X): ListLike[X] = MyLazyList(x, () => EmptyList)
 
   /**

@@ -54,7 +54,7 @@ case class UniformDoubleRNG(n: Long) extends RNG_Java[UniformDouble](n) {
 
   // ???
   // the following, which calls the apply(Double,Unit) method will check that result is in range 0..1
-  def value = UniformDouble(math.abs(n.toDouble / Long.MaxValue), Unit)
+  def value = UniformDouble(math.abs(n.toDouble / Long.MaxValue), ())
 
   override def toString = s"UniformDoubleRNG: $n->$value"
 }
@@ -86,17 +86,17 @@ case class GaussianRNG(n: Long) extends RNG_Java[(Double, Double)](n) {
 }
 
 object RNG {
-  type SRNG[A] = Stream[RNG[A]]
+  type SRNG[A] = LazyList[RNG[A]]
 
-  def rngs[A](ar: RNG[A]): SRNG[A] = Stream.cons(ar, rngs(ar.next))
+  def rngs[A](ar: RNG[A]): SRNG[A] = LazyList.cons(ar, rngs(ar.next))
 
   // ???
-  def values[A](ar: RNG[A]): Stream[A] = rngs(ar) map {
+  def values[A](ar: RNG[A]): LazyList[A] = rngs(ar) map {
     _.value
   }
 
   // ???
-  def values2[A](aAr: RNG[(A, A)]): Stream[A] = rngs(aAr) flatMap { x => Stream(x.value._1, x.value._2) } // ???
+  def values2[A](aAr: RNG[(A, A)]): LazyList[A] = rngs(aAr) flatMap { x => LazyList(x.value._1, x.value._2) } // ???
 }
 
 object LongRNG {

@@ -54,7 +54,7 @@ class FunctionParser extends JavaTokenParsers {
     * @return a Parser of Invocation
     */
   def pn1: Parser[Invocation] = pn1Identifier ~ parameterSet ^^ {
-    case f ~ ps => InvocationFPn(f.toString, List(Right(InvocationPn1(ps.toList))))
+    case f ~ ps => InvocationFPn(f, List(Right(InvocationPn1(ps.toList))))
   }
 
   /**
@@ -82,7 +82,7 @@ class FunctionParser extends JavaTokenParsers {
     * @return a Parser of Invocation
     */
   def fp: Parser[Invocation] = fpIdentifier ~ parameter ^^ {
-    case f ~ p => InvocationFP(f.toString, p)
+    case f ~ p => InvocationFP(f, p)
   }
 
   /**

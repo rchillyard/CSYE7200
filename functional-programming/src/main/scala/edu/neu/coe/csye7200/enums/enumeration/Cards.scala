@@ -1,5 +1,7 @@
 package edu.neu.coe.csye7200.enums.enumeration
 
+import scala.language.implicitConversions
+
 /**
   * @author scalaprof
   */

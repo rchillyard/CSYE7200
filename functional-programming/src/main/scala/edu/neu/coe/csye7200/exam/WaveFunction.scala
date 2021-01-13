@@ -11,7 +11,10 @@ trait WaveFunction extends ((Double,Double)=>Complex) {
 }
 
 case class SuperPosition(xs: List[(Double,WaveFunction)]) extends (() => WaveFunction) {
-  def apply(): WaveFunction = ??? // TO BE IMPLEMENTED
+  def apply(): WaveFunction = /*SOLUTION*/
+    (xs map { case (s, w) => w * s }).foldLeft[WaveFunction](Zero)(_ + _)
+
+  /*END*/
 }
 
 case object Zero extends WaveFunction {
@@ -31,9 +34,13 @@ object WaveFunctionTest extends App {
   val sp = SuperPosition(List(2.0 -> SquareWellWaveFunction(1), 1.0 -> SquareWellWaveFunction(2)))
   println(sp())
 
-  def getLiftedScaleFunction(w: WaveFunction): Double => WaveFunction = ??? // TO BE IMPLEMENTED
+  def getLiftedScaleFunction(w: WaveFunction): Double => WaveFunction = /*SOLUTION*/ w.*
+
+  /*END*/
   val f: Double => WaveFunction = getLiftedScaleFunction(SquareWellWaveFunction(1))
-  val fLift: Try[Double] => Try[WaveFunction] = ??? // TO BE IMPLEMENTED
+  val fLift: Try[Double] => Try[WaveFunction] = /*SOLUTION*/ _ map f
+  /*END*/
   val wy = fLift(Try(1.0))
   println(wy.get)
 }
+

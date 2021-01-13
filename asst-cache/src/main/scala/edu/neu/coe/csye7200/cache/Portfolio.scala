@@ -4,8 +4,8 @@
 
 package edu.neu.coe.csye7200.cache
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.util._
 
 case class Portfolio(positions: Seq[Position]) {
@@ -23,7 +23,7 @@ case class Position(symbol: String, quantity: Double) {
 }
 
 object Portfolio {
-  private def sequence[X](xys: Seq[Try[X]]): Try[Seq[X]] = (Try(Seq[X]()) /: xys) {
+  private def sequence[X](xys: Seq[Try[X]]): Try[Seq[X]] = xys.foldLeft(Try(Seq[X]())) {
     (xsy, xy) => for (xs <- xsy; x <- xy) yield xs :+ x
   }
 
@@ -33,8 +33,9 @@ object Portfolio {
 
 object Position {
   private val positionR = """(\w+)\s+(\d+(\.\d+))""".r
+
   def parse(w: String): Try[Position] = w match {
-    case positionR(a, b, _) => Try(Position(a,b.toDouble))
+    case positionR(a, b, _) => Try(Position(a, b.toDouble))
     case _ => Failure(new Exception(s"cannot parse $w as a Position"))
   }
 

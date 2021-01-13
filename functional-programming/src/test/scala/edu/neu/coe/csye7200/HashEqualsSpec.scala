@@ -1,8 +1,9 @@
 package edu.neu.coe.csye7200
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class HashEqualsSpec extends FlatSpec with Matchers {
+class HashEqualsSpec extends AnyFlatSpec with Matchers {
 
   case class MockProduct1(x: Int)
 

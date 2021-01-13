@@ -1,10 +1,12 @@
 package edu.neu.coe.csye7200
 
-import org.scalatest.{FlatSpec, Matchers}
-
-class HTMLTest extends FlatSpec with Matchers {
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
+class HTMLTest extends AnyFlatSpec with Matchers {
 
   import HTML.HtmlRules
+
+  val lineSeparator = System.getProperties.getProperty("line.separator")
 
   behavior of "content"
   it should "work" in {
@@ -43,10 +45,10 @@ class HTMLTest extends FlatSpec with Matchers {
 
   behavior of "toString"
   it should """match <html></html> for HTML("html")""" in {
-    HTML("html").toString shouldBe "\n<html></html>"
+    HTML("html").toString shouldBe s"$lineSeparator<html></html>"
   }
   it should """match <html>content</html> for HTML("html","content")""" in {
-    HTML("html", "content").toString shouldBe "\n<html>content</html>"
+    HTML("html", "content").toString shouldBe s"$lineSeparator<html>content</html>"
   }
   it should """match <html dir="rtl"></html> for HTML("html",Seq(dir="rtl")""" in {
     HTML("html", Map("dir" -> "rtl")).toString shouldBe
@@ -54,7 +56,7 @@ class HTMLTest extends FlatSpec with Matchers {
         |<html dir="rtl"></html>""".stripMargin
   }
   it should """match <html><head></head><body></body></html> for HTML("html",Nil,"",Seq(HTML("head"),HTML("body")))""" in {
-    HTML("html", Nil, "", Seq(HTML("head"), HTML("body"))).toString shouldBe "\n<html>\n<head></head>\n<body></body></html>"
+    HTML("html", Nil, "", Seq(HTML("head"), HTML("body"))).toString shouldBe s"$lineSeparator<html>$lineSeparator<head></head>$lineSeparator<body></body></html>"
   }
 
   behavior of """\\"""

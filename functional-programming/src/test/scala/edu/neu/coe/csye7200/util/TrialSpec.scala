@@ -1,13 +1,14 @@
 package edu.neu.coe.csye7200.util
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.util._
 
 /**
   * @author scalaprof
   */
-class TrialSpec extends FlatSpec with Matchers {
+class TrialSpec extends AnyFlatSpec with Matchers {
   "Lift" should "work" in {
     val toint = Lift[Any, Int] { case x: String => x.toInt }
     toint("10") should matchPattern { case Success(10) => }

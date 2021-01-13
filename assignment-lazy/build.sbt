@@ -2,7 +2,9 @@ name := "Lazy"
 
 version := "1.0"
 
-scalaVersion := "2.13.1"
+scalaVersion := "2.13.4"
 
-libraryDependencies += "org.scalactic" %% "scalactic" % "3.1.0"
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.0" % "test"
+scalacOptions in(Compile, doc) ++= Seq("-groups", "-implicits", "-deprecation")
+
+libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.2"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.2" % "test"

@@ -4,9 +4,10 @@
 
 package edu.neu.coe.csye7200.asstll
 
-import org.scalatest.{Matchers, flatspec}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class MappedListSpec extends flatspec.AnyFlatSpec with Matchers {
+class MappedListSpec extends AnyFlatSpec with Matchers {
 
   behavior of "MappedList constructor"
   it should "produce a single 1" in {
@@ -98,7 +99,7 @@ class MappedListSpec extends flatspec.AnyFlatSpec with Matchers {
     val y = LazyList.from(1) filter even
     assert(y.head == 2)
     assert(y.tail.head == 4)
-    (y take 4).toSeq shouldBe Seq(2, 4, 6, 8)
+    (y take 4) shouldBe Seq(2, 4, 6, 8)
   }
 
   it should "produce a stream of even numbers using from(2,2)" in {
@@ -107,7 +108,7 @@ class MappedListSpec extends flatspec.AnyFlatSpec with Matchers {
     val y = LazyList.from(2, 2) filter even
     assert(y.head == 2)
     assert(y.tail.head == 4)
-    (y take 4).toSeq shouldBe Seq(2, 4, 6, 8)
+    (y take 4) shouldBe Seq(2, 4, 6, 8)
   }
 
   behavior of "filterNot"
@@ -117,7 +118,7 @@ class MappedListSpec extends flatspec.AnyFlatSpec with Matchers {
     val y = LazyList.from(1) filterNot odd
     assert(y.head == 2)
     assert(y.tail.head == 4)
-    (y take 4).toSeq shouldBe Seq(2, 4, 6, 8)
+    (y take 4) shouldBe Seq(2, 4, 6, 8)
   }
 
   it should "produce a stream of even numbers using from(2,2)" in {
@@ -126,7 +127,7 @@ class MappedListSpec extends flatspec.AnyFlatSpec with Matchers {
     val y = LazyList.from(2, 2) filterNot odd
     assert(y.head == 2)
     assert(y.tail.head == 4)
-    (y take 4).toSeq shouldBe Seq(2, 4, 6, 8)
+    (y take 4) shouldBe Seq(2, 4, 6, 8)
   }
 
   behavior of "zip"

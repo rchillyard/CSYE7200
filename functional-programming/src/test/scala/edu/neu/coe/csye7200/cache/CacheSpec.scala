@@ -7,13 +7,14 @@ package edu.neu.coe.csye7200.cache
 import java.net.URL
 
 import org.scalatest.concurrent.{Futures, ScalaFutures}
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Random, Try}
 
-class CacheSpec extends FlatSpec with Matchers with Futures with ScalaFutures {
+class CacheSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutures {
 
   behavior of "apply"
 

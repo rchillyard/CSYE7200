@@ -1,13 +1,14 @@
 package edu.neu.coe.csye7200
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.language.postfixOps
 
 /**
   * @author scalaprof
   */
-class RNGSpec extends FlatSpec with Matchers {
+class RNGSpec extends AnyFlatSpec with Matchers {
 
   //noinspection SimplifiableFoldOrReduce
   // XXX not quite sure why I insisted on using reduceLeft here. Could just use xs.sum

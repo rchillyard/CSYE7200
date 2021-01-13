@@ -7,8 +7,10 @@ package edu.neu.coe.csye7200.enums.enumeration
 import edu.neu.coe.csye7200.enums.enumeration.Rank._
 import edu.neu.coe.csye7200.enums.enumeration.Suit._
 import org.scalatest._
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class CardsSpec_Enumeration extends FlatSpec with Matchers with Inside {
+class CardsSpec_Enumeration extends AnyFlatSpec with Matchers with Inside {
   "ranks" should "be ordered properly" in {
     assert(Ace > King)
     val rankList = List(Ace, Trey, Four, Queen, Knave, Nine, Seven, Six, Deuce, Five, King, Ten, Eight)
@@ -33,3 +35,4 @@ class CardsSpec_Enumeration extends FlatSpec with Matchers with Inside {
 
 
 }
+  

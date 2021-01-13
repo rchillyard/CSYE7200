@@ -1,11 +1,12 @@
 package edu.neu.coe.csye7200.parse
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
   * @author scalaprof
   */
-class PostCodeSpec extends FlatSpec with Matchers {
+class PostCodeSpec extends AnyFlatSpec with Matchers {
   val code1 = "EC1A 1BB"
   val code2 = "W1A 0AX"
   val code3 = "M1 1AE"

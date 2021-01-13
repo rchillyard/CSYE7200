@@ -199,7 +199,7 @@ case class Exact(x: Double) extends FuzzyBase(x, 0, new ConstantRealDistribution
   override def map2(f: DiFunc[Double])(delta: Double) = throw new UnsupportedOperationException("cannot introduce fuzz to Exact")
 
   def newFuzzy(x: Double, delta: Double): Fuzzy = {
-    require(delta == 0);
+    require(delta == 0)
     Exact(x)
   }
 

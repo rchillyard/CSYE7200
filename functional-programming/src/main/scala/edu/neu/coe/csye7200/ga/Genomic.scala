@@ -36,7 +36,7 @@ trait Expresser[A, B] {
 trait Phenotype[+B] extends Seq[Trait[B]]
 
 trait Trait[+B] extends Identifier {
-  def fitness[C](environment: Environment[C])
+  def fitness[C](environment: Environment[C]): Unit
 }
 
 trait Environment[+C] extends Seq[EcoFactor[C]] with Identifier
@@ -46,3 +46,4 @@ trait EcoFactor[+C] extends (() => C) with Identifier
 trait Identifier {
   def identify: String
 }
+

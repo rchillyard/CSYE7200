@@ -12,7 +12,7 @@ case class Mailer(server: String) {
   def doMail(message: String, filename: String): Unit = {
     val src = Source.fromResource(filename)
     src.mkString(",")
-    for (entry <- src.getLines.map(_.split(","))) out.println(s"To: ${entry(0)}\nDear ${entry(1)},\n$message")
+    for (entry <- src.getLines().map(_.split(","))) out.println(s"To: ${entry(0)}\nDear ${entry(1)},\n$message")
     src.close()
     out.flush()
   }

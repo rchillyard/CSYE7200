@@ -1,22 +1,23 @@
 package edu.neu.coe.csye7200
 
+import edu.neu.coe.csye7200.MonadOps._
+import org.scalatest.concurrent._
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.time.{Seconds, Span}
+import org.scalatest.{Assertions, Failed, Succeeded}
+
 import java.net.URL
 import java.util.NoSuchElementException
-
-import MonadOps._
-import org.scalatest.concurrent._
-import org.scalatest.time.{Seconds, Span}
-import org.scalatest.{FlatSpec, Matchers, _}
-
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Future, _}
+import scala.concurrent.Future
 import scala.io.Source
 import scala.util._
 
 /**
   * @author scalaprof
   */
-class MonadOpsSpec extends FlatSpec with Matchers with Futures with ScalaFutures {
+class MonadOpsSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutures {
 
   "lift(Future[Try[T]])" should "succeed for http://www.google.com" in {
     val uyf = Future(Try(new URL("http://www.google.com")))
@@ -33,7 +34,8 @@ class MonadOpsSpec extends FlatSpec with Matchers with Futures with ScalaFutures
   "sequence(Seq[Future[T]])" should "succeed for http://www.google.com, etc." in {
     val ws = List("http://www.google.com", "http://www.microsoft.com")
     val ufs = for {w <- ws; uf = Future(new URL(w))} yield uf
-    whenReady(Future.sequence(ufs)) { us => Assertions.assert(us.length == 2) }
+    val usf = Future.sequence(ufs)
+    whenReady(usf) { us => Assertions.assert(us.length == 2) }
   }
 
   behavior of "sequence(Seq[Try[T]])"

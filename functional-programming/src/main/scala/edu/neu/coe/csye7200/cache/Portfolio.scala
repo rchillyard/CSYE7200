@@ -24,7 +24,7 @@ case class Position(symbol: String, quantity: Double) {
 
 object Portfolio {
   // TODO use the sequence method in MonadOps
-  private def sequence[X](xys: Seq[Try[X]]): Try[Seq[X]] = (Try(Seq[X]()) /: xys) {
+  private def sequence[X](xys: Seq[Try[X]]): Try[Seq[X]] = xys.foldLeft(Try(Seq[X]())) {
     (xsy, xy) => for (xs <- xsy; x <- xy) yield xs :+ x
   }
 

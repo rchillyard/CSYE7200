@@ -81,19 +81,19 @@ case class GaussianRNG(n: Long) extends RNG_Java[(Double, Double)](n) {
 }
 
 object RNG {
-  type SRNG[A] = Stream[RNG[A]]
+  type SRNG[A] = LazyList[RNG[A]]
 
-  def rngs[A](r: RNG[A]): SRNG[A] = Stream.cons(r, rngs(r.next))
+  def rngs[A](r: RNG[A]): SRNG[A] = LazyList.cons(r, rngs(r.next))
 
-  def randoms[A](r: RNG[A]): Stream[A] = values(rngs(r))
+  def randoms[A](r: RNG[A]): LazyList[A] = values(rngs(r))
 
-  def gaussians: Stream[Double] = randoms(GaussianRNG.apply) flatMap { x => Stream(x._1, x._2) }
+  def gaussians: LazyList[Double] = randoms(GaussianRNG.apply) flatMap { x => LazyList(x._1, x._2) }
 
-  def values[A](s: SRNG[A]): Stream[A] = s map {
+  def values[A](s: SRNG[A]): LazyList[A] = s map {
     _.value
   }
 
-  def values2[A](s: SRNG[(A, A)]): Stream[A] = s flatMap { x => Stream(x.value._1, x.value._2) }
+  def values2[A](s: SRNG[(A, A)]): LazyList[A] = s flatMap { x => LazyList(x.value._1, x.value._2) }
 }
 
 object LongRNG {
@@ -118,7 +118,7 @@ object DoubleRNG {
 object UniformDoubleRNG {
   def apply: RNG[UniformDouble] = UniformDoubleRNG(System.currentTimeMillis())
 
-  implicit val u: Unit = Unit
+  implicit val u: Unit = ()
 }
 
 object GaussianRNG {

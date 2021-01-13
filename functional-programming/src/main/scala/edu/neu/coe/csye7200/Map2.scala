@@ -47,8 +47,8 @@ object Map2 {
 
   def map2right[A, B, C, S](a: Either[S, A], b: Either[S, B])(f: (A, B) => C): Either[S, C] =
     for {
-      aa <- a.right
-      bb <- b.right
+      aa <- a
+      bb <- b
     } yield f(aa, bb)
 
   def map2leftRight[A, B, C, S](a: Either[S, A], b: Either[S, B])(fr: (A, B) => C)(fl: (S, S) => S): Either[S, C] =
@@ -61,7 +61,6 @@ object Map2 {
 object ReadURL {
 
   import java.net.URL
-
   import scala.io.Source
   import scala.util._
 

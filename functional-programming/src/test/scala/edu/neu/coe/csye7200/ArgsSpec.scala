@@ -4,11 +4,12 @@
 
 package edu.neu.coe.csye7200
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.util.{Failure, Success}
 
-class ArgsSpec extends FlatSpec with Matchers {
+class ArgsSpec extends AnyFlatSpec with Matchers {
 
   private val argFilename = "argFilename"
   private val nameF = "f"
@@ -86,7 +87,7 @@ class ArgsSpec extends FlatSpec with Matchers {
 
   it should "implement map" in {
     val target = Args.create(Arg(sX, s1))
-    val result = target.map[Int](_.toInt)
+    val result = target.map{x: String => x.toInt}
     result.head.value shouldBe Some(x1)
   }
 
@@ -136,7 +137,7 @@ class ArgsSpec extends FlatSpec with Matchers {
     val sa = Args.parse(Array("1", "2", "3"))
     sa.xas.length shouldBe 3
     sa.xas.head shouldBe Arg(None, Some("1"))
-    val xa = sa.map[Int](_.toInt)
+    val xa = sa.map{x: String => x.toInt}
     xa shouldBe Args(Seq(Arg(None, Some(1)), Arg(None, Some(2)), Arg(None, Some(3))))
     val processor = Map[String, Option[Int] => Unit]()
     xa.process(processor) should matchPattern { case Success(Seq(1, 2, 3)) => }
@@ -152,7 +153,7 @@ class ArgsSpec extends FlatSpec with Matchers {
     val sa = Args.parse(Array("1", "2", "3"))
     sa.xas.length shouldBe 3
     sa.xas.head shouldBe Arg(None, Some("1"))
-    val xa = sa.map[Int](_.toInt)
+    val xa = sa.map{x: String => x.toInt}
     xa shouldBe Args(Seq(Arg(None, Some(1)), Arg(None, Some(2)), Arg(None, Some(3))))
     val processor = Map[String, Option[Int] => Unit]()
     xa.process(processor) should matchPattern { case Success(Seq(1, 2, 3)) => }

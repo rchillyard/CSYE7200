@@ -1,11 +1,12 @@
 package edu.neu.coe.csye7200
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
   * @author scalaprof
   */
-class ContainerSpec extends FlatSpec with Matchers {
+class ContainerSpec extends AnyFlatSpec with Matchers {
 
 //  val is = Seq(1,1,2,3,5,8,13,21)
 //

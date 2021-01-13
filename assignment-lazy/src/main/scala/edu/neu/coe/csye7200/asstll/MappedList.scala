@@ -185,12 +185,12 @@ case class MappedList[W, +X](ws: Seq[W], f: W => X) extends ListLike[X] {
   }
 
   /**
-   * Create an iterator on this MappedList
-   *
-   * CONSIDER a better implementation using unfold.
-   *
-   * @return an Iterator[X]
-   */
+    * Create an iterator on this MappedList
+    *
+    * CONSIDER a better implementation using unfold.
+    *
+    * @return an Iterator[X]
+    */
   def iterator: Iterator[X] = toSeq.iterator
 }
 

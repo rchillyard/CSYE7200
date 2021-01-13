@@ -1,17 +1,16 @@
 package edu.neu.coe.csye7200.asstwc
 
-import java.util.NoSuchElementException
-
 import org.scalatest.concurrent._
 import org.scalatest.flatspec
 import org.scalatest.matchers.should
 
+import java.util.NoSuchElementException
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
 /**
- * TODO implement me properly
- */
+  * TODO implement me properly
+  */
 class MonadOpsSpec extends flatspec.AnyFlatSpec with should.Matchers with Futures with ScalaFutures {
 
   import MonadOps._

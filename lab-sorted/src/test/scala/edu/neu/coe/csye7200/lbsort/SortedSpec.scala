@@ -1,14 +1,15 @@
 package edu.neu.coe.csye7200.lbsort
 
 import org.scalatest.concurrent.{Futures, ScalaFutures}
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.language.postfixOps
 
 /**
   * @author scalaprof
   */
-class SortedSpec extends FlatSpec with Matchers with Futures with ScalaFutures {
+class SortedSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutures {
 
   behavior of "Sorted"
 
@@ -64,6 +65,7 @@ class SortedSpec extends FlatSpec with Matchers with Futures with ScalaFutures {
   it should "work" in {
     val l1 = List(1, 5, 8, 10, 11, 15)
     val l2 = List(3, 4, 9, 12, 14, 16)
-    Sorted.merge(l1,l2) shouldBe List(1,3,4,5,8,9,10,11,12,14,15,16)
+    Sorted.merge(l1, l2) shouldBe List(1, 3, 4, 5, 8, 9, 10, 11, 12, 14, 15, 16)
   }
 }
+

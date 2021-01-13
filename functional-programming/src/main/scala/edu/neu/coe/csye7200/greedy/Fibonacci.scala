@@ -5,27 +5,27 @@
 package edu.neu.coe.csye7200.greedy
 
 /**
-  * This object provides a Stream of Fibonacci numbers.
-  * In Scala, a Stream is both lazy and memoized.
+  * This object provides a LazyList of Fibonacci numbers.
+  * In Scala, a LazyList is both lazy and memoized.
   */
 object Fibonacci {
   /**
-    * A stream of Fibonacci numbers of form Stream[Long].
+    * A stream of Fibonacci numbers of form LazyList[Long].
     * This formulation is due to http://www.luigip.com/?p=200
     */
-  val fibonacci: Stream[Long] = 0L #:: fibonacci.scanLeft(1L)(_ + _)
+  val fibonacci: LazyList[Long] = 0L #:: fibonacci.scanLeft(1L)(_ + _)
 
   /**
-    * A stream of Fibonacci numbers of form Stream[BigInt].
+    * A stream of Fibonacci numbers of form LazyList[BigInt].
     * This formulation is due to http://www.luigip.com/?p=200
     */
-  val fibonacciBigInt: Stream[BigInt] = BigInt(0) #:: fibonacciBigInt.scanLeft(BigInt(1))(_ + _)
+  val fibonacciBigInt: LazyList[BigInt] = BigInt(0) #:: fibonacciBigInt.scanLeft(BigInt(1))(_ + _)
 
   /**
-    * A stream of Fibonacci numbers of form Stream[BigInt].
+    * A stream of Fibonacci numbers of form LazyList[BigInt].
     * This uses a less elegant (but more comprehensible perhaps) formulation.
     */
-  val fibonacciAlt: Stream[BigInt] = BigInt(0) #:: BigInt(1) #:: fibonacciAlt.zip(fibonacciAlt.tail).map (n => n._1 + n._2)
+  val fibonacciAlt: LazyList[BigInt] = BigInt(0) #:: BigInt(1) #:: fibonacciAlt.zip(fibonacciAlt.tail).map(n => n._1 + n._2)
 
 //  println(fibonacciBigInt take 100 toList)
 

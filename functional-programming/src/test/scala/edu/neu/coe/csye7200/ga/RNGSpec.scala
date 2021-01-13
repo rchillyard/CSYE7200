@@ -1,13 +1,14 @@
 package edu.neu.coe.csye7200.ga
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.language.postfixOps
 
 /**
   * @author scalaprof
   */
-class RNGSpec extends FlatSpec with Matchers {
+class RNGSpec extends AnyFlatSpec with Matchers {
 
   "RNG(0L)" should "match case RNG(-4962768465676381896L)" in {
     val r: RNG[Long] = LongRNG(0L)

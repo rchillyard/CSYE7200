@@ -1,6 +1,5 @@
 package edu.neu.coe.csye7200.asstmd
 
-import scala.collection.mutable
 import scala.io.Source
 import scala.util.Try
 
@@ -27,7 +26,7 @@ import scala.util.Try
   * NOTE: such fragments are now marked as ???
     // TO BE IMPLEMENTED
     ???
-    result.to[List]
+    result.toList
   }
 
   /**
@@ -91,7 +90,7 @@ object Principal {
     case _ => throw ParseException(s"logic error in Principal: $params")
   }
 
-  def apply(name: String, facebookLikes: Int): Principal = Principal(Name(name),facebookLikes)
+  def apply(name: String, facebookLikes: Int): Principal = Principal(Name(name), facebookLikes)
 }
 
 object Rating {

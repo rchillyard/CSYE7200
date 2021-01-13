@@ -16,7 +16,7 @@ object Poet {
 }
 
 object Name {
-  def getLanguage(x: Option[Seq[Node]]): String = x match {
+  def getLanguage(x: Option[scala.collection.Seq[Node]]): String = x match {
     case Some(Seq(y)) => y.text;
     case _ => ""
   }

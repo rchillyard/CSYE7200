@@ -1,6 +1,7 @@
 package edu.neu.coe.csye7200.asstfc
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.io.{Codec, Source}
 import scala.util._
@@ -8,9 +9,9 @@ import scala.util._
 /**
   * Created by scalaprof on 9/13/16.
   */
-class MovieSpec extends FlatSpec with Matchers {
+class MovieSpec extends AnyFlatSpec with Matchers {
 
-  val phi = (math.sqrt(5) + 1) / 2
+  val phi: Double = (math.sqrt(5) + 1) / 2
 
   behavior of "Name"
 
@@ -133,7 +134,7 @@ class MovieSpec extends FlatSpec with Matchers {
 
   it should "work for the sample file" in {
     val ingester = new Ingest[Movie]()
-    implicit val codec = Codec.UTF8
+    implicit val codec: Codec = Codec.UTF8
     val source = Source.fromResource("movie_metadata.csv")
     val msy = Movie.getMoviesFromCountry("New Zealand", ingester(source))
     msy should matchPattern { case Success(_) => }
@@ -145,13 +146,13 @@ class MovieSpec extends FlatSpec with Matchers {
 
   it should "work for the sample file" in {
     val ingester = new Ingest[Movie]()
-    implicit val codec = Codec.UTF8
+    implicit val codec: Codec = Codec.UTF8
     val source = Source.fromResource("movie_metadata.csv")
     val msy = Movie.getMoviesFromCountry("New Zealand", ingester(source))
     val by = for (ms <- msy) yield Movie.testSerializationAndDeserialization(ms)
     by match {
       case Success(true) =>
-      case Failure(x) => fail("problem",x)
+      case Failure(x) => fail("problem", x)
       case _ => fail("unknown problem")
     }
     source.close()

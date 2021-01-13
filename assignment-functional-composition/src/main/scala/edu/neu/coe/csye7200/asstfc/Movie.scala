@@ -24,7 +24,7 @@ case class Movie(format: Format, production: Production, reviews: Reviews, direc
   * @param duration    its length in minutes
   */
 case class Format(color: Boolean, language: String, aspectRatio: Double, duration: Int) {
-  override def toString = {
+  override def toString: String = {
     val x = if (color) "Color" else "B&W"
     s"$x,$language,$aspectRatio,$duration"
   }
@@ -39,7 +39,7 @@ case class Format(color: Boolean, language: String, aspectRatio: Double, duratio
   * @param titleYear the year the title was registered (?)
   */
 case class Production(country: String, budget: Int, gross: Int, titleYear: Int) {
-  def isKiwi = this match {
+  def isKiwi: Boolean = this match {
     case Production("New Zealand", _, _, _) => true
     case _ => false
   }
@@ -69,8 +69,12 @@ case class Principal(name: Name, facebookLikes: Int) {
   * @param suffix suffix
   */
 case class Name(first: String, middle: Option[String], last: String, suffix: Option[String]) {
-  override def toString = {
-    case class Result(r: StringBuffer) { def append(s: String): Unit = r.append(" "+s); override def toString = r.toString}
+  override def toString: String = {
+    case class Result(r: StringBuffer) {
+      def append(s: String): Unit = r.append(" " + s)
+
+      override def toString: String = r.toString
+    }
     val r: Result = Result(new StringBuffer(first))
     middle foreach r.append
     r.append(last)
@@ -83,7 +87,7 @@ case class Name(first: String, middle: Option[String], last: String, suffix: Opt
   * The US rating
   */
 case class Rating(code: String, age: Option[Int]) {
-  override def toString = code + (age match {
+  override def toString: String = code + (age match {
     case Some(x) => "-" + x
     case _ => ""
   })
@@ -106,11 +110,11 @@ object Movie extends App {
 
   val ingester = new Ingest[Movie]()
   if (args.length > 0) {
-    implicit val codec = Codec.UTF8
+    implicit val codec: Codec = Codec.UTF8
     val source = Source.fromFile(args.head)
     val by = for (ms <- getMoviesFromCountry("New Zealand", ingester(source))) yield testSerializationAndDeserialization(ms)
     by match {
-      case Success(true) => println ("round trip works OK!")
+      case Success(true) => println("round trip works OK!")
       case _ => println("failure")
     }
     source.close()
@@ -121,7 +125,7 @@ object Movie extends App {
     // 5 points
     // TO BE IMPLEMENTED
     ???
- }
+  }
 
   def getMoviesFromCountry(country: String, movies: Iterator[Try[Movie]]): Try[Seq[Movie]] = {
     val mys = for (my <- movies.toSeq) yield
@@ -176,7 +180,8 @@ object Format {
   }
 
   import Function._
-  val fy = lift2(uncurried2(invert4((apply _).curried)))
+
+  val fy: (Try[Int], Try[Double]) => Try[String => Boolean => Format] = lift2(uncurried2(invert4((apply _).curried)))
 }
 
 object Production {
@@ -187,7 +192,8 @@ object Production {
   }
 
   import Function._
-  val fy = lift3(uncurried3(invert4((apply _).curried)))
+
+  val fy: (Try[Int], Try[Int], Try[Int]) => Try[String => Production] = lift3(uncurried3(invert4((apply _).curried)))
 }
 
 object Reviews {
@@ -202,7 +208,7 @@ object Reviews {
 
 object Name {
   // XXX this regex will not parse all names in the Movie database correctly. Still, it gets most of them.
-  val rName = """^([\p{L}\-\']+\.?)\s*(([\p{L}\-]+\.)\s)?([\p{L}\-\']+\.?)(\s([\p{L}\-]+\.?))?$""".r
+  private val rName = """^([\p{L}\-\']+\.?)\s*(([\p{L}\-]+\.)\s)?([\p{L}\-\']+\.?)(\s([\p{L}\-]+\.?))?$""".r
 
   def parse(name: String): Try[Name] = name match {
     case rName(first, _, null, last, _, null) => Success(apply(first, None, last, None))
@@ -221,7 +227,7 @@ object Principal {
 }
 
 object Rating {
-  val rRating = """^(\w*)(-(\d\d))?$""".r
+  private val rRating = """^(\w*)(-(\d\d))?$""".r
 
   /**
     * Alternative apply method for the Rating class such that a single String is decoded

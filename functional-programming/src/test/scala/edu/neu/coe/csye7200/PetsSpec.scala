@@ -1,12 +1,13 @@
 package edu.neu.coe.csye7200
 
 import edu.neu.coe.csye7200.Pets._
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
   * @author scalaprof
   */
-class PetsSpec extends FlatSpec with Matchers {
+class PetsSpec extends AnyFlatSpec with Matchers {
 
   behavior of "Pets"
 

@@ -7,7 +7,7 @@ import scala.util.Random
   */
 class RNG[+A](f: Long => A)(seed: Long) {
   private val random = new Random(seed)
-  private lazy val state = random.nextLong
+  private lazy val state = random.nextLong()
 
   def next = new RNG(f)(state)
 

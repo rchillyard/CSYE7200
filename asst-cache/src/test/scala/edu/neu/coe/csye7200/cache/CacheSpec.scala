@@ -4,20 +4,19 @@
 
 package edu.neu.coe.csye7200.cache
 
-import java.net.URL
-
 import org.scalatest.concurrent.{Futures, ScalaFutures}
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.{Random, Try}
+import scala.concurrent.Future
+import scala.util.Random
 
-class CacheSpec extends FlatSpec with Matchers with Futures with ScalaFutures {
+class CacheSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutures {
 
   behavior of "apply"
 
-  val random = Random
+  private val random = Random
 
   def lookupStock(k: String): Future[Double] = Future {
     random.setSeed(k.hashCode)
@@ -25,9 +24,9 @@ class CacheSpec extends FlatSpec with Matchers with Futures with ScalaFutures {
   }
 
   it should "work" in {
-    val cache = MyCache[String,Double](lookupStock)
+    val cache = MyCache[String, Double](lookupStock)
     val xf: Future[Double] = cache("MSFT")
-    whenReady(xf) { u => u should matchPattern { case x: Double =>  } }
+    whenReady(xf) { u => u should matchPattern { case _: Double => } }
     xf.value.get.get shouldBe 3.64
   }
 }

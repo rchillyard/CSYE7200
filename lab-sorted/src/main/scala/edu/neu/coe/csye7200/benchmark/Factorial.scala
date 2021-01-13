@@ -14,6 +14,7 @@ object Factorial extends App {
       case 0 => r
       case _ => inner(r * i, i - 1)
     }
+
     inner(1, n)
   }
 

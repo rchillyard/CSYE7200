@@ -2,9 +2,10 @@ package edu.neu.coe.csye7200.reduction
 
 import org.junit.Assert.{assertFalse, assertTrue}
 import org.scalatest.concurrent.{Futures, ScalaFutures}
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class MovesSpec extends FlatSpec with Matchers with Futures with ScalaFutures {
+class MovesSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutures {
 
   behavior of "distance"
   it should "be correct" in {
@@ -162,3 +163,4 @@ class MovesSpec extends FlatSpec with Matchers with Futures with ScalaFutures {
   }
 
 }
+

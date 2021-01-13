@@ -1,11 +1,12 @@
 package edu.neu.coe.csye7200
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
   * @author scalaprof
   */
-class FunctionalProgrammingSpec extends FlatSpec with Matchers {
+class FunctionalProgrammingSpec extends AnyFlatSpec with Matchers {
 
   "doublePrecision" should "not work properly" in {
     val x = FunctionalProgramming.evaluate_3_tenths

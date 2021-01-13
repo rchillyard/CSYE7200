@@ -2,14 +2,14 @@ package edu.neu.coe.csye7200.lbsort
 
 import edu.neu.coe.csye7200.lbsort.Comparison._
 import org.scalatest.concurrent.{Futures, ScalaFutures}
-import org.scalatest.{FlatSpec, Matchers}
-
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import scala.language.postfixOps
 
 /**
   * @author scalaprof
   */
-class ComparisonSpec extends FlatSpec with Matchers with Futures with ScalaFutures {
+class ComparisonSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutures {
 
   behavior of "Comparison"
 
