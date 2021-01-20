@@ -56,7 +56,7 @@ abstract class MasterSeqBase[V1, K2, V2, V3](config: Config, f: (Unit, V1) => (K
   override def receive: PartialFunction[Any, Unit] = {
     case v1s: Seq[V1] =>
       log.info(s"received Seq[V]: with ${v1s.length} elements")
-      val caller = sender
+      val caller = sender()
       doMapReduce(Incoming.sequence[Unit, V1](v1s)).onComplete {
         case Success(v3XeK2m) => caller ! Response(v3XeK2m)
         case Failure(x) => caller ! akka.actor.Status.Failure(x)
@@ -88,7 +88,7 @@ abstract class MasterBase[K1, V1, K2, V2, V3](config: Config, f: (K1, V1) => (K2
 
   def reducerProps(f: (K1, V1) => (K2, V2), g: (V3, V2) => V3, z: () => V3): Props
 
-  override def postStop: Unit = {
+  override def postStop(): Unit = {
     log.debug("has shut down")
   }
 
@@ -96,7 +96,7 @@ abstract class MasterBase[K1, V1, K2, V2, V3](config: Config, f: (K1, V1) => (K2
     case v1K1m: Map[K1, V1] =>
       log.info(s"received Map[K1,V1]: with ${v1K1m.size} elements")
       maybeLog("received", v1K1m)
-      val caller = sender
+      val caller = sender()
       doMapReduce(Incoming.map[K1, V1](v1K1m)).onComplete {
         case Success(v3XeK2m) =>
           maybeLog("response", v3XeK2m)
@@ -132,7 +132,7 @@ abstract class MasterBase[K1, V1, K2, V2, V3](config: Config, f: (K1, V1) => (K2
     else ": see log for problem and consider using Mapper_Forgiving instead"
     ) )
     maybeLog("doDistributeReduceCollate", v2sK2m)
-    val rs = Stream.continually(reducers.toStream).flatten
+    val rs = LazyList.continually(reducers.to(LazyList)).flatten
     val v2sK2s = for ((k2, v2s) <- v2sK2m.toSeq) yield (k2, v2s)
     val v3XeK2fs = for (((k2, v2s), a) <- v2sK2s zip rs) yield (a ? Intermediate(k2, v2s)).mapTo[(K2, Either[Throwable, V3])]
     // CONSIDER using traverse
@@ -178,7 +178,7 @@ object Master {
 
   def flatten[X](xyf: Future[Try[X]])(implicit executor: ExecutionContext): Future[X] = {
     def convert[W](wy: Try[W]): Future[W] = {
-      val wp = Promise[W]
+      val wp = Promise[W]()
       wy match {
         case Success(y) => wp complete Success(y)
         case Failure(e) => wp complete Failure(e)
@@ -191,9 +191,11 @@ object Master {
 
   def sequence[K, V, X](vXeKm: Map[K, Either[X, V]]): (Map[K, X], Map[K, V]) = toMap(sequenceLeftRight(vXeKm))
 
-  def sequenceLeft[K, V, X](vXeKs: Seq[(K, Either[X, V])]): Seq[(K, X)] = for ((k, e) <- vXeKs) yield (k, e.left.get)
+  // TODO remove the get invocation here
+  def sequenceLeft[K, V, X](vXeKs: Seq[(K, Either[X, V])]): Seq[(K, X)] = for ((k, e) <- vXeKs) yield (k, e.swap.toOption.get)
 
-  def sequenceRight[K, V, X](vXeKs: Seq[(K, Either[X, V])]): Seq[(K, V)] = for ((k, e) <- vXeKs) yield (k, e.right.get)
+  // TODO remove the get invocation here
+  def sequenceRight[K, V, X](vXeKs: Seq[(K, Either[X, V])]): Seq[(K, V)] = for ((k, e) <- vXeKs) yield (k, e.toOption.get)
 
   def tupleMap[L1, L2, R1, R2](fl: L1 => L2, fr: R1 => R2)(t: (L1, R1)): (L2, R2) = (fl(t._1), fr(t._2))
 

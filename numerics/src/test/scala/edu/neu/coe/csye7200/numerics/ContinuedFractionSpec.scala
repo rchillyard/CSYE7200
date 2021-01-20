@@ -216,6 +216,7 @@ class ContinuedFractionSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   it should "implement toDouble(Double)" in {
     def checkValue(epsilon: Double): Unit = {
+      import Ordering.Double.IeeeOrdering
       // NOTE: we need a fairly large power because phi converges so slowly.
       val maybeDouble = ConFrac.phi.toDouble(epsilon, Hurwitz)
       maybeDouble match {

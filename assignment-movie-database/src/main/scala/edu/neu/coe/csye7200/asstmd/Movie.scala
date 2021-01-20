@@ -22,7 +22,6 @@ import scala.util.Try
   * there are some advanced features like `implicit` which hasn't been covered in class.
   * You should be able to understand it before midterm.
   * I will suggest you only focus on TO BE IMPLEMENTED fragments in the assignments.
-  * NOTE: such fragments are now marked as // SOLUTION
   *
   */
 case class Movie(title: String, format: Format, production: Production, reviews: Reviews, director: Principal, actor1: Principal, actor2: Principal, actor3: Principal, genres: Seq[String], plotKeywords: Seq[String], imdb: String)
@@ -120,7 +119,9 @@ object Movie extends App {
   def elements(list: Seq[String], indices: Int*): List[String] = {
     // Hint: form a new list which is consisted by the elements in list in position indices. Int* means array of Int.
     // 6 points
-    val result: Seq[String] = ???    // TO BE IMPLEMENTED
+    val result: Seq[String] =
+    // TO BE IMPLEMENTED
+    ???
     result.toList
   }
 

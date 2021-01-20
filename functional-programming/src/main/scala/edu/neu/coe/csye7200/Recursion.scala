@@ -7,11 +7,12 @@ import scala.annotation.tailrec
   */
 object Recursion extends App {
 
-    def factorial(x: Int): Long = {
-      @tailrec def inner(r: Long, i: Int): Long =
-        if (i == 0) r else inner(r*i,i - 1)
-      inner(1,x)
-    }
+  def factorial(x: Int): Long = {
+    @tailrec def inner(r: Long, i: Int): Long =
+      if (i == 0) r else inner(r * i, i - 1)
 
-    println(factorial(20)) //> res0: Long = 2432902008176640000
+    inner(1, x)
   }
+
+  println(factorial(20)) //> res0: Long = 2432902008176640000
+}

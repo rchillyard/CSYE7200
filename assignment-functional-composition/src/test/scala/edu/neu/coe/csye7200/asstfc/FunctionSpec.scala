@@ -2,7 +2,6 @@ package edu.neu.coe.csye7200.asstfc
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-
 import scala.util.{Try, _}
 
 class FunctionSpec extends AnyFlatSpec with Matchers {

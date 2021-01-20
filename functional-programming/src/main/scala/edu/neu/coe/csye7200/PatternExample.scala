@@ -4,12 +4,15 @@
 
 package edu.neu.coe.csye7200
 
+import scala.annotation.tailrec
+
 object PatternExample extends App {
   decode(List(1, 2, -1))
 
   val m = Map(1 -> "uno", 2 -> "dos")
   for (kv <- m) decode(kv)
 
+  @tailrec
   def decode(xs: List[Int]): Unit =
     xs match {
       case Nil =>

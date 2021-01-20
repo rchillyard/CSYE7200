@@ -9,7 +9,7 @@ import org.scalatest.matchers.should.Matchers
   */
 class ConcordanceSpec extends AnyFlatSpec with Matchers with Inside {
 
-  def parse(s: String) = {
+  private def parse(s: String) = {
     val p = new ConcordanceParser
     p.parseAll(p.sentence, s) match {
       case p.Success(ws, _) => ws

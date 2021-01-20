@@ -8,24 +8,46 @@ import scala.collection.mutable
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-trait Cache[K, V] extends (K => Future[V]) {
+trait Cache[K, V] extends (K => Future[V])
 
-  val fulfill: K => Future[V]
+trait ExpiringKey[K] {
 
+  /**
+    * Method to expire a key.
+    *
+    * @param k the key to expire.
+    */
   def expire(k: K): Unit
-
-  def empty(): Unit
 }
 
-case class MyCache[K, V](fulfill: K => Future[V]) extends Cache[K, V] {
+trait Fulfillment[K, V] {
 
-  private def put(k: K, v: V): Unit = cache.+=((k, v))
+  /**
+    * Function which fulfills a value for a key.
+    * In the context of a Cache, we can invoke this function to get a value corresponding to the given key.
+    *
+    */
+  val fulfill: K => Future[V]
+}
 
-  override def apply(k: K): Future[V] = if (cache.contains(k)) Future(cache(k)) else for (v <- fulfill(k); _ = put(k, v)) yield v
+case class FulfillingCache[K, V](fulfill: K => Future[V]) extends Cache[K, V] with ExpiringKey[K] with Fulfillment[K, V] {
 
-  def expire(k: K): Unit = cache.-=(k)
+  private def put(k: K, v: V): Unit = cache += (k -> v)
 
-  val cache: mutable.Map[K, V] = mutable.Map.empty
+  def apply(k: K): Future[V] = if (cache.contains(k)) Future(cache(k)) else for (v <- fulfill(k); _ = put(k, v)) yield v
+
+  def expire(k: K): Unit = cache -= k
+
+  private val cache: mutable.Map[K, V] = mutable.Map.empty
 
   def empty(): Unit = cache.empty
+}
+
+object CacheFactory {
+
+  def createCache[K, V](fulfill: K => Future[V]): Cache[K, V] = FulfillingCache(fulfill)
+
+  def lookupStock(k: String): Future[Double] = Future(MockStock.lookupStock(k))
+
+  def createStockCache: Cache[String, Double] = createCache(lookupStock)
 }

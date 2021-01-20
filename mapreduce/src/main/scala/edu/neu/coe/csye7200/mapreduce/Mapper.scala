@@ -35,7 +35,7 @@ class Mapper[K1, V1, K2, V2](f: (K1, V1) => (K2, V2)) extends Actor with ActorLo
       log.info(s"received $i")
       log.debug(s"with map ${i.m}")
       val v2k2ts = for ((k1, v1) <- i.m) yield Try(f(k1, v1))
-      sender ! prepareReply(v2k2ts)
+      sender() ! prepareReply(v2k2ts)
     case z =>
       log.warning(s"received unknown message type: $z")
   }
@@ -50,7 +50,7 @@ class Mapper[K1, V1, K2, V2](f: (K1, V1) => (K2, V2)) extends Actor with ActorLo
     }
   }
 
-  override def postStop: Unit = {
+  override def postStop(): Unit = {
     log.debug("has shut down")
   }
 
@@ -88,7 +88,7 @@ case class Incoming[K, V](m: Seq[(K, V)]) {
 
 object Incoming {
   // TODO use 2.13 and change to LazyList.continually
-  def sequence[K, V](vs: Seq[V]): Incoming[K, V] = Incoming((vs zip Stream.continually(null.asInstanceOf[K])).map {
+  def sequence[K, V](vs: Seq[V]): Incoming[K, V] = Incoming((vs zip LazyList.continually(null.asInstanceOf[K])).map {
     _.swap
   })
 

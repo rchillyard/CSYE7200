@@ -4,6 +4,8 @@ version := "1.0"
 
 scalaVersion := "2.12.12"
 
+scalacOptions in(Compile, doc) ++= Seq("-groups", "-implicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused" )
+
 parallelExecution in Test := false
 
 libraryDependencies ++= Seq(

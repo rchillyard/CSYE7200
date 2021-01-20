@@ -1,13 +1,12 @@
 package edu.neu.coe.csye7200.asstwc
 
+import java.net.{MalformedURLException, URL}
 import org.scalatest._
 import org.scalatest.concurrent.{Futures, ScalaFutures}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 import org.scalatest.tagobjects.Slow
 import org.scalatest.time._
-
-import java.net.{MalformedURLException, URL}
 import scala.collection.mutable
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util._

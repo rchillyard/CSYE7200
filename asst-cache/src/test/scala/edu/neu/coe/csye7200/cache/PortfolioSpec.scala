@@ -14,7 +14,7 @@ import scala.util._
 
 class PortfolioSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutures {
 
-  private val cache = MyCache[String, Double](lookupStock)
+  private val cache = FulfillingCache[String, Double](lookupStock)
 
   behavior of "Position"
 

@@ -1,10 +1,9 @@
 package edu.neu.coe.csye7200.asstfc
 
-import spray.json._
-
 import scala.collection.mutable
 import scala.io.{Codec, Source}
 import scala.util._
+import spray.json._
 
 /**
   * This is a variation on the previous Movie class (in edu.neu.coe.csye._7200.ingest)

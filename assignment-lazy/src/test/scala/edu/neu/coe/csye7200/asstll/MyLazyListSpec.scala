@@ -6,7 +6,6 @@ package edu.neu.coe.csye7200.asstll
 
 import org.scalatest.flatspec
 import org.scalatest.matchers.should
-
 import scala.language.postfixOps
 
 class MyLazyListSpec extends flatspec.AnyFlatSpec with should.Matchers {

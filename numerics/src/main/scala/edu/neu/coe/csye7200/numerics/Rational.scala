@@ -8,6 +8,40 @@ import scala.language.implicitConversions
 import scala.util.control.NonFatal
 import scala.util.{Failure, Success, Try}
 
+
+/**
+  * Trait to define the behavior of a Ring.
+  *
+  * @tparam T the parametric type of the Ring.
+  */
+trait Ring[T] {
+  /**
+    * The additive, associative operator.
+    *
+    * @param that another value of T.
+    * @return the sum of this and that.
+    */
+  def +(that: T): T
+
+  /**
+    * The additive identity.
+    */
+  val iPlus: T
+
+  /**
+    * The multiplicative, associative operator.
+    *
+    * @param that another value of T.
+    * @return the product of this and that.
+    */
+  def *(that: T): T
+
+  /**
+    * The multiplicative identity.
+    */
+  val iTimes: T
+}
+
 /**
   * Rational.
   *
@@ -21,18 +55,27 @@ import scala.util.{Failure, Success, Try}
   *
   * @author scalaprof
   */
-case class Rational(n: BigInt, d: BigInt) {
+case class Rational(n: BigInt, d: BigInt) extends Ring[Rational] {
 
   // Pre-conditions
 
-  // NOTE: ensure that the denominator is positive.
+  // NOTE: ensure that the denominator is non-negative.
   require(d >= 0L, s"Rational denominator is negative: $d")
 
   // NOTE: ensure that the numerator and denominator are relatively prime.
-  require(n == 0L && d == 0L || Rational.gcd(n.abs, d.abs) == 1, s"Rational($n,$d): arguments have common factor: ${Rational.gcd(n, d)}")
+  require(n == 0L && d == 0L || Rational.areRelativelyPrime(n, d), s"Rational($n,$d): arguments have common factor: ${Rational.gcd(n, d)}")
+
+  // Concrete properties of Ring[Rational]
+
+  def *(that: Rational): Rational = Rational.times(this, that)
+
+  def +(that: Rational): Rational = Rational.plus(this, that)
+
+  val iPlus: Rational = Rational.zero
+
+  val iTimes: Rational = Rational.one
 
   // Operators
-  def +(that: Rational): Rational = Rational.plus(this, that)
 
   def +(that: BigInt): Rational = this + Rational(that)
 
@@ -45,8 +88,6 @@ case class Rational(n: BigInt, d: BigInt) {
   lazy val unary_- : Rational = negate
 
   lazy val negate: Rational = Rational.negate(this)
-
-  def *(that: Rational): Rational = Rational.times(this, that)
 
   def *(that: BigInt): Rational = this * Rational(that)
 
@@ -318,6 +359,8 @@ object Rational {
     * @return if (b==0) a else gcd(b, a % b)
     */
   @tailrec def gcd(a: BigInt, b: BigInt): BigInt = if (b == 0) a else gcd(b, a % b)
+
+  private def areRelativelyPrime(n: BigInt, d: BigInt) = gcd(n.abs, d) == 1
 
   /**
     * Method to yield a Rational exponent (in the sense of the a literal Double: for example 1.0Ex).

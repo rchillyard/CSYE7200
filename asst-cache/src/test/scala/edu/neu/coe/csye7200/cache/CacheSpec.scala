@@ -16,15 +16,8 @@ class CacheSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutures
 
   behavior of "apply"
 
-  private val random = Random
-
-  def lookupStock(k: String): Future[Double] = Future {
-    random.setSeed(k.hashCode)
-    random.nextInt(1000) / 100.0
-  }
-
   it should "work" in {
-    val cache = MyCache[String, Double](lookupStock)
+    val cache = CacheFactory.createStockCache
     val xf: Future[Double] = cache("MSFT")
     whenReady(xf) { u => u should matchPattern { case _: Double => } }
     xf.value.get.get shouldBe 3.64

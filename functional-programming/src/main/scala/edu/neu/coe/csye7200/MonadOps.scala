@@ -12,7 +12,7 @@ object MonadOps {
 
   // Hint: write as a for-comprehension, using the method asFuture (below).
   // 6 points.
-  def flatten[X](xyf: Future[Try[X]])(implicit executor: ExecutionContext): Future[X] = /*SOLUTION*/for (xy <- xyf; x <- asFuture(xy)) yield x/*END*/
+  def flatten[X](xyf: Future[Try[X]])(implicit executor: ExecutionContext): Future[X] = /*SOLUTION*/ for (xy <- xyf; x <- asFuture(xy)) yield x/*END*/
 
   def flatten[X](xfy: Try[Future[X]]): Future[X] =
     xfy match {
@@ -27,7 +27,7 @@ object MonadOps {
 
   // Hint: write as a for-comprehension, using the method Future.sequence
   // 6 points.
-  def flatten[X](xsfs: Seq[Future[Seq[X]]])(implicit ec: ExecutionContext): Future[Seq[X]] = /*SOLUTION*/Future.sequence(xsfs) map {
+  def flatten[X](xsfs: Seq[Future[Seq[X]]])(implicit ec: ExecutionContext): Future[Seq[X]] = /*SOLUTION*/ Future.sequence(xsfs) map {
     _ flatten
   }/*END*/
 
@@ -41,6 +41,7 @@ object MonadOps {
       val uss = for {use <- uses2; uso = sequence(use); us <- uso} yield us
       uss flatten
     }
+
     for {es <- esf; e = filter(es)} yield e
   }
 
@@ -59,17 +60,18 @@ object MonadOps {
 
   // 4 points.
   def sequence[X](xy: Try[X]): Either[Throwable, X] =
-    /*SOLUTION*/xy match {
-      case Success(s) => Right(s)
-      case Failure(e) => Left(e)
-    }/*END*/
+  /*SOLUTION*/ xy match {
+    case Success(s) => Right(s)
+    case Failure(e) => Left(e)
+  }/*END*/
 
   def sequence[X](xf: Future[X])(implicit executor: ExecutionContext): Future[Either[Throwable, X]] =
     xf transform( { s => Right(s) }, { f => f }) recoverWith[Either[Throwable, X]] { case f => Future(Left(f)) }
 
   /**
     * Sequence an Option[Future[X] to a Future[Option[X]
-    * @param xfo the input
+    *
+    * @param xfo      the input
     * @param executor the (implicit) execution context
     * @tparam X the underlying type
     * @return a Future[Option[X]
@@ -81,7 +83,8 @@ object MonadOps {
 
   /**
     * Sequence a Future[Option[X] to an Option[Future[X]
-    * @param xof the input
+    *
+    * @param xof      the input
     * @param executor the (implicit) execution context
     * @tparam X the underlying type
     * @return an Option[Future[X]
@@ -98,7 +101,7 @@ object MonadOps {
 
   // Hint: write as a for-comprehension, using the method sequence (above).
   // 6 points.
-  def sequence[X](xfs: Seq[Future[X]])(implicit executor: ExecutionContext): Seq[Future[Either[Throwable, X]]] = /*SOLUTION*/for (xf <- xfs) yield sequence(xf)/*END*/
+  def sequence[X](xfs: Seq[Future[X]])(implicit executor: ExecutionContext): Seq[Future[Either[Throwable, X]]] = /*SOLUTION*/ for (xf <- xfs) yield sequence(xf)/*END*/
 
   def sequence[X](xys: Seq[Try[X]]): Try[Seq[X]] = xys.foldLeft(Try(Seq[X]())) {
     (xsy, xy) => for (xs <- xsy; x <- xy) yield xs :+ x

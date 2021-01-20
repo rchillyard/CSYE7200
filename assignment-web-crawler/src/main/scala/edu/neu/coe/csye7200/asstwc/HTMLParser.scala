@@ -7,10 +7,9 @@ import scala.util.Try
   */
 object HTMLParser {
 
+  import java.io.ByteArrayInputStream
   import org.ccil.cowan.tagsoup.jaxp.SAXFactoryImpl
   import org.xml.sax.InputSource
-
-  import java.io.ByteArrayInputStream
   import scala.xml.Node
   import scala.xml.parsing.NoBindingFactoryAdapter
 

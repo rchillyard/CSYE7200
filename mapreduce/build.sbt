@@ -4,7 +4,7 @@ version := "1.0.0-SNAPSHOT"
 
 scalaVersion := "2.13.4"
 
-scalacOptions in(Compile, doc) ++= Seq("-groups", "-implicits", "-deprecation")
+scalacOptions in(Compile, doc) ++= Seq("-groups", "-implicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused" )
 
 //mainClass in (Compile, run) := Some("edu.neu.coe.scala.mapreduce.MapReduce")
 

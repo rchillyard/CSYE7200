@@ -33,7 +33,7 @@ object CountWords extends App {
 
   def adder(x: Int, y: Int): Int = x + y
 
-  val props1 = Props.create(classOf[Master_First_Fold[String, URI, String, Seq[String]]], config, mapper1 _, reducer _, init _)
+  val props1 = Props.create(classOf[Master_First_Fold[String, URI, String, Seq[String]]], config, mapper1 _, reducer _, init)
   val master1 = system.actorOf(props1, s"WC-1-mstr")
   val props2 = Props.create(classOf[Master[URI, Seq[String], URI, Int, Int]], config, mapper2 _, adder _)
   val master2 = system.actorOf(props2, s"WC-2-mstr")
@@ -46,8 +46,8 @@ object CountWords extends App {
       println(s"total words: $n")
       if (iUr.left.nonEmpty)
         for ((k, x) <- iUr.left) Console.err.println(s"exception thrown for key $k: $x")
-      system.terminate
-    case Failure(x) => Console.err.println(s"Map/reduce error: ${x.getLocalizedMessage}"); system.terminate
+      system.terminate()
+    case Failure(x) => Console.err.println(s"Map/reduce error: ${x.getLocalizedMessage}"); system.terminate()
   }
   // there are 556 words in total between the three extracts
   val bbcText =

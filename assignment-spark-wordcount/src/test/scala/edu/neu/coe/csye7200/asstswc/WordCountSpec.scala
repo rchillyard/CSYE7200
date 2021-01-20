@@ -4,6 +4,7 @@ import org.apache.spark.sql.SparkSession
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.tagobjects.Slow
 import org.scalatest.{BeforeAndAfter, flatspec}
+import scala.util.Try
 
 class WordCountSpec extends flatspec.AnyFlatSpec with Matchers with BeforeAndAfter  {
 
@@ -26,7 +27,10 @@ class WordCountSpec extends flatspec.AnyFlatSpec with Matchers with BeforeAndAft
   behavior of "Spark"
 
   it should "work for wordCount" taggedAs Slow in {
-    WordCount.wordCount(spark.read.textFile(getClass.getResource("WordCount.txt").getPath).rdd," ").collect() should matchPattern {
+    val triedPath = Try(getClass.getResource("WordCount.txt").getPath)
+    triedPath.isSuccess shouldBe true
+    for (path <- triedPath)
+    WordCount.wordCount(spark.read.textFile(path).rdd," ").collect() should matchPattern {
       case Array(("Hello",3),("World",3),("Hi",1)) =>
     }
   }

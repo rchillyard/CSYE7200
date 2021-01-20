@@ -47,12 +47,12 @@ abstract class ReducerBase[K2, V2, V3] extends Actor with ActorLogging {
     case i: Intermediate[K2, V2] =>
       log.info(s"received $i")
       log.debug(s"with elements ${i.vs}")
-      sender ! (i.k, Master.sequence(Try(getValue(i.vs))))
+      sender() ! (i.k, Master.sequence(Try(getValue(i.vs))))
     case q =>
       log.warning(s"received unknown message type: $q")
   }
 
-  override def postStop: Unit = {
+  override def postStop(): Unit = {
     log.debug("has shut down")
   }
 
