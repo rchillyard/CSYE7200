@@ -50,7 +50,7 @@ object MonadOps {
     }
 
   def sequence[X](xf: Future[X])(implicit executor: ExecutionContext): Future[Either[Throwable, X]] =
-    xf transform( { s => Right(s) }, { f => f }) recoverWith[Either[Throwable, X]] { case f => Future(Left(f)) }
+    xf transform( { s => Right(s) }, identity) recoverWith[Either[Throwable, X]] { case f => Future(Left(f)) }
 
   // Hint: write as a for-comprehension, using the method sequence (above).
   // 6 points.
