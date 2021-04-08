@@ -21,5 +21,6 @@ libraryDependencies ++= Seq(
   "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2",
   "org.apache.commons" % "commons-math3" % "3.6.1",
   "org.scalacheck" %% "scalacheck" % "1.14.1" % "test"
+//  "org.scalatestplus" %% "scalacheck-1-15" % "3.2.2.0" % "test"
 )
 

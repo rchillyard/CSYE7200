@@ -41,7 +41,7 @@ class RationalPropertySpec extends Properties("Rational") {
     // TODO check this is OK. Might need to be Rational(BigDecimal.valueOf(x))
     val r = Rational(x)
     val s = Rational(1.0 / x)
-    (r * s).toDouble === 1.0 +- 1E-6
+    (r * s).toDouble === 1.0 +- 1E-7
   }
 
 }
