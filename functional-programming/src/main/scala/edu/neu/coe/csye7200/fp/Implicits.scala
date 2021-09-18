@@ -41,4 +41,3 @@ object T {
 }
 
 case class U(u: Int)
-

@@ -2,7 +2,7 @@ name := "lab-actors"
 
 version := "1.0"
 
-scalaVersion := "2.13.1"
+scalaVersion := "2.13.5"
 
 scalacOptions in(Compile, doc) ++= Seq("-groups", "-implicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused" )
 

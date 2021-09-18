@@ -117,5 +117,3 @@ object CaseParser {
   val sOr: Regex = """(?i)OR""".r
   val sBetween: Regex = """(?i)BETWEEN""".r
 }
-
-
