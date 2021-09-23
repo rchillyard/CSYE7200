@@ -46,4 +46,3 @@ trait EcoFactor[+C] extends (() => C) with Identifier
 trait Identifier {
   def identify: String
 }
-

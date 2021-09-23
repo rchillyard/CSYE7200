@@ -49,7 +49,7 @@ trait ProductStream[X <: Product] {
     * @return a ProductStream of transformed tuples
     */
   def map[Y <: Product](f: X => Y): ProductStream[Y] = // Assignment6 5
-  /*SOLUTION*/ ConcreteProductStream[Y](header, tuples map f)/*END*/
+  ??? // TO BE IMPLEMENTED
 
   /**
     * flatMap method
@@ -58,7 +58,7 @@ trait ProductStream[X <: Product] {
     * @return a ProductStream of transformed tuples
     */
   def flatMap[Y <: Product](f: X => Iterable[Y]): ProductStream[Y] = // Assignment6 5
-  /*SOLUTION*/ ConcreteProductStream[Y](header, tuples flatMap f)/*END*/
+  ??? // TO BE IMPLEMENTED
 
   /**
     * toMap method
@@ -92,7 +92,7 @@ abstract class ProductStreamBase[X <: Product] extends ProductStream[X] {
     * @return a Stream of Map[String,Any] objects
     */
   def asMaps: LazyList[Map[String, Any]] = // Assignment6 14
-  /*SOLUTION*/ tuples map { t => (t.productIterator zip header.iterator map { case (v, k) => k -> v }).toMap } /*END*/
+  ??? // TO BE IMPLEMENTED
 }
 
 /**
@@ -229,7 +229,7 @@ object TupleStream {
   def project[X <: Product](is: Seq[Int])(x: X): Seq[String] = for (i <- is) yield x.productElement(i).asInstanceOf[String]
 
   def toTuple[X <: Product](ats: Seq[Try[Any]]): Try[X] = // Assignment6 8 Hint: use MonadOps.sequence; Tuples.toTuple; and asInstanceOf
-  /*SOLUTION*/ for (as <- MonadOps.sequence(ats)) yield Tuples.toTuple(as).asInstanceOf[X]/*END*/
+  ??? // TO BE IMPLEMENTED
 
   def seqToTuple[X <: Product](ws: Seq[String])(f: String => Try[Any]): Try[X] = toTuple(ws map f)
 }
@@ -290,7 +290,7 @@ case class CsvParser(
     * @return a Parser of List of String
     */
   lazy val row: Parser[List[String]] = // Assignment6 3: row ::= term { delimiter term }
-  /*SOLUTION*/ repsep(term, delimiter)/*END*/
+  ??? // TO BE IMPLEMENTED
 
   /**
     * Internal parser method to parse a term.
@@ -300,7 +300,7 @@ case class CsvParser(
     * @return a Parser of String
     */
   lazy val term: Parser[String] = // Assignment6 7: term ::= quoteChar text quoteChar | text
-  /*SOLUTION*/ stringInQuotes | nonDelimiters | failure("term failure")/*END*/
+  ??? // TO BE IMPLEMENTED
 
   /**
     * Internal parser method to parse a string within quotes.
@@ -377,4 +377,3 @@ object CsvParser {
   private val truth = """(?i)^([ty]|true|yes)$""".r
   val untruth: Regex = """(?i)^([fn]|false|no)$""".r
 }
-

@@ -25,9 +25,7 @@ abstract class LazyNumber[X: Fractional](x: => X, f: X => X) extends Valuable[X]
   def unit(x: => X): LazyNumber[X] = construct(x, identity)
 
   // 7 points
-  def flatMap(g: X => LazyNumber[X]): LazyNumber[X] = /*SOLUTION*/ g(get)
-
-  /*END*/
+  def flatMap(g: X => LazyNumber[X]): LazyNumber[X] = ??? // TO BE IMPLEMENTED
   def map(f: X => X): LazyNumber[X] = flatMap(a => unit(f(a)))
 
   def fNegate: Product[X] = Product(z.negate(z.one))

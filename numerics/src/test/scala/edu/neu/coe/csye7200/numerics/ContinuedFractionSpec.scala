@@ -495,4 +495,10 @@ class ContinuedFractionSpec extends flatspec.AnyFlatSpec with should.Matchers {
     checkValue(0.00000001)
     checkValue(0.000000001)
   }
+
+  behavior of "Basel"
+  it should "calculate pi" in {
+    ??? // TO BE IMPLEMENTED
+  }
+
 }
