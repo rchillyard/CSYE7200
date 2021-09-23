@@ -37,5 +37,5 @@ object Substring {
     p.isEmpty || substring(string.toList)
   }
 
-  private def startsWith(s: Seq[Char], p: Seq[Char]): Boolean = /*SOLUTION*/ s zip p forall (t => t._1 == t._2)/*END*/
+  private def startsWith(s: Seq[Char], p: Seq[Char]): Boolean = ??? // TO BE IMPLEMENTED
 }

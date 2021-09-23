@@ -25,4 +25,3 @@ object ScalaDate {
     println(apply())
   }
 }
-

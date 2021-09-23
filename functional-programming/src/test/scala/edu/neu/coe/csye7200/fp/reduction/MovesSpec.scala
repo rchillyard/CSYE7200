@@ -163,4 +163,3 @@ class MovesSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutures
   }
 
 }
-

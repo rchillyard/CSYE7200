@@ -51,4 +51,3 @@ class ParseCsvWithHTMLSpec extends AnyFlatSpec with Matchers {
     case None => Failure(new FileNotFoundException(s"cannot get resource $resource"))
   }
 }
-

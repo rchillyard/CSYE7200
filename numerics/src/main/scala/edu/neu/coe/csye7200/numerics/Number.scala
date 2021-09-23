@@ -630,4 +630,3 @@ object Factor {
 }
 
 case class NumberException(str: String) extends Exception(str)
-

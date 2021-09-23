@@ -1,3 +1,7 @@
+*/.idea/*
+*/project/*
+*/target/*
+*/.bsp/*
 *.class
 *.log
 
@@ -7,9 +11,8 @@ api/
 
 *.iml
 .idea
-
+.bsp/*
 output\.html
 /CSYEoutput.html
+/draft final.pages
 /.bsp/
-sbt.json
-
