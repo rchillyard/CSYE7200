@@ -5,7 +5,7 @@ import scala.util.parsing.combinator._
 /**
   * @author scalaprof
   */
-class ArithImproved extends JavaTokenParsers {
+object ArithImproved extends JavaTokenParsers {
 
   trait Expression {
     def eval: Double

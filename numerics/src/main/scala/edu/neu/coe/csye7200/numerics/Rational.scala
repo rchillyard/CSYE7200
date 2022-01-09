@@ -1,5 +1,6 @@
 package edu.neu.coe.csye7200.numerics
 
+import edu.neu.coe.csye7200.numerics.Rational.toStringThreshold
 import edu.neu.coe.csye7200.parse.{RationalParser, RationalParserException}
 
 import java.lang.Math._
@@ -163,16 +164,20 @@ case class Rational(n: BigInt, d: BigInt) extends Ring[Rational] {
     Rational(n + other.n, d + other.d)
   else Rational.NaN
 
-  override def toString: String =
+  override def toString: String = render(toStringThreshold)
+
+  def render(implicit threshold: Long): String = {
     if (isNaN) "NaN"
     else if (isInfinity) (if (n > 0) "+ve" else "-ve") + " infinity"
     else if (isWhole) toBigInt.toString
-    else if (d > 100000L || isExactDouble) toDouble.toString
+    else if (d > threshold || isExactDouble) toDouble.toString
     else toRationalString
+  }
 }
 
 object Rational {
 
+  implicit val toStringThreshold: Long = 1000000L
   /**
     * Method to approximate a Double as a Rational, regardless of the value of the Double.
     * Application code should always call this method, or Rational.apply(Double).

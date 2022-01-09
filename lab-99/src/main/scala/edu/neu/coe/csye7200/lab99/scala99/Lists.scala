@@ -45,16 +45,7 @@ object P03 {
 
 object P04 {
 
-  def length[X](xs: List[X]): Int = {
-    @tailrec
-    def inner(result: Int, _xs: List[X]): Int = {
-      _xs match {
-        case Nil => result
-        case _ :: t => inner(result + 1, t)
-      }
-    }
-
-    inner(0, xs)
+  def length[X](xs: List[X]): Int = ??? // TO BE IMPLEMENTED
   }
 }
 
@@ -68,8 +59,8 @@ object P05 {
 
 object P06 {
 
-  // inefficient solution
-  def isPalindrome[X](xs: List[X]): Boolean = ??? // TO BE IMPLEMENTED
+@tailrec
+def isPalindrome[X](xs: List[X]): Boolean = ??? // TO BE IMPLEMENTED
 }
 
 object P07 {

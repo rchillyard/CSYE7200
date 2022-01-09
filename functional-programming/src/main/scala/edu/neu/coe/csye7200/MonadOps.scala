@@ -49,7 +49,7 @@ object MonadOps {
 //      case Failure(e) => (Promise[X] complete (throw e)).future
 //    }
 
-  def flatten[K, V](voKm: Map[K, Option[V]]): Map[K, V] = for ((k, vo) <- voKm; v <- vo) yield k -> v
+    def flatten[K, V](voKm: Map[K, Option[V]]): Map[K, V] = for ((k, vo) <- voKm; v <- vo) yield k -> v
 
   def asFuture[X](xy: Try[X]): Future[X] = xy match {
     case Success(s) => Future.successful(s)

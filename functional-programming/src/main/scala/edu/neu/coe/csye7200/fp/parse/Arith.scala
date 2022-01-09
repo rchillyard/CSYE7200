@@ -5,7 +5,7 @@ import scala.util.parsing.combinator._
 /**
   * @author scalaprof
   */
-class Arith extends JavaTokenParsers {
+object Arith extends JavaTokenParsers {
 
   def expr: Parser[Any] = term ~ rep("+" ~ term | "-" ~ term)
 

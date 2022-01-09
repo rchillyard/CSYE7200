@@ -419,6 +419,8 @@ class ContinuedFractionSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   it should "define ContinuedFraction.PiSimple" in {
     val z: ContinuedFraction = ContinuedFraction.PiSimple
+    implicit val threshold: Long = 10000000L
+    z.convergents.foreach(r => println(r.render))
     val qo = z.toRational(1E-10)
     qo should matchPattern { case Some(_) => }
     qo.get.toDouble shouldBe math.Pi +- 1E-9

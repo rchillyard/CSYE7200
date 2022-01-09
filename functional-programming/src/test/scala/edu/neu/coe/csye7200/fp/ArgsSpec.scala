@@ -6,6 +6,7 @@ package edu.neu.coe.csye7200.fp
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+
 import scala.util.{Failure, Success}
 
 class ArgsSpec extends AnyFlatSpec with Matchers {
@@ -203,7 +204,7 @@ class ArgsSpec extends AnyFlatSpec with Matchers {
 
   behavior of "SimpleArgParser"
 
-  val p = new SimpleArgParser
+  private val p = SimpleArgParser
 
   it should "parse command " + cmdF in {
     p.parseAll(p.command, cmdF) should matchPattern { case p.Success(p.Command(`nameF`), _) => }
@@ -255,25 +256,25 @@ class ArgsSpec extends AnyFlatSpec with Matchers {
   behavior of "PosixArgParser"
 
   it should "parse options from -xf;" in {
-    val p = new PosixArgParser
+    val p = PosixArgParser
     val pp: p.ParseResult[PosixArg] = p.parseAll(p.posixOptions, "-xf;")
     pp should matchPattern { case p.Success(_, _) => }
   }
 
   it should "parse operand from 3.1415927;" in {
-    val p = new PosixArgParser
+    val p = PosixArgParser
     val pp: p.ParseResult[PosixArg] = p.parseAll(p.posixOperand, "3.1415927;")
     pp should matchPattern { case p.Success(_, _) => }
   }
 
   it should "parse option value from -argFilename;" in {
-    val p = new PosixArgParser
+    val p = PosixArgParser
     val pp: p.ParseResult[PosixArg] = p.parseAll(p.posixOptionValue, "argFilename;")
     pp should matchPattern { case p.Success(_, _) => }
   }
 
   it should "parse option set from -xf;argFilename" in {
-    val p = new PosixArgParser
+    val p = PosixArgParser
     val pp: p.ParseResult[Seq[PosixArg]] = p.parseAll(p.posixOptionSet, "-xf;argFilename;")
     pp should matchPattern { case p.Success(_, _) => }
     pp.get.size shouldBe 2
@@ -282,7 +283,7 @@ class ArgsSpec extends AnyFlatSpec with Matchers {
   }
 
   it should """parseCommandLine "-xf argFilename 3.1415927"""" in {
-    val p = new PosixArgParser
+    val p = PosixArgParser
     val as: Seq[PosixArg] = p.parseCommandLine(Seq("-xf", "argFilename", "3.1415927"))
     as.size shouldBe 3
     as.head shouldBe PosixOptions("xf")
@@ -292,83 +293,83 @@ class ArgsSpec extends AnyFlatSpec with Matchers {
 
   behavior of "PosixSynopsisParser"
   it should "parse x as OptionToken" in {
-    val p = new PosixSynopsisParser
+    val p = PosixSynopsisParser
     val cr = p.parse(p.command, "x")
     cr should matchPattern { case p.Success(p.Command("x"), _) => }
   }
   it should "parse xf as two optionTokens" in {
-    val p = new PosixSynopsisParser
+    val p = PosixSynopsisParser
     val eEr = p.parse(p.command ~ p.command, "xf")
     eEr should matchPattern { case p.Success(_, _) => }
   }
   it should """parse "filename" as ValueToken1""" in {
-    val p = new PosixSynopsisParser
+    val p = PosixSynopsisParser
     val wr = p.parse(p.valueToken1, "filename")
     wr should matchPattern { case p.Success("filename", _) => }
   }
   it should "parse Junk as ValueToken2" in {
-    val p = new PosixSynopsisParser
+    val p = PosixSynopsisParser
     val wr = p.parse(p.valueToken2, "Junk")
     wr should matchPattern { case p.Success("Junk", _) => }
   }
   it should "parse Junk as ValueToken" in {
-    val p = new PosixSynopsisParser
+    val p = PosixSynopsisParser
     val vr = p.parse(p.value, "Junk")
     vr should matchPattern { case p.Success(p.Value("Junk"), _) => }
   }
   it should """parse " filename" as ValueToken""" in {
-    val p = new PosixSynopsisParser
+    val p = PosixSynopsisParser
     val vr = p.parse(p.value, " filename")
     vr should matchPattern { case p.Success(p.Value("filename"), _) => }
   }
   it should "parse x as an optionOrValueToken" in {
-    val p = new PosixSynopsisParser
+    val p = PosixSynopsisParser
     val er = p.parse(p.optionWithOrWithoutValue, "x")
     er should matchPattern { case p.Success(_, _) => }
   }
   it should "parse xf as two optionOrValueTokens" in {
-    val p = new PosixSynopsisParser
+    val p = PosixSynopsisParser
     val eEr = p.parse(p.optionWithOrWithoutValue ~ p.optionWithOrWithoutValue, "xf")
     eEr should matchPattern { case p.Success(_, _) => }
   }
   it should "parse [f] as an optionalElement" in {
-    val p = new PosixSynopsisParser
+    val p = PosixSynopsisParser
     val er = p.parse(p.optionalElement, "[f]")
     er should matchPattern { case p.Success(_, _) => }
   }
   it should "parse x[f] as one optionOrValueToken with three characters left over" in {
-    val p = new PosixSynopsisParser
+    val p = PosixSynopsisParser
     val er = p.parse(p.optionWithOrWithoutValue, "x[f]")
     er should matchPattern { case p.Success(p.Command("x"), _) => }
     er.next.pos.column should matchPattern { case 2 => }
   }
   it should "parse x[f] as one optionOrValueToken followed by an optionalElement" in {
-    val p = new PosixSynopsisParser
+    val p = PosixSynopsisParser
     val eEr = p.parse(p.optionWithOrWithoutValue ~ p.optionalElement, "x[f]")
     eEr should matchPattern { case p.Success(_, _) => }
   }
   it should "parse x[f filename] as one optionOrValueToken followed by an optionalElement" in {
-    val p = new PosixSynopsisParser
+    val p = PosixSynopsisParser
     val eEr = p.parse(p.optionWithOrWithoutValue ~ p.optionalElement, "x[f filename]")
     eEr should matchPattern { case p.Success(_, _) => }
   }
   it should "parse f filename as a optionalOrRequiredElement" in {
-    val p = new PosixSynopsisParser
+    val p = PosixSynopsisParser
     val esr = p.parse(p.optionalOrRequiredElement, "f filename")
     esr should matchPattern { case p.Success(_, _) => }
   }
   it should "parse [xf filename] as a List[Element]" in {
-    val p = new PosixSynopsisParser
+    val p = PosixSynopsisParser
     val esr = p.parse(p.optionalElements, "[xf filename]")
     esr should matchPattern { case p.Success(_, _) => }
   }
   it should "parse -x[f filename] as a synopsis" in {
-    val p = new PosixSynopsisParser
+    val p = PosixSynopsisParser
     val so: Option[Synopsis] = p.parseSynopsis(Some("-x[f filename]"))
     so shouldBe Some(Synopsis(Seq(p.Command("x"), p.OptionalElement(p.CommandWithValue("f", p.Value("filename"))))))
   }
   it should "parse -[xf filename]" in {
-    val p = new PosixSynopsisParser
+    val p = PosixSynopsisParser
     val so: Option[Synopsis] = p.parseSynopsis(Some("-[xf filename]"))
     so shouldBe Some(Synopsis(Seq(p.OptionalElement(p.Command("x")), p.OptionalElement(p.CommandWithValue("f", p.Value("filename"))))))
   }

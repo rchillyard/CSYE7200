@@ -5,6 +5,7 @@
 package edu.neu.coe.csye7200.fp
 
 import edu.neu.coe.csye7200.MonadOps
+
 import scala.util._
 import scala.util.parsing.combinator.RegexParsers
 
@@ -65,7 +66,7 @@ object Arg {
 
 case class Args[X](xas: Seq[Arg[X]]) extends Iterable[Arg[X]] {
 
-  def validate(w: String): Args[X] = validate(new PosixSynopsisParser().parseSynopsis(Some(w)))
+  def validate(w: String): Args[X] = validate(PosixSynopsisParser.parseSynopsis(Some(w)))
 
   def validate(so: Option[Synopsis]): Args[X] = so match {
     case Some(s) => if (validate(s)) this else throw ValidationException(this, s)
@@ -142,7 +143,7 @@ object Args {
   def create(args: Arg[String]*): Args[String] = apply(args)
 
   def parse(args: Array[String]): Args[String] = {
-    val p = new SimpleArgParser
+    val p = SimpleArgParser
 
     @scala.annotation.tailrec
     def inner(r: Seq[Arg[String]], w: Seq[p.Token]): Seq[Arg[String]] = w match {
@@ -161,7 +162,7 @@ object Args {
     Args(inner(Seq(), ts))
   }
 
-  def parsePosix(args: Array[String], synopsis: Option[String] = None): Args[String] = doParse((new PosixArgParser).parseCommandLine(args), synopsis)
+  def parsePosix(args: Array[String], synopsis: Option[String] = None): Args[String] = doParse(PosixArgParser.parseCommandLine(args), synopsis)
 
   private def doParse(ps: Seq[PosixArg], synopsis: Option[String] = None): Args[String] = {
     def processPosixArg(p: PosixArg): Seq[PosixArg] = p match {
@@ -177,7 +178,7 @@ object Args {
       case PosixOperand(o) :: t => inner(r :+ Arg(None, Some(o)), t)
     }
 
-    val eso = (new PosixSynopsisParser).parseSynopsis(synopsis)
+    val eso = PosixSynopsisParser.parseSynopsis(synopsis)
     val pss = for (p <- ps) yield processPosixArg(p)
     Args(inner(Seq(), pss.flatten)).validate(eso)
   }
@@ -200,7 +201,7 @@ trait Derivable[T] {
   def deriveFrom[X](x: X): T
 }
 
-class SimpleArgParser extends RegexParsers {
+abstract class SimpleArgParser extends RegexParsers {
   def parseToken(s: String): Try[Token] = parseAll(token, s) match {
     case Success(t, _) => scala.util.Success(t)
     case Failure(msg, input) => scala.util.Failure(new Exception(s"Failure: could not parse '$s' as a token because: $msg with input pos=${input.pos}"))
@@ -225,6 +226,8 @@ class SimpleArgParser extends RegexParsers {
   private val doubleQuote = """""""
   private val argR = doubleQuote ~> """[^"]*""".r <~ doubleQuote | """[^-].*""".r | failure("invalid argument")
 }
+
+object SimpleArgParser extends SimpleArgParser
 
 trait PosixArg {
   def value: String
@@ -252,7 +255,7 @@ case class PosixOptionValue(value: String) extends PosixArg
   */
 case class PosixOperand(value: String) extends PosixArg
 
-class PosixArgParser extends RegexParsers {
+object PosixArgParser extends RegexParsers {
 
   def flatten[T](to: Option[List[T]]): List[T] = to.toList.flatten
 
@@ -307,7 +310,7 @@ case class Synopsis(es: Seq[Element]) {
   def mandatoryAndOptionalElements: (Seq[Element], Seq[Element]) = es partition (!_.isOptional)
 }
 
-class PosixSynopsisParser extends RegexParsers {
+object PosixSynopsisParser extends RegexParsers {
   def parseSynopsis(wo: Option[String]): Option[Synopsis] = wo match {
     case Some(w) => parseAll(synopsis, w) match {
       case Success(es, _) => Some(Synopsis(es))
@@ -420,7 +423,7 @@ class PosixSynopsisParser extends RegexParsers {
   val valueToken1: Parser[String] = """[^\[\]\s]+""".r
 
   private val openBracket = """\[""".r
-  private val closeBracket = """\]""".r
+  private val closeBracket = """]""".r
 
 }
 

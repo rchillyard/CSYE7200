@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers
   * @author scalaprof
   */
 class ArithImprovedSpec extends AnyFlatSpec with Matchers {
-  val parser = new ArithImproved
+  private val parser = ArithImproved
 
   behavior of "factor"
   it should "parse 1" in {

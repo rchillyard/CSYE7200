@@ -6,8 +6,8 @@ import scala.util.parsing.combinator._
 /**
   * @author scalaprof
   */
-class ConcordanceParser extends RegexParsers {
-  private val rWord = """[\w’]+[,;\.\-\?\!\—]?""".r
+object ConcordanceParser extends RegexParsers {
+  private val rWord = """[\w’]+[,;.\-\?!!]?""".r
 
   def word: Parser[(Int, String)] = new PositionalParser(regex(rWord))
 
@@ -24,10 +24,10 @@ class ConcordanceParser extends RegexParsers {
 
 }
 
-object ConcordanceParser {
+object ConcordanceParserMain {
 
   def main(args: Array[String]): Unit = {
-    val docs = for (f <- args) yield Source.fromFile(f).mkString
+    val docs = for (f <- args) yield noleak(Source.fromFile(f))(_.mkString)
     val concordance = for (i <- docs.indices) yield (args(i), parseDoc(docs(i)))
     println(concordance)
     // an alternative way of looking at the data (gives doc, page, line and char numbers with each string)
@@ -51,12 +51,21 @@ object ConcordanceParser {
   def parseLine(line: String): Seq[(Int, String)] = {
     def tidy(s: String) = s.replaceAll("""[.,;-?!]""", "")
 
-    val p = new ConcordanceParser
+    val p = ConcordanceParser
     val r = p.parseAll(p.sentence, line) match {
       case p.Success(ws, _) => ws
       case p.Failure(e, _) => println(e); Nil
       case _ => println("PositionalParser: logic error"); Nil
     }
     r map { case (i, s) => (i, tidy(s).toLowerCase) }
+  }
+
+  /**
+    * TODO Replace with Using when we upgrade to 2.13
+    */
+  private def noleak[R <: AutoCloseable, T](resource: => R)(f: R => T): T = {
+    lazy val r = resource
+    try f(r)
+    finally r.close()
   }
 }

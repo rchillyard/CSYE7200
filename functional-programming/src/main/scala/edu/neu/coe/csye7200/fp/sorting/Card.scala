@@ -294,7 +294,7 @@ object Card {
 
   private[sorting] def bool2Int(b: Boolean): Int = if (b) 1 else 0
 
-  private[sorting] val parser = new RankParser
+  private[sorting] val parser = RankParser
 }
 
 /**
@@ -309,7 +309,7 @@ import scala.util.parsing.combinator.JavaTokenParsers
 /**
   * Parser of rank strings.
   */
-class RankParser extends JavaTokenParsers {
+object RankParser extends JavaTokenParsers {
 
   /**
     * Method to parse ranks as a sequence of Rank

@@ -13,7 +13,7 @@ class PostCodeSpec extends AnyFlatSpec with Matchers {
   val code4 = "B33 8TH"
   val code5 = "CR2 6XH"
   val code6 = "DN55 1PT"
-  val parser = new PostCode
+  private val parser = PostCodeParser
 
   behavior of "letter"
   it should "parse A" in {

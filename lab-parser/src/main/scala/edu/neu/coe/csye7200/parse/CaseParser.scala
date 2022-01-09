@@ -6,6 +6,8 @@ package edu.neu.coe.csye7200.parse
 
 import com.phasmid.laScala.values.Scalar
 import com.phasmid.laScala.{Prefix, Renderable}
+import edu.neu.coe.csye7200.parse.CaseParser.{rAnd, rBetween, rCase, rElse, rEnd, rOr, rThen, rWhen, sAnd, sOr}
+import edu.neu.coe.csye7200.parse.SQLParser.rLimit
 
 import scala.language.implicitConversions
 import scala.util._
@@ -15,7 +17,7 @@ import scala.util.matching.Regex
   * This class defines a parser for Strings which represent a (possibly nested) Case Clause.
   *
   */
-class CaseParser extends FunctionParser {
+abstract class AbstractCaseParser extends AbstractFunctionParser {
 
   /**
     * The chief method of the parser: it takes a String and returns an Invocation, wrapped in Try.
@@ -27,8 +29,8 @@ class CaseParser extends FunctionParser {
     parseAll(caseClause, s) match {
       case this.Success(x, _) => scala.util.Success(x)
       // CHECK...
-      case this.Failure(x, _) => FunctionParser.parseFailure(s, "caseClause", x)
-      case this.Error(x, _) => FunctionParser.parseFailure(s, "caseClause", x)
+      case this.Failure(x, _) => parseFailure(s, "caseClause", x)
+      case this.Error(x, _) => parseFailure(s, "caseClause", x)
     }
   }
 
@@ -37,27 +39,27 @@ class CaseParser extends FunctionParser {
     *
     * @return a Parser of Invocation
     */
-  def caseClause: Parser[Invocation] = CaseParser.sCase ~> rep(whenThen) ~ opt(elseClause) <~ CaseParser.sEnd ^^ { case xs ~ eo => InvocationCaseClause(xs, eo) }
+  def caseClause: Parser[Invocation] = rCase ~> rep(whenThen) ~ opt(elseClause) <~ rEnd ^^ { case xs ~ eo => InvocationCaseClause(xs, eo) }
 
   /**
     * The definition of the parser of a when/then clause
     *
     * @return a Parser of Invocation
     */
-  def whenThen: Parser[Invocation] = CaseParser.sWhen ~ booleanExpression ~ CaseParser.sThen ~ parameter ^^ { case _ ~ f ~ _ ~ t => InvocationWhenThen(f, t) }
+  def whenThen: Parser[Invocation] = rWhen ~> booleanExpression ~ (rThen ~> parameter) ^^ { case f ~ t => InvocationWhenThen(f, t) }
 
   /**
     * The definition of the parser of an else clause
     *
     * @return a Parser of Invocation
     */
-  def elseClause: Parser[Expression] = CaseParser.sElse ~> parameter
+  def elseClause: Parser[Expression] = rElse ~> parameter
 
   def booleanExpression: Parser[Invocation] = predicate ~ rep(booleanTerm) ^^ { case p ~ ts => InvocationBooleanExpression(p, ts) }
 
   def booleanTerm: Parser[BooleanTerm] = booleanOp ~ predicate ^^ { case op ~ p => BooleanTerm(BooleanOp(op), p) }
 
-  def booleanOp: Parser[String] = CaseParser.sAnd | CaseParser.sOr | failure("boolean operator")
+  def booleanOp: Parser[String] = rAnd | rOr | failure("boolean operator")
 
   def predicate: Parser[Expression] = (range | comparison | compareFunction | function | term | failure("predicate")) ^^ { case i: Invocation => Right(i); case x: Scalar => Left(x) }
 
@@ -65,15 +67,15 @@ class CaseParser extends FunctionParser {
 
   def comparison: Parser[Invocation] = parameter ~ opCompare ~ parameter ^^ { case p ~ c ~ q => InvocationComparison(p, c, q) }
 
-  def range: Parser[Invocation] = parameter ~ CaseParser.sBetween ~ parameter ~ CaseParser.sAnd ~ parameter ^^ {
-    case p ~ _ ~ q ~ _ ~ r =>
+  def range: Parser[Invocation] = (parameter <~ rBetween) ~ parameter ~ (rAnd ~> parameter) ^^ {
+    case p ~ q ~ r =>
       InvocationBooleanExpression(Right(InvocationComparison(q, "<=", p)), List(BooleanTerm(And, Right(InvocationComparison(p, "<=", r)))))
   }
 
   def opCompare: Parser[String] = sGe | sGt | sEq | sNe1 | sNe2 | sLe | sLt | failure("opCompare")
 
-  override def reserved: Parser[String] = super.reserved | CaseParser.sCase | CaseParser.sElse | CaseParser.sEnd | CaseParser.sThen |
-    CaseParser.sWhen | CaseParser.sAnd | CaseParser.sOr | SQLParser.sLimit
+  override def reserved: Parser[String] = super.reserved | rCase | rElse | rEnd | rThen |
+    rWhen | rAnd | rOr | rLimit
 
 
   val sGt = ">"
@@ -92,28 +94,63 @@ case class BooleanTerm(op: BooleanOp, e: Expression) extends Renderable {
 trait BooleanOp
 
 case object And extends BooleanOp {
-  override def toString: String = "AND"
+  override def toString: String = sAnd
 }
 
 case object Or extends BooleanOp {
-  override def toString: String = "OR"
+  override def toString: String = sOr
 }
 
 object BooleanOp {
   def apply(s: String): BooleanOp = s.toUpperCase match {
-    case "AND" => And
-    case "OR" => Or
+    case `sAnd` => And
+    case `sOr` => Or
     case _ => throw ParserException(s"BooleanOp not recognized for $s") // CHECK
   }
 }
 
-object CaseParser {
-  val sCase: Regex = """(?i)CASE""".r
-  val sEnd: Regex = """(?i)END""".r
-  val sWhen: Regex = """(?i)WHEN""".r
-  val sThen: Regex = """(?i)THEN""".r
-  val sElse: Regex = """(?i)ELSE""".r
-  val sAnd: Regex = """(?i)AND""".r
-  val sOr: Regex = """(?i)OR""".r
-  val sBetween: Regex = """(?i)BETWEEN""".r
+object CaseParser extends AbstractCaseParser {
+  val sAnd = "AND"
+
+  val sOr = "OR"
+
+  /**
+    * case-independent regular expression to match CASE
+    */
+  val rCase: Regex = """(?i)CASE""".r
+
+  /**
+    * case-independent regular expression to match END
+    */
+  val rEnd: Regex = """(?i)END""".r
+
+  /**
+    * case-independent regular expression to match WHEN
+    */
+  val rWhen: Regex = """(?i)WHEN""".r
+
+  /**
+    * case-independent regular expression to match THEN
+    */
+  val rThen: Regex = """(?i)THEN""".r
+
+  /**
+    * case-independent regular expression to match ELSE
+    */
+  val rElse: Regex = """(?i)ELSE""".r
+
+  /**
+    * case-independent regular expression to match AND
+    */
+  val rAnd: Regex = (s"""(?i)$sAnd""").r
+
+  /**
+    * case-independent regular expression to match OR
+    */
+  val rOr: Regex = (s"""(?i)$sOr""").r
+
+  /**
+    * case-independent regular expression to match BETWEEN
+    */
+  val rBetween: Regex = """(?i)BETWEEN""".r
 }

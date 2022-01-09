@@ -5,6 +5,7 @@
 package edu.neu.coe.csye7200.parse
 
 import com.phasmid.laScala.values.{DateScalar, QuotedStringScalar, Scalar}
+import edu.neu.coe.csye7200.parse.FunctionParser.{rConcat, rIn, rIsNull, rLike, rNot}
 
 import scala.language.implicitConversions
 import scala.util._
@@ -18,7 +19,7 @@ import scala.util.parsing.combinator.JavaTokenParsers
   * It would be easy enough to support double quotes, but for now, they are not supported.
   *
   */
-class FunctionParser extends JavaTokenParsers {
+abstract class AbstractFunctionParser extends JavaTokenParsers {
 
   /**
     * The chief method of the parser: it takes a String and returns an Invocation, wrapped in Try.
@@ -29,9 +30,11 @@ class FunctionParser extends JavaTokenParsers {
   def parseFunctionCall(s: String): Try[Invocation] = parseAll(function, s) match {
     case this.Success(x, _) => scala.util.Success(x)
     // CHECK ...
-    case this.Failure(x, _) => FunctionParser.parseFailure(s, "function call", x)
-    case this.Error(x, _) => FunctionParser.parseFailure(s, "function call", x)
+    case this.Failure(x, _) => parseFailure(s, "function call", x)
+    case this.Error(x, _) => parseFailure(s, "function call", x)
   }
+
+  def parseFailure[X](s: String, e: String, x: String): Try[X] = scala.util.Failure(ParserException(s"""unable to parse "$s" as a $e: $x""")) // CHECK
 
   /**
     * The definition of the parser of a function invocation
@@ -98,21 +101,21 @@ class FunctionParser extends JavaTokenParsers {
     *
     * @return Parser[String]
     */
-  def pn1Identifier: Parser[String] = FunctionParser.sIn | FunctionParser.sConcat | failure("pn1Identifier")
+  def pn1Identifier: Parser[String] = rIn | rConcat | failure("pn1Identifier")
 
   /**
     * The definition of a Parser for a String which defines a f-type Parser (see above).
     *
     * @return Parser[String]
     */
-  def fpIdentifier: Parser[String] = FunctionParser.sNot | "!" | "==" | FunctionParser.sLike | failure("fpIdentifier")
+  def fpIdentifier: Parser[String] = rNot | "!" | "==" | rLike | failure("fpIdentifier")
 
   /**
     * The definition of a Parser for a String which defines a variable.
     *
     * @return Parser[String]
     */
-  def variable: Parser[Invocation] = not(reserved) ~> """[\w\._]+""".r ^^ InvocationLookup
+  def variable: Parser[Invocation] = not(reserved) ~> """[\w._]+""".r ^^ InvocationLookup
 
   def nonfunction: Parser[Expression] = (term | variable | failure("nonfunction")) ^^ {
     case i@InvocationBase(_, _) => Right(i)
@@ -207,18 +210,16 @@ class FunctionParser extends JavaTokenParsers {
 
   def dateString(y: String, m: String, d: String): String = y + "-" + m + "-" + d
 
-  def reserved: Parser[String] =
-    FunctionParser.sLike | FunctionParser.sIn | FunctionParser.sNot | FunctionParser.sConcat | FunctionParser.sIsNull | failure("reserved")
+  def reserved: Parser[String] = rLike | rIn | rNot | rConcat | rIsNull | failure("reserved")
 
   private def ds = "-" | "/" | failure("ds")
 
   val identifier: Parser[Scalar] = not(reserved) ~ """\w+""".r ^^ { case _ ~ s => Scalar(s) }
-  private val quotedString = """[^\']*""".r
+  private val quotedString = """[^']*""".r
   val openParen = "("
   val closeParen = ")"
   private val comma = ","
   private val singleQuote = "'"
-
 }
 
 case class IsoDate(y: Int, m: Int, d: Int)
@@ -240,7 +241,7 @@ object IsoDate {
   }
 
   def apply(w: String): IsoDate = {
-    val dateR = """([^\-]+)\-([^\-]+)\-([^\-]+)""".r
+    val dateR = """([^\-]+)-([^\-]+)-([^\-]+)""".r
     w match {
       case dateR(y, m, d) => apply(if (y.length == 4) y else "20" + y, m, d)
       case _ => throw ParserException(s"Unable to parse $w as a date") // CHECK
@@ -256,15 +257,32 @@ object IsoDate {
 case class ParserException(s: String) extends Exception(s)
 
 /**
-  * Companion object to FunctionParser
+  * FunctionParser
   */
-object FunctionParser {
-  def parseFailure[X](s: String, e: String, x: String): Try[X] = scala.util.Failure(ParserException(s"""unable to parse "$s" as a $e: $x""")) // CHECK
+object FunctionParser extends AbstractFunctionParser {
+  /**
+    * case-independent regular expression to match LIKE
+    */
+  val rLike: Regex = """(?i)LIKE""".r
 
-  val sLike: Regex = """(?i)LIKE""".r
-  val sIn: Regex = """(?i)IN""".r
-  val sNot: Regex = """(?i)NOT""".r
-  val sIsNull: Regex = """(?i)IS NULL""".r
-  val sConcat: Regex = """(?i)CONCAT""".r
+  /**
+    * case-independent regular expression to match IN
+    */
+  val rIn: Regex = """(?i)IN""".r
+
+  /**
+    * case-independent regular expression to match NOT
+    */
+  val rNot: Regex = """(?i)NOT""".r
+
+  /**
+    * case-independent regular expression to match IS NULL
+    */
+  val rIsNull: Regex = """(?i)IS NULL""".r
+
+  /**
+    * case-independent regular expression to match CONCAT
+    */
+  val rConcat: Regex = """(?i)CONCAT""".r
 
 }
