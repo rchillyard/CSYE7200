@@ -46,7 +46,6 @@ object P03 {
 object P04 {
 
   def length[X](xs: List[X]): Int = ??? // TO BE IMPLEMENTED
-  }
 }
 
 object P05 {
