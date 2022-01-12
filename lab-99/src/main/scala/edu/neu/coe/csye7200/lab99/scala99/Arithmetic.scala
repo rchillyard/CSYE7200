@@ -43,7 +43,7 @@ object Arithmetic {
   lazy val primes: LazyList[Int] = 2 #:: LazyList.from(3, 2).filter(_.isPrime)
 
   // P32
-  @scala.annotation.tailrec
+//  @scala.annotation.tailrec
   def gcd(m: Int, n: Int): Int = ??? // TO BE IMPLEMENTED
 
   // P39
