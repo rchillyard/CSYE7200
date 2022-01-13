@@ -4,7 +4,7 @@
 
 package edu.neu.coe.csye7200.csv
 
-import com.phasmidsoftware.parse.{AttributeSet, CellParser, CellParsers, ColumnHelper, DefaultRowConfig, RowParser, StandardRowParser, StringTableParser}
+import com.phasmidsoftware.parse._
 import com.phasmidsoftware.table.{HeadedTable, Header, Table}
 import scala.util.Try
 import scala.util.matching.Regex
@@ -150,6 +150,8 @@ object MovieParser extends CellParsers {
   implicit val parser: StandardRowParser[Movie] = StandardRowParser[Movie]
 
   implicit object MovieTableParser extends StringTableParser[Table[Movie]] {
+    protected def builder(rows: Iterable[Movie], header: Header): Table[Movie] = HeadedTable(rows, header)
+
     type Row = Movie
 
     val maybeFixedHeader: Option[Header] = None
@@ -158,7 +160,6 @@ object MovieParser extends CellParsers {
 
     val rowParser: RowParser[Row, String] = implicitly[RowParser[Row, String]]
 
-    protected def builder(rows: Iterator[Movie], header: Header): Table[Row] = HeadedTable(rows, header)
   }
 
 }

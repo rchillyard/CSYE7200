@@ -4,10 +4,11 @@ import com.phasmidsoftware.table.Table
 import org.apache.spark.sql.{Dataset, SparkSession}
 import scala.util.Try
 
+
 /**
  * @author scalaprof
  */
-object MovieDatabaseAnalyzer extends App {
+case class MovieDatabaseAnalyzer(resource: String) {
 
   val spark: SparkSession = SparkSession
           .builder()
@@ -20,8 +21,24 @@ object MovieDatabaseAnalyzer extends App {
   import MovieParser._
   import spark.implicits._
 
-  val dy: Try[Dataset[Movie]] = Table.parseResource("/movie_metadata.csv") map (mt => spark.createDataset(mt.rows.toSeq))
-  dy foreach {
+  private val mty: Try[Table[Movie]] = Table.parseResource(resource, getClass)
+  val dy: Try[Dataset[Movie]] = mty map {
+    mt =>
+      println(s"Movie table has ${mt.size} rows")
+      spark.createDataset(mt.rows.toSeq)
+
+  }
+}
+
+
+/**
+ * @author scalaprof
+ */
+object MovieDatabaseAnalyzer extends App {
+
+  def apply(resource: String): MovieDatabaseAnalyzer = new MovieDatabaseAnalyzer(resource)
+
+  apply("/movie_metadata.csv").dy foreach {
     d =>
       println(d.count())
       d.show(10)
