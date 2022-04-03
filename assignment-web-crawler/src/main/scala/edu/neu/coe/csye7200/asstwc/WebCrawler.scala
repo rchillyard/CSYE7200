@@ -45,12 +45,12 @@ object WebCrawler extends App {
 
   def crawler(depth: Int, us: Seq[URL]): Future[Seq[URL]] = {
     def inner(urls: Seq[URL], depth: Int, accum: Seq[URL]): Future[Seq[URL]] =
-      if (depth > 0)
+      if (depth > 1)
         for (us <- MonadOps.flattenRecover(wget(urls), { x => System.err.println(s"""crawler: ignoring exception $x ${if (x.getCause != null) " with cause " + x.getCause else ""}""") }); r <- inner(us, depth - 1, accum ++: urls)) yield r
       else
-        Future.successful(accum)
+        Future.successful(accum ++: urls)
 
-    inner(us, depth, Nil)
+    if (depth <= 0) Future.successful(Nil) else inner(us, depth, Nil)
   }
 
   println(s"web reader: ${args.toList}")
