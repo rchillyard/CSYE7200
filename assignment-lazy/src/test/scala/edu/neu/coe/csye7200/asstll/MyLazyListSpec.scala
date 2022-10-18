@@ -8,7 +8,7 @@ import org.scalatest.flatspec
 import org.scalatest.matchers.should
 import scala.language.postfixOps
 
-class MyLazyListSpec extends flatspec.AnyFlatSpec with should.Matchers {
+class Lazy_Test extends flatspec.AnyFlatSpec with should.Matchers {
 
   behavior of "Cons"
   it should "produce a single of 1" in {
@@ -243,6 +243,12 @@ class MyLazyListSpec extends flatspec.AnyFlatSpec with should.Matchers {
   it should "allow for 1" in {
     val x = MyLazyList.singleton(1)
     x.toSeq shouldBe Seq(1)
+  }
+
+  behavior of "from"
+  it should "produce a stream of 1,3,5,7" in {
+    val x = MyLazyList.from(1,2) take 4
+    x.toSeq shouldBe Seq(1,3,5,7)
   }
 
   behavior of "Iterator"
