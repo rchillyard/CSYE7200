@@ -123,7 +123,9 @@ class MovieSpec extends AnyFlatSpec with Matchers {
   behavior of "Reviews"
 
   it should "work for List[String]" in {
+    printf("hello")
     val x = Reviews.parse(List("8.14", "42", "PG-13", "7", "10", "12", "99"))
+    print(x)
     x should matchPattern {
       case Success(Reviews(8.14, 42, Rating("PG", Some(13)), 7, 10, 12, 99)) =>
     }
