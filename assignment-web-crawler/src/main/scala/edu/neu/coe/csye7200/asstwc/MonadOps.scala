@@ -247,7 +247,7 @@ object MonadOps {
    * @tparam X the underlying type.
    * @return if xe is a Right(x) then Some(x) else None.
    */
-  def asOption[X](xe: Either[Throwable, X]): Option[X] = ??? // TO BE IMPLEMENTED
+  def asOption[X](xe: Either[Throwable, X]): Option[X] = if (xe == Right(x)) Some(x) else None// TO BE IMPLEMENTED
 
   /**
    * Method to zip two Optional objects together.
