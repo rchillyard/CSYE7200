@@ -1,7 +1,8 @@
 package edu.neu.coe.csye7200.csv
 
 import com.phasmidsoftware.table.Table
-import org.apache.spark.sql.{Dataset, SparkSession}
+import org.apache.spark.sql.{DataFrame, Dataset, SparkSession, functions}
+
 import scala.util.Try
 
 
@@ -20,6 +21,23 @@ case class MovieDatabaseAnalyzer(resource: String) {
 
   import MovieParser._
   import spark.implicits._
+
+
+  val movieData = spark.read.option("delimiter", ",")
+    .option("header", "true")
+    .csv(resource)
+
+  def mean() = {
+    val mean = movieData.select(functions.avg("imdb_score"))
+    mean.show()
+    mean.collect()(0).get(0)
+  }
+
+  def standardDeviation(): Any = {
+    val stdv = movieData.select(functions.stddev("imdb_score"))
+    stdv.show()
+    stdv.collect()(0).get(0)
+  }
 
   private val mty: Try[Table[Movie]] = Table.parseResource(resource, getClass)
   val dy: Try[Dataset[Movie]] = mty map {
@@ -43,4 +61,9 @@ object MovieDatabaseAnalyzer extends App {
       println(d.count())
       d.show(10)
   }
+
+ // To answer where I got this file : C:\Users\c_jas\CSYE7200\CSYE7200\spark-csv\src\main\resources\movie_metadata.csv
+  apply("/movie_metadata.csv").mean()
+  apply("/movie_metadata.csv").standardDeviation()
 }
+
