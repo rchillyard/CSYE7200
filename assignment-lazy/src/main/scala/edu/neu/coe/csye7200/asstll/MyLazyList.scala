@@ -370,7 +370,6 @@ object MyLazyList {
     * @return a <code>ListLike[X]</code> with the same number of elements as <code>xs</code>.
     */
   def apply[X](x: X, xs: Seq[X]): ListLike[X] = MyLazyList(x, () => apply(xs))
-
   /**
     * Construct a stream of xs.
     *
@@ -405,7 +404,10 @@ object MyLazyList {
     * @return a <code>ListLike[X]</code> with an infinite number of element (whose values are <code>x</code>,
     *         <code>x+step</code>, etc.).
     */
-  def from(start: Int, step: Int): ListLike[Int] = ??? // TO BE IMPLEMENTED
+
+  def from(start: Int, step: Int): ListLike[Int] = {
+    MyLazyList(start, () => from(start+step, step))
+  }
 
   /**
     * Construct a stream of Integers starting with <code>start</code> and with successive elements being
