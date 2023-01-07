@@ -13,7 +13,7 @@ import org.scalatest.matchers.should.Matchers
 
 import java.net.URL
 import scala.concurrent.duration._
-import scala.language.postfixOps
+//import scala.language.postfixOps
 
 import scala.language.postfixOps
 
@@ -42,7 +42,7 @@ class MapReduceSpec extends AnyFlatSpec with Matchers with Futures with ScalaFut
       val u = MockURL(w); (u.get, u.content)
     }
 
-    val props = Props.create(classOf[Master_First_Fold[String, URL, String, Seq[String]]], config, mapper _, reducer _, init _)
+    val props = Props.create(classOf[Master_First_Fold[String, URL, String, Seq[String]]], config, mapper _, reducer _, () => Nil)
     val master = system.actorOf(props, s"""mstr-$spec1""")
     val wsUrf = master.ask(Seq("http://www.bbc.com/", "http://www.cnn.com/", "http://default/")).mapTo[Response[URL, Seq[String]]]
     whenReady(wsUrf, timeout(Span(6, Seconds))) {
@@ -79,7 +79,7 @@ class MapReduceSpec extends AnyFlatSpec with Matchers with Futures with ScalaFut
       val u = MockURL(w); (u.get, u.content)
     }
 
-    val props1 = Props.create(classOf[Master_First_Fold[String, URL, String, Seq[String]]], config, mapper1 _, reducer _, init _)
+    val props1 = Props.create(classOf[Master_First_Fold[String, URL, String, Seq[String]]], config, mapper1 _, reducer _, () => Nil)
     val master1 = system.actorOf(props1, s"WC-1-master")
 
     def mapper2(w: URL, gs: Seq[String]): (URL, Int) = (w, (for (g <- gs) yield g.split("""\s+""").length) reduce (_ + _))
@@ -105,7 +105,7 @@ class MapReduceSpec extends AnyFlatSpec with Matchers with Futures with ScalaFut
       val u = MockURL(w); (u.get, u.content)
     }
 
-    val props1 = Props.create(classOf[Master_First_Fold[String, URL, String, Seq[String]]], config, mapper1 _, reducer _, init _)
+    val props1 = Props.create(classOf[Master_First_Fold[String, URL, String, Seq[String]]], config, mapper1 _, reducer _, () => Nil)
     val master1 = system.actorOf(props1, s"WC-1b-master")
 
     def mapper2(w: String, gs: Seq[String]): (String, Int) = (w, (for (g <- gs) yield g.split("""\s+""").length) reduce (_ + _))
@@ -138,8 +138,6 @@ class MapReduceSpec extends AnyFlatSpec with Matchers with Futures with ScalaFut
   }
 
   def reducer(a: Seq[String], v: String): Seq[String] = a :+ v
-
-  def init: Seq[String] = Seq[String]()
 
   def adder(x: Int, y: Int): Int = x + y
 }

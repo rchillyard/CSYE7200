@@ -26,7 +26,7 @@ class PellSpec extends AnyFlatSpec with Matchers {
   }
 
   it should "yield correct result for P90" in {
-    Pell.bad(90) shouldBe 7052354271195710746L
+    Pell(90) shouldBe 7052354271195710746L
   }
 
 }

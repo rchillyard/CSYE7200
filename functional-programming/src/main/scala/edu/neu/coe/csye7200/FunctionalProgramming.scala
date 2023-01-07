@@ -22,3 +22,24 @@ object FunctionalProgramming extends App {
 
   u.foreach(println(_))
 }
+
+sealed trait Wrapper[T] {
+
+  def unit[U](u: U): Wrapper[U]
+
+  def flatMap[U](f: T => Wrapper[U]): Wrapper[U]
+
+  def map[U](f: T => U): Wrapper[U] = flatMap(t => unit(f(t)))
+}
+
+case class MyWrapper[T](x: T) extends Wrapper[T] {
+  def unit[U](u: U): Wrapper[U] = MyWrapper[U](u)
+
+  def flatMap[U](f: T => Wrapper[U]): Wrapper[U] = f(x)
+}
+
+object MyWrapper extends App {
+  val myWrapper1: MyWrapper[Int] = MyWrapper[Int](0)
+  val myWrapper2: Wrapper[String] = myWrapper1.map(_.toString)
+  println(myWrapper2)
+}

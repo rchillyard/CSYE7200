@@ -76,13 +76,15 @@ object ParseCSVwithHTML extends App {
     val file = new File("output.html")
     val bw = new BufferedWriter(new FileWriter(file))
 
-    val ty = parseEncodeAndWriteString(filename, columnArgs)
-    ty.recover { case x: Throwable => System.err.println(s"No output written because: $x") }.foreach(t => bw.write(t.toString))
+    val ty: Try[Tag] = parseEncodeAndWriteString(filename, columnArgs)
+    // TODO fix this as Unit is not a super-class of Tag.
+    val result: Unit = ty.recover { case x: Throwable => System.err.println(s"No output written because: $x") }.foreach(t => bw.write(t.toString))
     bw.close()
     if (ty.isSuccess) println(s"Successfully written $file")
   }
 
   private def parseEncodeAndWriteString(filename: String, columnArgs: Seq[Arg[String]]) = {
+    // TODO close the source.
     val stream = Source.fromFile(filename, "UTF-16").getLines().to(LazyList)
     val columnNames = columnArgs.flatMap {
       case Arg(_, Some(columnName)) => Some(columnName)

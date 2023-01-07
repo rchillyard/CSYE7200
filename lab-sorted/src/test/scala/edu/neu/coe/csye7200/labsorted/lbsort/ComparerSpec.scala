@@ -53,7 +53,7 @@ class ComparerSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutu
   private val c2a = Composite(2, "a")
   private val c1z = Composite(1, "z")
 
-  it should "umMap" in {
+  it should "unMap" in {
     val comparer1a: Comparer[Composite] = implicitly[Comparer[Int]].unMap(_.i)
     val comparer1b: Comparer[Composite] = implicitly[Comparer[String]].unMap(_.s)
     val comparer: Comparer[Composite] = comparer1b orElse comparer1a

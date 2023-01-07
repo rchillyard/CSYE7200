@@ -117,7 +117,9 @@ object Number {
     */
   def getDigits(bigInt: BigInt): Seq[Int] = {
     val xs = bigInt.toString.toCharArray
+    // TODO sort out the info message here...
     val ys = for (x <- xs) yield s"$x".toInt
+    // TODO sort out the info message here...
     ys.reverse.toList
   }
 

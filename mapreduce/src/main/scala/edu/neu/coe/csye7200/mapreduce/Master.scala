@@ -4,10 +4,9 @@ import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import akka.pattern.ask
 import akka.util.Timeout
 import com.typesafe.config.Config
-
 import scala.collection.immutable
-import scala.concurrent.{Future, _}
 import scala.concurrent.duration._
+import scala.concurrent._
 import scala.language.postfixOps
 import scala.util._
 
@@ -24,6 +23,8 @@ trait ByReduce[K1, V1, K2, V2, V3 >: V2] {
   def mapperProps(f: (K1, V1) => (K2, V2), config: Config): Props =
     if (config.getBoolean("forgiving")) Props.create(classOf[Mapper_Forgiving[K1, V1, K2, V2]], f) else Props.create(classOf[Mapper[K1, V1, K2, V2]], f)
 
+  // TODO f is never used.
+  // TODO z is never used.
   def reducerProps(f: (K1, V1) => (K2, V2), g: (V3, V2) => V3, z: () => V3): Props = Props.create(classOf[Reducer[K2, V2, V3]], g)
 }
 
@@ -32,6 +33,7 @@ trait ByFold[K1, V1, K2, V2, V3] {
   def mapperProps(f: (K1, V1) => (K2, V2), config: Config): Props =
     if (config.getBoolean("forgiving")) Props.create(classOf[Mapper_Forgiving[K1, V1, K2, V2]], f) else Props.create(classOf[Mapper[K1, V1, K2, V2]], f)
 
+  // TODO f is never used.
   def reducerProps(f: (K1, V1) => (K2, V2), g: (V3, V2) => V3, z: () => V3): Props = Props.create(classOf[Reducer_Fold[K2, V2, V3]], g, z)
 }
 
@@ -119,9 +121,10 @@ abstract class MasterBase[K1, V1, K2, V2, V3](config: Config, f: (K1, V1) => (K2
   def maybeLog(w: String, z: Any): Unit = if (log.isDebugEnabled) log.debug(s"$w: $z")
   private def doMap(i: Incoming[K1, V1]): Future[Map[K2, Seq[V2]]] = {
     val reply = mapper ? i
-    if (config.getBoolean("forgiving"))
+    if (config.getBoolean("forgiving")) {
+      // TODO sort out compile info message...
       reply.mapTo[(Map[K2, Seq[V2]], Seq[Throwable])] map { case (v2sK2m, xs) => for (x <- xs) log.warning("mapper exception:", x); v2sK2m }
-    else {
+    } else {
       val v2sK2mtf = reply.mapTo[Try[Map[K2, Seq[V2]]]]
       Master.flatten(v2sK2mtf)
     }

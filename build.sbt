@@ -42,6 +42,6 @@ lazy val sparkcsv = project in file("spark-csv")
 
 lazy val root = (project in file(".")).aggregate(assthw, asstmd, asstrs, asstfc, asstwc, asstsw, fp, num,  mapred, concor, labsort, labparser, labactors, lab99, asstch, sparkapp, sparkcsv)
 
-parallelExecution in Test := false
+Test / parallelExecution := false
 
 javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:+CMSClassUnloadingEnabled")

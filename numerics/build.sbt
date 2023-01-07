@@ -6,7 +6,7 @@ version := "1.0.0-SNAPSHOT"
 
 scalaVersion := "2.13.1"
 
-scalacOptions in(Compile, doc) ++= Seq("-groups", "-implicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused" )
+Compile / doc / scalacOptions ++= Seq("-Vimplicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
 
 val scalaTestVersion = "3.1.1"
 

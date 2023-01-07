@@ -101,16 +101,13 @@ object WebCrawler extends App {
     /**
      * Method to validate a URL as using either HTTPS or HTTP protocol.
      *
-     * CONSIDER: lift this from a URL => URL function.
-     *
-     * @param uy a Try[URL].
+     * @param u a URL.
      * @return a Try[URL] which is a Success only if protocol is valid.
      */
-    def validateURL(uy: Try[URL]): Try[URL] = uy.transform(u => u.getProtocol match {
+    def validateURL(u: URL) = u.getProtocol match {
         case "https" | "http" => Success(u)
         case p => Failure(WebCrawlerProtocolException(p))
-    },
-        x => Failure(x))
+    }
 
     /**
      * Method to try to predict if a URL can be read as an HTML document.
@@ -137,7 +134,9 @@ object WebCrawler extends App {
      * @return a Future of Seq[URL] which corresponds to the various A links in the HTML.
      */
     def wget(url: URL)(implicit ec: ExecutionContext): Future[Seq[URL]] = {
-        // Hint: write as a for-comprehension, using the method createURL(Option[URL], String) to get the appropriate URL for relative links
+        // Hint: write as two nested for-comprehensions: the outer one (first) based on Seq, the inner (second) based on Try.
+        // In the latter, use the method createURL(Option[URL], String) to get the appropriate URL for a relative link.
+        // Don't forget to run it through validateURL.
         // 16 points.
         def getURLs(ns: Node): Seq[Try[URL]] = ??? // TO BE IMPLEMENTED
 

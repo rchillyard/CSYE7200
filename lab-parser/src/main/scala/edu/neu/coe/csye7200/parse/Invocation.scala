@@ -286,7 +286,7 @@ case class InvocationSelect(is: List[Invocation], table: Scalar, wo: Option[Invo
   InvocationBase("select", ((is map (Right(_))) :+ Left(table)) ++ (wo.toList map (Right(_))) ++ (lo.toList map (Left(_))) ++ (oo.toList map (Left(_))))
 
 object InvocationComparison {
-  val opMap = Map(">" -> "gt", ">=" -> "ge", "=" -> "eq", "<=" -> "le", "<" -> "lt", "<>" -> "ne", "!=" -> "ne", "LIKE" -> "like")
+  private val opMap = Map(">" -> "gt", ">=" -> "ge", "=" -> "eq", "<=" -> "le", "<" -> "lt", "<>" -> "ne", "!=" -> "ne", "LIKE" -> "like")
 
   def asOp(s: String): Scalar = QuotedStringScalar(opMap(s))
 }

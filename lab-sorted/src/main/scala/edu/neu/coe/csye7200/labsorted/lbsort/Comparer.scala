@@ -2,6 +2,14 @@ package edu.neu.coe.csye7200.labsorted.lbsort
 
 import scala.language.{implicitConversions, postfixOps}
 
+/**
+  * This trait defines methods to aid in comparing instances of type T.
+  * The apply method takes a tuple of two Ts and returns a Comparison.
+  *
+  * For much more comprehensive comparison library, please see https://github.com/rchillyard/Comparer.
+  *
+  * @tparam T the type of the comparands.
+  */
 trait Comparer[T] extends (((T, T)) => Comparison) {
   self =>
 
@@ -39,6 +47,7 @@ trait Comparer[T] extends (((T, T)) => Comparison) {
 
 object Comparer {
 
+  // NOTE: the reason this is so simple is that there is an implicit converter (below) which converts an Ordering[T] into a Comparer[T].
   implicit val intComparer: Comparer[Int] = Ordering[Int]
   // what should follow this comment?
   ??? // TO BE IMPLEMENTED

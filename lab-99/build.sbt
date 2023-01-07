@@ -4,9 +4,9 @@ version := "1.0"
 
 scalaVersion := "2.13.1"
 
-scalacOptions in(Compile, doc) ++= Seq("-groups", "-implicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused" )
+Compile / scalacOptions ++= Seq("-Vimplicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
 
 libraryDependencies += "org.scalactic" %% "scalactic" % "3.1.0"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.0" % "test"
 
-unmanagedSourceDirectories in Test += baseDirectory.value / "src/it/scala"
+Test / unmanagedSourceDirectories += baseDirectory.value / "src/it/scala"

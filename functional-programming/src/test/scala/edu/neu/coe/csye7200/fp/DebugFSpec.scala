@@ -22,7 +22,7 @@ class DebugFSpec extends AnyFlatSpec with should.Matchers {
         implicitly[Writable].close()
     }
 
-    ignore should "write debug info to LogFile" in {
+    it should "write debug info to LogFile" in {
         import Writable.LogFileWritable
         ("x" !! 1) shouldBe 1
         implicitly[Writable].readBack shouldBe "DebugF: x: 1"
@@ -55,7 +55,7 @@ class DebugFSpec extends AnyFlatSpec with should.Matchers {
         implicitly[Writable].readBack shouldBe ""
     }
 
-    ignore should "not write debug info to LogFile" in {
+    it should "not write debug info to LogFile" in {
         import Writable.LogFileWritable
         ("x" !| 1) shouldBe 1
         a[Exception] shouldBe thrownBy(implicitly[Writable].readBack)

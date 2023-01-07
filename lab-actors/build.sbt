@@ -4,7 +4,7 @@ version := "1.0"
 
 scalaVersion := "2.13.5"
 
-scalacOptions in(Compile, doc) ++= Seq("-groups", "-implicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused" )
+Compile / doc / scalacOptions ++= Seq("-Vimplicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
 
 lazy val akkaVersion = "2.6.10"
 lazy val scalatestVersion = "3.1.4"

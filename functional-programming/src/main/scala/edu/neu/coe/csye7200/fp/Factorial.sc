@@ -1,19 +1,13 @@
-package edu.neu.coe.csye7200
-
 import scala.annotation.tailrec
 
-object Factorial extends App {
   println("Welcome to the Factorial worksheet")
 
-  //> Welcome to the Factorial worksheet
   def factorial(x: Int): Long = {
     @tailrec def inner(r: Long, i: Int): Long =
-      if (i == 0) 1 else inner(r * i, i - 1)
+      if (i == 0) r else inner(r * i, i - 1)
 
     inner(1L, x)
   }
 
-  factorial(5)
-
-  factorial(20)
-}
+  val f5 = factorial(5)
+  val f20 = factorial(20)

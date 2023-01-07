@@ -35,9 +35,7 @@ object DebugF {
          * @tparam X the type of x.
          * @return x.
          */
-        def !![X](x: X): X = { /* SOLUTION */
-            ???
-            /* END */
+        def !![X](x: X): X = { ??? // TO BE IMPLEMENTED
         }
 
         /**
@@ -49,7 +47,7 @@ object DebugF {
          * @tparam X the type of x.
          * @return x.
          */
-        def !|[X](x: X): X =  /* SOLUTION */ ??? /* END */
+        def !|[X](x: X): X =  ??? // TO BE IMPLEMENTED
     }
 }
 
@@ -71,8 +69,7 @@ trait Writable {
      * @param w a String to be written out.
      */
     def write(w: String): Unit = {
-        /* SOLUTION */
-        /* END */
+        ??? // TO BE IMPLEMENTED
     }
 
     /**
@@ -102,11 +99,7 @@ object Writable {
      * ReadBack is not possible with this sink.
      */
     implicit object SysOutWritable extends Writable {
-        /* SOLUTION */
-        val sink: Sink = ???
-
-        def readBack: String = ???
-        /* END */
+        ??? // TO BE IMPLEMENTED
 
         def close(): Unit = ()
     }
@@ -117,20 +110,9 @@ object Writable {
      * ReadBack is not possible with this sink.
      */
     implicit object LogFileWritable extends Writable {
-        var lastMessage: String = _ // NOTE: Yes, it's OK to use a var here.
+        ??? // TO BE IMPLEMENTED
 
-        val sink: Sink = new BufferedWriter(new FileWriter("logFile", true))
-
-        /* SOLUTION */
-
-        override def write(w: String): Unit = {
-            /* SOLUTION */ /* END */
-        }
-
-        def readBack: String = /* SOLUTION */ ???
-        /* END */
-
-        def close(): Unit = /* SOLUTION */ /* END */
+        def close(): Unit = {lastMessage = null; ()}
     }
 
     implicit object StringBuilderWritable extends Writable {
@@ -169,4 +151,3 @@ object Writable {
         def flush(): Unit = ()
     }
 }
-

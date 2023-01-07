@@ -1,44 +1,30 @@
 package edu.neu.coe.csye7200.csv
 
-import com.phasmidsoftware.table.Table
+import edu.neu.coe.csye7200.csv.tableParser.TableDatasetParser
 import org.apache.spark.sql.{Dataset, SparkSession}
+
 import scala.util.Try
 
-
 /**
- * @author scalaprof
- */
-case class MovieDatabaseAnalyzer(resource: String) {
+  * @author scalaprof
+  */
+object MovieDatabaseAnalyzer extends App {
 
-  val spark: SparkSession = SparkSession
-          .builder()
-          .appName("WordCount")
-          .master("local[*]")
-          .getOrCreate()
+  implicit val spark: SparkSession = SparkSession
+    .builder()
+    .appName("MovieDatabaseAnalyzer")
+    .master("local[*]")
+    .getOrCreate()
 
   spark.sparkContext.setLogLevel("ERROR") // We want to ignore all of the INFO and WARN messages.
+
+  val movieTableParser: TableDatasetParser[Movie] = new TableDatasetParser[Movie] {}
 
   import MovieParser._
   import spark.implicits._
 
-  private val mty: Try[Table[Movie]] = Table.parseResource(resource, getClass)
-  val dy: Try[Dataset[Movie]] = mty map {
-    mt =>
-      println(s"Movie table has ${mt.size} rows")
-      spark.createDataset(mt.rows.toSeq)
-
-  }
-}
-
-
-/**
- * @author scalaprof
- */
-object MovieDatabaseAnalyzer extends App {
-
-  def apply(resource: String): MovieDatabaseAnalyzer = new MovieDatabaseAnalyzer(resource)
-
-  apply("/movie_metadata.csv").dy foreach {
+  val mdy: Try[Dataset[Movie]] = movieTableParser.parseResource("/movie_metadata.csv")
+  mdy foreach {
     d =>
       println(d.count())
       d.show(10)

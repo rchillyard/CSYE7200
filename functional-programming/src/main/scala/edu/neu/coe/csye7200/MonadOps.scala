@@ -1,6 +1,5 @@
 package edu.neu.coe.csye7200
 
-import java.util.NoSuchElementException
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.language.postfixOps
 import scala.util._
@@ -43,12 +42,6 @@ object MonadOps {
     for {es <- esf; e = filter(es)} yield e
   }
 
-//  def flatten[X](xfy: Try[Future[X]]): Future[X] =
-//    xfy match {
-//      case Success(xf) => xf
-//      case Failure(e) => (Promise[X] complete (throw e)).future
-//    }
-
     def flatten[K, V](voKm: Map[K, Option[V]]): Map[K, V] = for ((k, vo) <- voKm; v <- vo) yield k -> v
 
   def asFuture[X](xy: Try[X]): Future[X] = xy match {
@@ -60,17 +53,22 @@ object MonadOps {
   def sequence[X](xy: Try[X]): Either[Throwable, X] =
   ??? // TO BE IMPLEMENTED
 
-  def sequence[X](xf: Future[X])(implicit executor: ExecutionContext): Future[Either[Throwable, X]] =
-    xf transform( { s => Right(s) }, { f => f }) recoverWith[Either[Throwable, X]] { case f => Future(Left(f)) }
+  def sequence[X](xf: Future[X])(implicit executor: ExecutionContext): Future[Either[Throwable, X]] = {
+    type Result = Either[Throwable, X]
+    val fToRight: X => Result = s => Right(s)
+    val fToFutureLeft: PartialFunction[Throwable, Future[Result]] = f => Future(Left(f))
+    val identityThrowable: Throwable => Throwable = identity
+    xf.transform[Result](fToRight, identityThrowable).recoverWith[Result](fToFutureLeft)
+  }
 
   /**
-    * Sequence an Option[Future[X] to a Future[Option[X]
-    *
-    * @param xfo      the input
-    * @param executor the (implicit) execution context
-    * @tparam X the underlying type
-    * @return a Future[Option[X]
-    */
+   * Sequence an Option[Future[X] to a Future[Option[X]
+   *
+   * @param xfo      the input
+   * @param executor the (implicit) execution context
+   * @tparam X the underlying type
+   * @return a Future[Option[X]
+   */
   def sequence[X](xfo: Option[Future[X]])(implicit executor: ExecutionContext): Future[Option[X]] = xfo match {
     case Some(xf) => xf map (Some(_))
     case None => Future.successful(None)

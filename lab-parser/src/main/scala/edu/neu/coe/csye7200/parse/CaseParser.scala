@@ -142,12 +142,12 @@ object CaseParser extends AbstractCaseParser {
   /**
     * case-independent regular expression to match AND
     */
-  val rAnd: Regex = (s"""(?i)$sAnd""").r
+  val rAnd: Regex = s"""(?i)$sAnd""".r
 
   /**
     * case-independent regular expression to match OR
     */
-  val rOr: Regex = (s"""(?i)$sOr""").r
+  val rOr: Regex = s"""(?i)$sOr""".r
 
   /**
     * case-independent regular expression to match BETWEEN

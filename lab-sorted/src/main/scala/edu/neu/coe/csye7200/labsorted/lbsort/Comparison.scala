@@ -90,8 +90,9 @@ case object Same extends Comparison {
 }
 
 object Comparison {
-  val more: Different = Different(false)
-  val less: Different = Different(true)
+  val more: Comparison = Different(false)
+  val less: Comparison = Different(true)
+  val same: Comparison = Same
 
   def apply(b: Boolean): Comparison = Different(b)
 

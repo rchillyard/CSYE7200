@@ -10,6 +10,7 @@ class HappyFamiliesSpec extends AnyFlatSpec with should.Matchers {
   private val bentley = Person("Bentley", male, Some(13))
   private val gingerSnap = Person("GingerSnap", female, Some(12))
   private val xena = Person("Xena", Gender(None), Some(7))
+  private val joey = Person("Joey", male, Some(4))
 
   behavior of "HappyFamilies"
 
@@ -48,6 +49,8 @@ class HappyFamiliesSpec extends AnyFlatSpec with should.Matchers {
   it should "birth" in {
     val f1 = for (f <- bentley.marry(gingerSnap)) yield f.birth(xena)
     f1 shouldBe Success(Family(bentley, gingerSnap, Seq(xena)))
+    val f2 = for (f <- f1) yield f.birth(joey)
+    f2 shouldBe Success(Family(bentley, gingerSnap, Seq(xena, joey)))
   }
 
 }
