@@ -6,5 +6,9 @@ object WordCount_ScalaVanilla {
     //Use scala original methods to perform word count
     //Result format should similiar to Map(Hello -> 3, Hi -> 1, World -> 3)
     //hint: you may start with flatMap() then consider the steps to process data in Spark
-    def wordCount(list:List[String]): Map[String, Int] = ??? // TO BE IMPLEMENTED
-  }
+    def wordCount(list: List[String]): Map[String, Int] = {
+// TO BE IMPLEMENTED 
+
+???
+    }
+}

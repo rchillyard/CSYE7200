@@ -47,7 +47,16 @@ case class ShuntingYard(valueStack: Stack[Int], operatorStack: Stack[Operator], 
     // we pop the top operator and the two top values from their respective stacks,
     // apply the operator and push the resulting value onto the value stack.
     //      ???
-    ??? // TO BE IMPLEMENTED
+
+    // TO BE IMPLEMENTED 
+
+
+
+
+
+
+
+???
   }
 
   override def toString(): String = s"ShuntingYard($valueStack,$operatorStack,$depth)"

@@ -37,5 +37,8 @@ object Substring {
     p.isEmpty || substring(string.toList)
   }
 
-  private def startsWith(s: Seq[Char], p: Seq[Char]): Boolean = ??? // TO BE IMPLEMENTED
+  private def startsWith(s: Seq[Char], p: Seq[Char]): Boolean =
+// TO BE IMPLEMENTED 
+
+???
 }

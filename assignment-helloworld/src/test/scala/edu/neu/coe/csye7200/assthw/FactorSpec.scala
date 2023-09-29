@@ -14,9 +14,9 @@ class FactorSpec extends AnyFlatSpec with should.Matchers {
     }
 
     it should "unapply" in {
-        Factor(3).unapply(12) shouldBe Some(List(4))
-        Factor(5).unapply(15) shouldBe Some(List(3))
-        Factor(15).unapply(15) shouldBe Some(List(1))
+        Factor(3).unapply(12) shouldBe Some(4)
+        Factor(5).unapply(15) shouldBe Some(3)
+        Factor(15).unapply(15) shouldBe Some(1)
     }
 
 }

@@ -27,41 +27,86 @@ object P00 {
 
 object P01 {
 
-  @scala.annotation.tailrec
-  def last[X](xs: List[X]): X = ??? // TO BE IMPLEMENTED
+  def last[X](xs: List[X]): X =
+// TO BE IMPLEMENTED 
+
+
+
+
+
+???
 }
 
 object P02 {
 
-  @scala.annotation.tailrec
-  def penultimate[X](xs: List[X]): X = ??? // TO BE IMPLEMENTED
+  def penultimate[X](xs: List[X]): X =
+// TO BE IMPLEMENTED 
+
+
+
+
+
+???
 }
 
 object P03 {
 
-  @scala.annotation.tailrec
-  def kth[X](k: Int, xs: List[X]): X = ??? // TO BE IMPLEMENTED
+  def kth[X](k: Int, xs: List[X]): X =
+// TO BE IMPLEMENTED 
+
+
+
+
+
+???
 }
 
 object P04 {
 
-  def length[X](xs: List[X]): Int = ??? // TO BE IMPLEMENTED
-  }
+  def length[X](xs: List[X]): Int =
+// TO BE IMPLEMENTED 
+
+
+
+
+
+
+
+
+
+
+
+???
 }
 
 object P05 {
 
   def reverse[X](xs: List[X]): List[X] = {
-    // TO BE IMPLEMENTED
-    ???
+    // TO BE IMPLEMENTED 
+
+
+
+
+
+
+
+
+???
   }
 }
 
 object P06 {
 
   def isPalindrome[X](ys: List[X]): Boolean = {
-    @tailrec
-    def inner(r: Boolean, xs: List[X]): Boolean = ??? // TO BE IMPLEMENTED
+    def inner(r: Boolean, xs: List[X]): Boolean =
+// TO BE IMPLEMENTED 
+
+
+
+
+
+
+???
 
     inner(r = true, ys)
   }
@@ -73,62 +118,150 @@ object P07 {
   type ListAny = List[Any]
 
   def flatten(xs: ListAny): ListAny = {
-    // TO BE IMPLEMENTED
-    ???
+    // TO BE IMPLEMENTED 
+
+
+
+
+
+
+
+
+
+
+
+???
   }
 }
 
 object P08 {
 
   def compress[X](xs: List[X]): List[X] = {
-    // TO BE IMPLEMENTED
-    ???
+    // TO BE IMPLEMENTED 
+
+
+
+
+
+
+
+
+
+
+
+
+
+???
   }
 }
 
 object P09 {
 
   def pack[X](xs: List[X]): List[List[X]] = {
-    // TO BE IMPLEMENTED
-    ???
+    // TO BE IMPLEMENTED 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+???
   }
 }
 
 object P10 {
 
-  def encode[X](xs: List[X]): List[(Int, X)] = ??? // TO BE IMPLEMENTED
+  def encode[X](xs: List[X]): List[(Int, X)] =
+// TO BE IMPLEMENTED 
+
+???
 }
 
 object P11 {
 
-  def encodeModified[X](xs: List[X]): List[Any] = ??? // TO BE IMPLEMENTED
+  def encodeModified[X](xs: List[X]): List[Any] =
+// TO BE IMPLEMENTED 
+
+???
 }
 
 object P12 {
 
-  def decode[X](xIs: List[(Int, X)]): List[X] = ??? // TO BE IMPLEMENTED
+  def decode[X](xIs: List[(Int, X)]): List[X] =
+// TO BE IMPLEMENTED 
+
+???
 }
 
 object P13 {
 
   def encodeDirect[X](xs: List[X]): List[(Int, X)] = {
-    // TO BE IMPLEMENTED
-    ???
+    // TO BE IMPLEMENTED 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+???
   }
 }
 
 object P14 {
 
   def duplicate[X](xs: List[X]): List[X] = {
-    // TO BE IMPLEMENTED
-    ???
+    // TO BE IMPLEMENTED 
+
+
+
+
+
+
+
+???
   }
 }
 
 object P15 {
 
   def duplicateN[X](n: Int, xs: List[X]): List[X] = {
-    // TO BE IMPLEMENTED
-    ???
+    // TO BE IMPLEMENTED 
+
+
+
+
+
+
+
+???
   }
 }

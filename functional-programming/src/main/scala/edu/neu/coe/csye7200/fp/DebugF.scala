@@ -35,7 +35,10 @@ object DebugF {
          * @tparam X the type of x.
          * @return x.
          */
-        def !![X](x: X): X = { ??? // TO BE IMPLEMENTED
+        def !![X](x: X): X = { /* SOLUTION */
+            z.write(s"DebugF: $w: $x")
+            x
+            /* END */
         }
 
         /**
@@ -47,7 +50,7 @@ object DebugF {
          * @tparam X the type of x.
          * @return x.
          */
-        def !|[X](x: X): X =  ??? // TO BE IMPLEMENTED
+        def !|[X](x: X): X =  /* SOLUTION */ x /* END */
     }
 }
 
@@ -69,7 +72,9 @@ trait Writable {
      * @param w a String to be written out.
      */
     def write(w: String): Unit = {
-        ??? // TO BE IMPLEMENTED
+        /* SOLUTION */
+        sink.append(w); sink.append("\n"); sink.flush()
+        /* END */
     }
 
     /**
@@ -99,7 +104,11 @@ object Writable {
      * ReadBack is not possible with this sink.
      */
     implicit object SysOutWritable extends Writable {
-        ??? // TO BE IMPLEMENTED
+        /* SOLUTION */
+        val sink: Sink = System.out
+
+        def readBack: String = throw new Exception("cannot read back from SysOutWritable")
+        /* END */
 
         def close(): Unit = ()
     }
@@ -110,7 +119,21 @@ object Writable {
      * ReadBack is not possible with this sink.
      */
     implicit object LogFileWritable extends Writable {
-        ??? // TO BE IMPLEMENTED
+        /* SOLUTION */
+        var lastMessage: String = _
+
+        val sink: Sink = new BufferedWriter(new FileWriter("logFile", true))
+
+        override def write(w: String): Unit = {
+            lastMessage = w
+            super.write(w)
+        }
+
+        def readBack: String = Option(lastMessage) match {
+            case Some(w) => w
+            case None => throw new Exception("No message written to LogFileWritable")
+        }
+        /* END */
 
         def close(): Unit = {lastMessage = null; ()}
     }

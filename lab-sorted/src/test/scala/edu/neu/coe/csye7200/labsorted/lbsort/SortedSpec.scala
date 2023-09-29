@@ -4,6 +4,7 @@ import org.scalatest.concurrent.{Futures, ScalaFutures}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import scala.language.postfixOps
+import scala.util.Random
 
 /**
   * @author scalaprof
@@ -58,6 +59,28 @@ class SortedSpec extends AnyFlatSpec with Matchers with Futures with ScalaFuture
     val sorted = Sorted.create(list)
     val xsf = sorted.async
     whenReady(xsf) { xs => xs shouldBe List(1, 2, 3) }
+  }
+
+  behavior of "mergeSort"
+  it should "work on small list" in {
+    val list = List(1, 5, 8, 10, 11, 15, 3, 4, 9, 12, 14, 16)
+    import scala.concurrent.ExecutionContext.Implicits.global
+    val xsf = Sorted.mergeSort(list)
+    whenReady(xsf) { xs => xs shouldBe List(1, 3, 4, 5, 8, 9, 10, 11, 12, 14, 15, 16) }
+  }
+
+  it should "work on large list" in {
+    val random = new Random()
+    val n = 1000
+    val list = LazyList.continually(random.nextInt(100000000)).take(n).toList
+    import scala.concurrent.ExecutionContext.Implicits.global
+    val xsf = Sorted.mergeSort(list)
+    whenReady(xsf) { xs =>
+      val result = xs.grouped(2).scanLeft(true) {
+        case (b, (x :: y :: Nil)) => b && x <= y
+      }
+      result.forall(x => x) shouldBe true
+    }
   }
 
   behavior of "merge"
