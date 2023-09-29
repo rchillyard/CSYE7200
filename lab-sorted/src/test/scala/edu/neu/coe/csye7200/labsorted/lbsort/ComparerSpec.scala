@@ -55,6 +55,8 @@ class ComparerSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutu
 
   it should "unMap" in {
     val comparer1a: Comparer[Composite] = implicitly[Comparer[Int]].unMap(_.i)
+    // NOTE: if the compiler error here is getting in your way, just comment out this entire unit test.
+    // When you come back to lab-sorted, then you need to actually fix the error. Think about why the previous line works but this line does not.
     val comparer1b: Comparer[Composite] = implicitly[Comparer[String]].unMap(_.s)
     val comparer: Comparer[Composite] = comparer1b orElse comparer1a
     comparer(c1a, c1z) shouldBe less
