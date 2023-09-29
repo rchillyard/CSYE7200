@@ -148,3 +148,4 @@ case class Meeting(start: TransitionTime, stop: TransitionTime)
 object Meeting {
   def apply(start: Int, stop: Int): Meeting = Meeting(TransitionTime(start), TransitionTime(stop))
 }
+

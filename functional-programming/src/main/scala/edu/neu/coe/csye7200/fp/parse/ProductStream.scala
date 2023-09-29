@@ -39,26 +39,33 @@ trait ProductStream[X <: Product] {
 
   /**
     * @return a materialized (non-lazy) List version of the tuples.
-    */
+   */
   lazy val asList: List[X] = tuples.toList
 
   /**
-    * map method
-    *
-    * @param f function to be applied to each tuple
-    * @return a ProductStream of transformed tuples
-    */
+   * map method
+   *
+   * @param f function to be applied to each tuple
+   * @return a ProductStream of transformed tuples
+   */
   def map[Y <: Product](f: X => Y): ProductStream[Y] = // Assignment6 5
-  ??? // TO BE IMPLEMENTED
+
+// TO BE IMPLEMENTED 
+
+???
 
   /**
-    * flatMap method
-    *
-    * @param f function to be applied to each tuple
-    * @return a ProductStream of transformed tuples
-    */
-  def flatMap[Y <: Product](f: X => Iterable[Y]): ProductStream[Y] = // Assignment6 5
-  ??? // TO BE IMPLEMENTED
+   * flatMap method
+   *
+   * @param f function to be applied to each tuple
+   * @return a ProductStream of transformed tuples
+   */
+  def flatMap[Y <: Product](f: X => Iterable[Y]): ProductStream[Y] = { // Assignment6 5
+
+// TO BE IMPLEMENTED 
+
+???
+  }
 
   /**
     * toMap method
@@ -86,13 +93,16 @@ trait ProductStream[X <: Product] {
   */
 abstract class ProductStreamBase[X <: Product] extends ProductStream[X] {
   /**
-    * Method asMaps converts this ProductStream into a Stream of Map[String,Any] objects, one per row.
-    * The keys for the map are derived from the header and the values from the tuple elements.
-    *
-    * @return a Stream of Map[String,Any] objects
-    */
-  def asMaps: LazyList[Map[String, Any]] = // Assignment6 14
-  ??? // TO BE IMPLEMENTED
+   * Method asMaps converts this ProductStream into a Stream of Map[String,Any] objects, one per row.
+   * The keys for the map are derived from the header and the values from the tuple elements.
+   *
+   * @return a Stream of Map[String,Any] objects
+   */
+  def asMaps: LazyList[Map[String, Any]] =  // Assignment6 14
+
+// TO BE IMPLEMENTED 
+
+???
 }
 
 /**
@@ -229,7 +239,10 @@ object TupleStream {
   def project[X <: Product](is: Seq[Int])(x: X): Seq[String] = for (i <- is) yield x.productElement(i).asInstanceOf[String]
 
   def toTuple[X <: Product](ats: Seq[Try[Any]]): Try[X] = // Assignment6 8 Hint: use MonadOps.sequence; Tuples.toTuple; and asInstanceOf
-  ??? // TO BE IMPLEMENTED
+
+// TO BE IMPLEMENTED 
+
+???
 
   def seqToTuple[X <: Product](ws: Seq[String])(f: String => Try[Any]): Try[X] = toTuple(ws map f)
 }
@@ -284,30 +297,36 @@ case class CsvParser(
   }
 
   /**
-    * Internal parser method to parse a row.
-    * It succeeds on a sequence of terms, separated by the delimiter.
-    *
-    * @return a Parser of List of String
-    */
+   * Internal parser method to parse a row.
+   * It succeeds on a sequence of terms, separated by the delimiter.
+   *
+   * @return a Parser of List of String
+   */
   lazy val row: Parser[List[String]] = // Assignment6 3: row ::= term { delimiter term }
-  ??? // TO BE IMPLEMENTED
+
+// TO BE IMPLEMENTED 
+
+???
 
   /**
-    * Internal parser method to parse a term.
-    * It succeeds on EITHER a string contained by a pair of quote characters OR a string which does not contain
-    * any delimiter.
-    *
-    * @return a Parser of String
-    */
+   * Internal parser method to parse a term.
+   * It succeeds on EITHER a string contained by a pair of quote characters OR a string which does not contain
+   * any delimiter.
+   *
+   * @return a Parser of String
+   */
   lazy val term: Parser[String] = // Assignment6 7: term ::= quoteChar text quoteChar | text
-  ??? // TO BE IMPLEMENTED
+
+// TO BE IMPLEMENTED 
+
+???
 
   /**
-    * Internal parser method to parse a string within quotes.
-    * It succeeds on a quotedString contained by a pair of quote characters.
-    *
-    * @return a Parser of String
-    */
+   * Internal parser method to parse a string within quotes.
+   * It succeeds on a quotedString contained by a pair of quote characters.
+   *
+   * @return a Parser of String
+   */
   lazy val stringInQuotes: Parser[String] = quoteChar ~> quotedString <~ quoteChar
 
   /**

@@ -56,16 +56,27 @@ class ContinuedFractionSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   behavior of "ConFrac.convergents"
 
-  val lFib: LazyList[Long] = 1L #:: lFib.scanLeft(1L)(_ + _)
+  val lFib: LazyList[BigInt] = BigInt(1) #:: lFib.scanLeft(BigInt(1))(_ + _)
   // NOTE: these values are: 1, 2, 3/2, 5/3, 8/5, 13/8, 21/13, 34/21, 55/34, 89/55, 144/89, etc.
   val convergentsPhi: LazyList[Rational] = Pair.zip(lFib, lFib.tail) map (p => p.toRational)
 
   def tupleMatch(t: (Any, Any)): Boolean = t._1 == t._2
 
-  it should "get convergents from simple ConFrac" in {
+  it should "get 5 convergents from simple ConFrac" in {
     val one: LazyList[Long] = LazyList.continually(1L)
     val target = ConFrac.simple(one)
     target.convergents.take(5).zip(convergentsPhi).forall(tupleMatch) shouldBe true
+  }
+
+  it should "get sufficientConvergents from simple ConFrac" in {
+    val one: LazyList[Long] = LazyList.continually(1L)
+    val target = ConFrac.simple(one)
+    val significantConvergents = target.sufficientConvergents(1E-7)
+    val zip = significantConvergents.zip(convergentsPhi)
+    zip.forall(tupleMatch) shouldBe true
+    val phi = significantConvergents.last
+    val error = phi * phi - phi - 1
+    error.toDouble shouldBe 0.0 +- 1E-7
   }
 
   it should "get convergents from simple finite expansion for pi" in {
@@ -189,7 +200,6 @@ class ContinuedFractionSpec extends flatspec.AnyFlatSpec with should.Matchers {
     val one: LazyList[Long] = LongLazyListFrom(1)
     val cf: ConFrac = ConFrac.simple(one)
 
-    import edu.neu.coe.csye7200.numerics.Rational.RationalHelper
     cf.toRational(0.05)(Hurwitz) shouldBe Some(r"10/7")
     cf.toRational(0.01)(Hurwitz) shouldBe Some(r"43/30")
     cf.toRational(0.005)(Hurwitz) shouldBe Some(r"43/30")
@@ -326,7 +336,7 @@ class ContinuedFractionSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   it should "work" in {
     val target: ConFrac = ConFrac.root19
-    ConFrac.unapply(target) should matchPattern { case Some((4, Some(CF(1, _)))) => }
+    ConFrac.unapply(target) should matchPattern { case Some((4, Some(CF(_, _)))) => }
   }
 
   behavior of "ContinuedFraction.prefix"
@@ -370,7 +380,6 @@ class ContinuedFractionSpec extends flatspec.AnyFlatSpec with should.Matchers {
   it should "implement toRational(Double)" in {
     val cf: ContinuedFraction = ContinuedFraction.createInfinite(1)
 
-    import edu.neu.coe.csye7200.numerics.Rational.RationalHelper
     cf.toRational(0.05) shouldBe Some(r"5/3")
     cf.toRational(0.01) shouldBe Some(r"13/8")
     cf.toRational(0.005) shouldBe Some(r"21/13")
@@ -500,7 +509,14 @@ class ContinuedFractionSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   behavior of "Basel"
   it should "calculate pi" in {
-    ??? // TO BE IMPLEMENTED
-  }
 
+    // TO BE IMPLEMENTED 
+
+
+
+
+
+    // STUB
+    // END
+  }
 }

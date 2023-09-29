@@ -397,24 +397,29 @@ object MyLazyList {
   def singleton[X](x: => X): ListLike[X] = MyLazyList(x, () => EmptyList)
 
   /**
-    * Construct a stream of Integers starting with <code>start</code> and with successive elements being
-    * greater than their predecessors by <code>step</code>.
-    *
-    * @param start the value of the first element.
-    * @param step  the difference between successive elements.
-    * @return a <code>ListLike[X]</code> with an infinite number of element (whose values are <code>x</code>,
-    *         <code>x+step</code>, etc.).
-    */
-  def from(start: Int, step: Int): ListLike[Int] = ??? // TO BE IMPLEMENTED
+   * Construct a stream of Integers starting with <code>start</code> and with successive elements being
+   * greater than their predecessors by <code>step</code>.
+   *
+   * @param start the value of the first element.
+   * @param step  the difference between successive elements.
+   * @return a <code>ListLike[X]</code> with an infinite number of element (whose values are <code>x</code>,
+   *         <code>x+step</code>, etc.).
+   */
+  def from(start: Int, step: Int): ListLike[Int] = {
+// TO BE IMPLEMENTED 
+
+???
+  }
+
 
   /**
-    * Construct a stream of Integers starting with <code>start</code> and with successive elements being
-    * the next greater Int.
-    *
-    * @param start the value of the first element.
-    * @return a <code>ListLike[X]</code> with an infinite number of element (whose values are <code>x</code>,
-    *         <code>x+1</code>, etc.).
-    */
+   * Construct a stream of Integers starting with <code>start</code> and with successive elements being
+   * the next greater Int.
+   *
+   * @param start the value of the first element.
+   * @return a <code>ListLike[X]</code> with an infinite number of element (whose values are <code>x</code>,
+   *         <code>x+1</code>, etc.).
+   */
   def from(start: Int): ListLike[Int] = from(start, 1)
 }
 

@@ -234,21 +234,21 @@ object ContinuedFraction {
   val PiSimple: ContinuedFraction = ContinuedFraction(ConFrac.PiSimple, infinite = true, Hurwitz)
 
   /**
-    * This is the Leibniz formula for pi.
-    */
-  val fPiBy4Leibniz: LazyList[Pair] = Pair.zip(1L +: LazyList.continually(2L), LazyList.from(0).map(2L * _ + 1).map(x => x * x))
+   * This is the Leibniz formula for pi.
+   */
+  val fPiBy4Leibniz: LazyList[Pair] = Pair.zip(1L +: LazyList.continually(BigInt(2)), LazyList.from(0).map(2L * _ + 1).map(x => x * x))
   val FourOverPiLeibniz: ContinuedFraction = ContinuedFraction(fPiBy4Leibniz, infinite = true, Hurwitz)
 
   /**
-    * This is the Somayaji formula for pi.
-    */
-  private val fPiSomayaji: LazyList[Pair] = Pair.zip(3L +: LazyList.continually(6L), LazyList.from(0).map(2L * _ + 1).map(x => x * x))
+   * This is the Somayaji formula for pi.
+   */
+  private val fPiSomayaji: LazyList[Pair] = Pair.zip(3L +: LazyList.continually(BigInt(6)), LazyList.from(0).map(2L * _ + 1).map(x => x * x))
   val PiSomayaji: ContinuedFraction = ContinuedFraction(fPiSomayaji, infinite = true, Hurwitz)
 
   /**
-    * This is the most direct and fastest-converging formula for pi (I think).
-    */
-  private val fPi: LazyList[Pair] = Pair.zip(0L +: LazyList.from(0).map(2L * _ + 1), 4L +: LazyList.from(1).map(x => 1L * x * x))
+   * This is the most direct and fastest-converging formula for pi (I think).
+   */
+  private val fPi: LazyList[Pair] = Pair.zip(BigInt(0) +: LazyList.from(0).map(BigInt(_)).map(BigInt(2) * _ + 1), BigInt(4) +: LazyList.from(1).map(BigInt(_)).map(x => 1L * x * x))
   val PiA: ContinuedFraction = ContinuedFraction(fPi, infinite = true, Hurwitz)
 
   private def eFunction(xs: List[Pair]): List[Pair] = xs match {
@@ -257,22 +257,22 @@ object ContinuedFraction {
 }
 
 /**
-  * This Class defines a lazily-evaluated Generalized Continued Fraction, somewhat like a LazyList.
-  *
-  * @param b  the (additive) coefficient, represented on the Wikipedia page (Generalized CF) as b.
-  * @param co an optional reference to a ConFrac.
-  */
-class ConFrac(val b: Long, co: => Option[CF]) extends Evaluatable with Takeable {
+ * This Class defines a lazily-evaluated Generalized Continued Fraction, somewhat like a LazyList.
+ *
+ * @param b  the (additive) coefficient, represented on the Wikipedia page (Generalized CF) as b.
+ * @param co an optional reference to a ConFrac.
+ */
+class ConFrac(val b: BigInt, co: => Option[CF]) extends Evaluatable with Takeable {
 
   /**
-    * Alias method because we can't make co a val.
-    *
-    * @return the value of co.
-    */
+   * Alias method because we can't make co a val.
+   *
+   * @return the value of co.
+   */
   lazy val tailOption: Option[CF] = co
 
   /**
-    * Method to prepend an (b, a) pair of coefficients to this ConFrac.
+   * Method to prepend an (b, a) pair of coefficients to this ConFrac.
     * This is particularly useful if the value before the semi-colon (in the standard representation)
     * is not part of a repeating sequence.
     *
@@ -327,15 +327,23 @@ class ConFrac(val b: Long, co: => Option[CF]) extends Evaluatable with Takeable 
   }
 
   /**
-    * Method to get the coefficients.
-    *
-    * NOTE: this method is not tail-recursive but it will only recurse as deeply
-    * as required by the number of elements which must be evaluated.
-    *
-    * @return a LazyList[Pair] which can never be empty.
-    */
+   * Retrieve sufficient convergents to provide precision to satisfy the given epsilon.
+   *
+   * @param epsilon an error tolerance such as 1E-7
+   * @return sufficient convergents such that the last convergent should be precise to within epsilon.
+   */
+  def sufficientConvergents(epsilon: Double): LazyList[Rational] = convergents.takeWhile(r => r.d.bitCount < -math.log(epsilon) / math.log(2))
+
+  /**
+   * Method to get the coefficients.
+   *
+   * NOTE: this method is not tail-recursive but it will only recurse as deeply
+   * as required by the number of elements which must be evaluated.
+   *
+   * @return a LazyList[Pair] which can never be empty.
+   */
   def coefficients: LazyList[Pair] = {
-    def inner(_b: Long, a: Long, co: Option[CF]): LazyList[Pair] =
+    def inner(_b: BigInt, a: BigInt, co: Option[CF]): LazyList[Pair] =
       Pair(_b, a) #:: {
         co match {
           case None => LazyList()
@@ -372,7 +380,7 @@ class ConFrac(val b: Long, co: => Option[CF]) extends Evaluatable with Takeable 
   def toRational: Rational = {
     def inner(w: LazyList[Pair]): Rational = w match {
       case LazyList() => Rational.zero
-      case p #:: tail => p.a / (p.b + inner(tail))
+      case p #:: tail => p.a / (inner(tail) + p.b)
     }
 
     val h #:: z = coefficients
@@ -443,12 +451,12 @@ object ConFrac {
   }
 
   /**
-    * Method to construct a Simple ConFrac from a lazy list of Int elements.
-    *
-    * @param xs a lazy list of Ints.
-    * @return a ConFrac where all of the "a" coefficients (the ones on top) are 1.
-    */
-  def simple(xs: LazyList[Long]): ConFrac = ConFrac(Pair.zip(xs, LazyList.continually(1L)))
+   * Method to construct a Simple ConFrac from a lazy list of Int elements.
+   *
+   * @param xs a lazy list of Ints.
+   * @return a ConFrac where all of the "a" coefficients (the ones on top) are 1.
+   */
+  def simple(xs: LazyList[Long]): ConFrac = ConFrac(Pair.zip(xs.map(BigInt(_)), LazyList.continually(BigInt(1))))
 
   /**
     * Utility method to construct a LazyList[Long] of increasing values, starting at m.
@@ -478,13 +486,13 @@ object ConFrac {
     }
 
   /**
-    * Unapply method for ConFrac.
-    *
-    * @param x any object.
-    * @return Some((Long), Option[CF]) is x is a ConFrac, otherwise, None.
-    */
-  def unapply(x: Any): Option[(Long, Option[CF])] = x match {
-    case c: ConFrac => Some(c.b, c.tailOption)
+   * Unapply method for ConFrac.
+   *
+   * @param x any object.
+   * @return Some((Long), Option[CF]) is x is a ConFrac, otherwise, None.
+   */
+  def unapply(x: Any): Option[(BigInt, Option[CF])] = x match {
+    case c: ConFrac => Some((c.b, c.tailOption))
     case _ => None
   }
 
@@ -535,60 +543,66 @@ object ConFrac {
 }
 
 /**
-  * Scaled ConFrac.  The "value" of the ConFrac is "divided" by a.
-  *
-  * CONSIDER making CF a trait.
-  *
-  * @param a the a coefficient to apply to c.
-  * @param c the ConFrac.
-  */
-case class CF(a: Long, c: ConFrac)
+ * Scaled ConFrac.  The "value" of the ConFrac is "divided" by a.
+ *
+ * CONSIDER making CF a trait.
+ *
+ * @param a the a coefficient to apply to c.
+ * @param c the ConFrac.
+ */
+case class CF(a: BigInt, c: ConFrac)
+
+object CF {
+  def apply(a: Long, c: ConFrac): CF = new CF(BigInt(a), c)
+}
 
 /**
-  * A pair of coefficients.
-  * The a value is always 1 in the case of a simple Continued Fraction.
-  * The b value is always positive (except for the b which precedes a Continue Fraction, which may be negative).
-  *
-  * CONSIDER representing this by a Rational. However, these coefficients are really independent entities.
-  *
-  * @param b the b value.
-  * @param a the a value.
-  */
-case class Pair(b: Long, a: Long) {
+ * A pair of coefficients.
+ * The a value is always 1 in the case of a simple Continued Fraction.
+ * The b value is always positive (except for the b which precedes a Continue Fraction, which may be negative).
+ *
+ * CONSIDER representing this by a Rational. However, these coefficients are really independent entities.
+ *
+ * @param b the b value.
+ * @param a the a value.
+ */
+case class Pair(b: BigInt, a: BigInt) {
   /**
-    * This method returns a Rational defined as a divided by b.
-    * It isn't really useful generally when evaluating continued fractions because we never really need this result
-    *
-    * @return a/b as a Rational.
-    */
+   * This method returns a Rational defined as a divided by b.
+   * It isn't really useful generally when evaluating continued fractions because we never really need this result
+   *
+   * @return a/b as a Rational.
+   */
   def toRational: Rational = Rational(a, b)
 }
 
 object Pair {
   /**
-    * Method to construct a Pair from a single Long value (useful for simple continued fractions).
-    *
-    * @param b the coefficient.
-    * @return a Pair of form Pair(b, 1)
-    */
-  def apply(b: Long): Pair = Pair(b, 1)
+   * Method to construct a Pair from a single Long value (useful for simple continued fractions).
+   *
+   * @param b the coefficient.
+   * @return a Pair of form Pair(b, 1)
+   */
+  def apply(b: BigInt): Pair = Pair(b, 1)
+
+  def apply(b: Long): Pair = new Pair(BigInt(b), 1)
 
   /**
-    * Utility method to convert a List[Long] to a List[Pair].
-    *
-    * @param xs a list of Longs.
-    * @return a list of Pairs.
-    */
+   * Utility method to convert a List[Long] to a List[Pair].
+   *
+   * @param xs a list of Longs.
+   * @return a list of Pairs.
+   */
   def list(xs: List[Long]): List[Pair] = xs map (Pair(_))
 
   /**
-    * Method to zip together two LazyLists of Long such that the result is a LazyList of Pair.
-    *
-    * @param bs the b coefficients (according to the figure on Wikipedia describing Generalized ContinuedFraction).
-    * @param as the a coefficients (according to the figure on Wikipedia describing Generalized ContinuedFraction).
-    * @return a LazyList of Longs.
-    */
-  def zip(bs: LazyList[Long], as: LazyList[Long]): LazyList[Pair] = bs zip as map (t => Pair(t._1, t._2))
+   * Method to zip together two LazyLists of Long such that the result is a LazyList of Pair.
+   *
+   * @param bs the b coefficients (according to the figure on Wikipedia describing Generalized ContinuedFraction).
+   * @param as the a coefficients (according to the figure on Wikipedia describing Generalized ContinuedFraction).
+   * @return a LazyList of Longs.
+   */
+  def zip(bs: LazyList[BigInt], as: LazyList[BigInt]): LazyList[Pair] = bs zip as map (t => Pair(t._1, t._2))
 }
 
 /**

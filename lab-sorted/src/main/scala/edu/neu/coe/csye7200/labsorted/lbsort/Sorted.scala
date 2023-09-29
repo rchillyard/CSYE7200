@@ -24,9 +24,16 @@ object Sorted {
 
   def verify[T: Comparer](xs: Seq[T]): Boolean = xs.zip(xs.tail).forall(z => implicitly[Comparer[T]].<=(z._1, z._2))
 
-  def parSort[T: Ordering](tst: (Seq[T], Seq[T]))(implicit ec: ExecutionContext): Future[Seq[T]] = map2(Future(tst._1.sorted), Future(tst._2.sorted))(merge)
+  def parSort[T: Ordering](tst: (Seq[T], Seq[T]))(implicit ec: ExecutionContext): Future[Seq[T]] = map2(mergeSort(tst._1), mergeSort(tst._2))(merge)
 
-  def mergeSort[T: Ordering](ts: Seq[T])(implicit ec: ExecutionContext): Future[Seq[T]] = parSort(ts splitAt (ts.length / 2))
+  def mergeSort[T: Ordering](ts: Seq[T])(implicit ec: ExecutionContext): Future[Seq[T]] =
+    ts.length match {
+      case 0 | 1 => Future(ts)
+      case n if n <= 16 => Future(BubbleSort.sort(ts))
+      case n => parSort {
+        ts splitAt n / 2
+      }
+    }
 
   def merge[T: Ordering](ts1: Seq[T], ts2: Seq[T]): Seq[T] = {
     val ordering = implicitly[Ordering[T]]

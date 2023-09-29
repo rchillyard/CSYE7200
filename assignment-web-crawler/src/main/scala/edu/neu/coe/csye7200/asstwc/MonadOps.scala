@@ -103,7 +103,7 @@ object MonadOps {
    * @tparam X the underlying type.
    * @return a PartialFunction from Throwable => Try of Option[X].
    */
-  def forgiveness[X](logFunction: Throwable => Unit): PartialFunction[Throwable, Try[Option[X]]] = {
+  private def forgiveness[X](logFunction: Throwable => Unit): PartialFunction[Throwable, Try[Option[X]]] = {
     case NonFatal(x) => logFunction(x); Success(None)
     case x => Failure(x)
   }
@@ -154,13 +154,15 @@ object MonadOps {
    * Any unevaluated future will give rise to a Failure[TimeoutException] in the result.
    *
    * @param xfs       a Seq[Future of X].
-   * @param millisecs the number of milliseconds to wait.
+   * @param millisecs the number of milliseconds to wait (a Double).
    * @param ec        the (implicit) ExecutionContext
    * @tparam X the underlying type of the input.
    * @return a Future of Seq[Try of X]
    */
-  def sequenceImpatient[X](xfs: Seq[Future[X]])(millisecs: Int)(implicit ec: ExecutionContext): Future[Seq[Try[X]]] = {
-    Thread.sleep(millisecs)
+  def sequenceImpatient[X](xfs: Seq[Future[X]])(millisecs: Double)(implicit ec: ExecutionContext): Future[Seq[Try[X]]] = {
+    val m: Long = millisecs.toLong
+    val n: Int = (millisecs * 1000000 - m * 1000000).toInt
+    Thread.sleep(m, n)
     val result: Seq[Try[X]] = xfs.foldLeft(Seq.empty[Try[X]]) {
       (a, xf) =>
         xf.value match {
@@ -247,7 +249,11 @@ object MonadOps {
    * @tparam X the underlying type.
    * @return if xe is a Right(x) then Some(x) else None.
    */
-  def asOption[X](xe: Either[Throwable, X]): Option[X] = ??? // TO BE IMPLEMENTED
+  def asOption[X](xe: Either[Throwable, X]): Option[X] =
+// TO BE IMPLEMENTED 
+
+???
+
 
   /**
    * Method to zip two Optional objects together.
@@ -351,7 +357,7 @@ object MonadOps {
    * @param w the prefix.
    * @param x the Throwable.
    */
-  def stdForgivenessFunction(w: String)(x: Throwable): Unit = System.err.println(s"$w: forgiving: $x")
+  private def stdForgivenessFunction(w: String)(x: Throwable): Unit = System.err.println(s"$w: forgiving: $x")
 
   /**
    * Strict form of combine.

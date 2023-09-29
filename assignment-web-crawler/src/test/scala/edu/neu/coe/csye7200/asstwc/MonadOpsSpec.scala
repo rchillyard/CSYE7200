@@ -212,12 +212,12 @@ class MonadOpsSpec extends flatspec.AnyFlatSpec with should.Matchers with Future
         }
     }
     it should "work for 1, goodURL, 1/0 (less patient)" taggedAs Slow in {
-        whenReady(sequenceImpatient(Seq(Future(1), WebCrawler.getURLContent(new URL(goodURL)), Future(1 / 0)))(1)) {
-            xys =>
-                xys.length shouldBe 3
-                xys.head shouldBe Success(1)
-                xys.tail.head should matchPattern { case Failure(x: TimeoutException) => }
-                xys.tail.tail.head should matchPattern { case Failure(x: java.lang.ArithmeticException) => }
+        whenReady(sequenceImpatient(Seq(Future(1), WebCrawler.getURLContent(new URL(goodURL)), Future(1 / 0)))(0.5)) {
+          xys =>
+            xys.length shouldBe 3
+            xys.head shouldBe Success(1)
+            xys.tail.head should matchPattern { case Failure(_: TimeoutException) => }
+            xys.tail.tail.head should matchPattern { case Failure(_: java.lang.ArithmeticException) => }
         }
     }
     it should "work for 1, goodURL, 1/0 (more patient)" taggedAs Slow in {
@@ -226,7 +226,7 @@ class MonadOpsSpec extends flatspec.AnyFlatSpec with should.Matchers with Future
                 xys.length shouldBe 3
                 xys.head shouldBe Success(1)
                 xys.tail.head should matchPattern { case Success(_) => }
-                xys.tail.tail.head should matchPattern { case Failure(x: java.lang.ArithmeticException) => }
+                xys.tail.tail.head should matchPattern { case Failure(_: java.lang.ArithmeticException) => }
         }
     }
 
