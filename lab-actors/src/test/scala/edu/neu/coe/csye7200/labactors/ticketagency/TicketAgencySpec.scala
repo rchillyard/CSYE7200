@@ -14,7 +14,7 @@ class TicketAgencySpec extends AnyFlatSpec with should.Matchers {
     Behaviors.same[String]
   }
 
-  ignore should "apply" in {
+  it should "apply" in {
     val testKit: BehaviorTestKit[TicketAgency.Release] = BehaviorTestKit(TicketAgency())
     testKit.run(TicketAgency.Release(Nil))
 testKit.expectEffect(Spawned(Clients(), "client"))

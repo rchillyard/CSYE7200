@@ -139,7 +139,22 @@ class MonadOpsSpec extends flatspec.AnyFlatSpec with should.Matchers with Future
         asOption(Left(WebCrawlerException("junk"))) should matchPattern { case None => }
     }
 
-    behavior of "sequence of Iterable"
+  behavior of "SequenceLax"
+
+  it should "work1" in {
+    sequenceLax(Seq(Some(1), Some(2))) shouldBe Some(Seq(1, 2))
+    sequenceLax(Seq(Some(1), None)) shouldBe Some(Seq(1))
+    sequenceLax(Seq(Some(1), None, Some(2))) shouldBe Some(Seq(1, 2))
+  }
+
+  behavior of "guardedValue"
+
+  it should "work" in {
+    guardedValue(1)(_>0)(0) shouldBe 1
+    guardedValue(-1)(_>0)(0) shouldBe 0
+  }
+
+  behavior of "sequence of Iterable"
 
     it should "sequence" in {
         val try1 = Success(1)

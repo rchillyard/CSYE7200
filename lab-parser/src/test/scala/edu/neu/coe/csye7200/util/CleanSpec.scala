@@ -27,7 +27,7 @@ class CleanSpec extends FlatSpec with Matchers {
   }
   it should "clean 4" in {
     val cleaner = new FileCleaner("SOLUTION", "STUB", "END")
-    val result: Try[Int] = cleaner.clean("assignment-movie-database/src/main/scala/edu/neu/coe/csye7200/asstmd/MovieBad.scala", "badOutput.txt")
+    val result: Try[Int] = cleaner.clean("assignment-movie-database/src/main/scala/edu/neu/coe/csye7200/asstmd/Movie.scala", "badOutput.txt")
     result shouldBe Success(8230)
   }
 

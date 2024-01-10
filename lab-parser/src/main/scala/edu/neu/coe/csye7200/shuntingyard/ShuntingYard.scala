@@ -4,6 +4,8 @@ import scala.language.implicitConversions
 
 /**
   * Case class which supports the Shunting Yard algorithm of Dijkstra.
+ *
+ * See [[https://en.wikipedia.org/wiki/Shunting_yard_algorithm]]
   *
   * @param valueStack    a Stack[Int].
   * @param operatorStack a Stack[Operator].

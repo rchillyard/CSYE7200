@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200.util
 
-import edu.neu.coe.csye7200.util.FileCleaner.{noleak, noleakFlat, sequence}
+import edu.neu.coe.csye7200.util.FileCleaner.{getConfiguration, noleak, noleakFlat, sequence}
 import java.io.{BufferedWriter, File, FileWriter, Writer}
 import java.nio.file.FileSystems.getDefault
 import java.nio.file.Files.walk
@@ -15,7 +15,16 @@ class FileCleaner(solution: String, stub: String, terminator: String) extends Ja
   println(s"FileCleaner created with solution='$solution', stub='$stub', terminator='$terminator'")
 
   def clean(inputFile: String, outputFile: String)(implicit logger: Logger): Try[Int] =
-    clean(new File(inputFile), new File(outputFile))
+    clean(new File(inputFile), new File(outputFile), getDefaultStub(inputFile))
+
+  def getDefaultStub(inputFile: String): String = {
+    val extension = """^.+\.(\w+)$""".r
+    inputFile match {
+      case extension("scala") => DEFAULTSTUB_SCALA
+      case extension("java") => DEFAULTSTUB_JAVA
+      case _ => throw CleanParseException(s"getDefaultStub: not supported for $inputFile")
+    }
+  }
 
   def cleanTree(sourcePath: String, destPath: String, toInclude: Path => Boolean, toExclude: Path => Boolean)(implicit logger: Logger): Try[Boolean] = {
     import scala.collection.JavaConverters._
@@ -27,7 +36,7 @@ class FileCleaner(solution: String, stub: String, terminator: String) extends Ja
     val xsy: Try[Seq[Int]] = sequence(for {
       (s, d) <- files map (p => p -> destDir.resolve(sourceDir.relativize(p)))
       _ = ensureCanWriteFile(d.toAbsolutePath.toFile)
-    } yield clean(s.toFile, d.toAbsolutePath.toFile)).recover {
+    } yield clean(s.toFile, d.toAbsolutePath.toFile, getDefaultStub(s.toString))).recover {
       case NonFatal(x) =>
         logger.logError(x.toString)
         Nil
@@ -36,12 +45,12 @@ class FileCleaner(solution: String, stub: String, terminator: String) extends Ja
     xsy map (xs => xs.forall(_ > 0))
   }
 
-  def clean(inputFile: File, outputFile: File)(implicit logger: Logger): Try[Int] =
+  def clean(inputFile: File, outputFile: File, defaultStubString: String)(implicit logger: Logger): Try[Int] =
     noleakFlat(Try(new BufferedWriter(new FileWriter(outputFile)))) {
       w =>
         noleak(Try(Source.fromFile(inputFile))) { s =>
-          println(s"clean $inputFile $outputFile")
-          clean(s, w)
+          println(s"clean $inputFile $outputFile '$defaultStubString'")
+          clean(s, w, defaultStubString)
         }
     }
 
@@ -53,8 +62,6 @@ class FileCleaner(solution: String, stub: String, terminator: String) extends Ja
 
 
   override def skipWhitespace: Boolean = false
-
-  val TOBEIMPLEMENTED = "TO BE IMPLEMENTED"
 
   case class ParsedLine(n: Int, prefix: String, maybeMaybeString: Option[Option[String]], suffix: String) {
     def render(isStub: Boolean): String =
@@ -71,9 +78,7 @@ class FileCleaner(solution: String, stub: String, terminator: String) extends Ja
     case prefix ~ None ~ code => ParsedLine(x, prefix, None, code)
   }
 
-  val DEFAULTSTUB = "???"
-
-  def clean(source: Source, destination: Writer)(implicit logger: Logger): Int = {
+  def clean(source: Source, destination: Writer, defaultStubString: String)(implicit logger: Logger): Int = {
     // CONSIDER avoiding vars
     var output = true
     var isStub = false
@@ -83,7 +88,7 @@ class FileCleaner(solution: String, stub: String, terminator: String) extends Ja
       var defaultStub = false
       commentedLine.maybeMaybeString match {
         case Some(Some(`solution`)) =>
-          logger.logInfo("Solution")
+          logger.logDebug("Solution")
           transition = true
           output = false
         case Some(Some(`stub`)) =>
@@ -97,7 +102,7 @@ class FileCleaner(solution: String, stub: String, terminator: String) extends Ja
             isStub = false
         case _ =>
       }
-      if (defaultStub) DEFAULTSTUB else if (transition || output) commentedLine.render(isStub) else ""
+      if (defaultStub) defaultStubString else if (transition || output) commentedLine.render(isStub) else ""
     }
 
     val result = FileCleaner.sequence(for (l <- source.getLines().zipWithIndex) yield parseLine(l)) match {
@@ -125,6 +130,10 @@ class FileCleaner(solution: String, stub: String, terminator: String) extends Ja
   def slashes: Parser[String] = """//""".r
 
   private def keyword: Parser[String] = solution | stub | terminator | failure("not a keyword")
+
+  val DEFAULTSTUB_SCALA = "???"
+  val DEFAULTSTUB_JAVA = """throw new RuntimeException("implementation missing");"""
+  val TOBEIMPLEMENTED = "TO BE IMPLEMENTED"
 }
 
 object FileCleaner {
@@ -152,17 +161,22 @@ object FileCleaner {
     result
   }
 
+  def getConfiguration(sa: Array[String]): List[String] = {
+    def merge(x: (String, String)): String = if (x._1.nonEmpty) x._1 else x._2
+
+    val arguments = sa.toList zipAll(List("", "", "SOLUTION", "STUB", "END"), "", "")
+    arguments map merge
+  }
+
 }
+
 object CleanTree extends App {
 
   import java.nio.file.Files
 
   implicit val logger: Logger = Logger(getClass)
 
-  def merge(x: (String, String)): String = if (x._1.nonEmpty) x._1 else x._2
-
-  val arguments = args.toList zipAll(List("", "", "SOLUTION", "STUB", "END"), "", "")
-  val List(sourcePath, destPath, solution, stub, terminator) = arguments map merge
+  val List(sourcePath, destPath, solution, stub, terminator) = getConfiguration(args)
   if (sourcePath.isEmpty || destPath.isEmpty) System.err.println("You must provide root paths for source and destination (at least)")
   else {
     val cleaner = new FileCleaner(solution, stub, terminator)
@@ -170,6 +184,19 @@ object CleanTree extends App {
     val toExclude: Path => Boolean = p => p.getFileName.toString.startsWith(".")
     val result = cleaner.cleanTree(sourcePath, destPath, toInclude, toExclude).get
     if (result) println("CleanTree complete") else System.err.println("CleanTree: At least one destination file is empty")
+  }
+}
+
+object Clean extends App {
+
+  implicit val logger: Logger = Logger(getClass)
+  val List(sourcePath, destPath, solution, stub, terminator) = getConfiguration(args)
+  if (sourcePath.isEmpty || destPath.isEmpty) System.err.println("You must provide paths for source and destination (at least)")
+  else {
+    val cleaner = new FileCleaner(solution, stub, terminator)
+    val triedInt = cleaner.clean(sourcePath, destPath)
+    val result: Int = triedInt.get // NOTE: This will throw an exception if there was a failure
+    if (result > 0) println("Clean complete") else System.err.println("Clean: At least one destination file is empty")
   }
 }
 

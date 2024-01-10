@@ -239,6 +239,14 @@ object MonadOps {
     (xso, xo) => for (xs <- xso; x <- xo) yield xs :+ x
   }
 
+  def sequenceLax[X](xos: Seq[Option[X]]): Option[Seq[X]] = xos.foldLeft(Option(Seq[X]())) {
+      case (xso, None) => xso
+      case (Some(xs), Some(x)) => Some(xs :+ x)
+      case (None, Some(x)) => Some(Seq(x))
+  }
+
+  def guardedValue[A,B](a: A)(f: A=>Boolean)(default: A): A = if (f(a)) a else default
+
   /**
    * Method to extract an Option[X] from an Either[Throwable, X].
    *

@@ -1,5 +1,9 @@
 package edu.neu.coe.csye7200.labsorted.lbsort
 
+import edu.neu.coe.csye7200.sort.BubbleSortJava
+import scala.reflect.ClassTag
+import scala.util.Random
+
 /**
   * Case class to perform BubbleSort on a linked list.
   *
@@ -37,7 +41,7 @@ case class BubbleSort[X]()(implicit xo: Ordering[X]) {
     * @return true if a swap actually happened.
     */
   private def swapConditional(x: Element[X], y: Element[X]) = {
-    val result = xo.compare(x.x, y.x) > 0
+    val result = xo.compare(x.x, y.x) < 0
     if (result) {
       val temp = x.x
       x.x = y.x
@@ -53,7 +57,7 @@ case class BubbleSort[X]()(implicit xo: Ordering[X]) {
     * @param stop  the Element[X] at which to stop.
     * @return a Tuple consisting of the last value of x and a Boolean representing whether this pass swapped anything.
     */
-  private def pass(start: Element[X], stop: Element[X]) = {
+  private def pass(start: Element[X], stop: Element[X]): (Element[X], Boolean) = {
     var x = start
     var yo = x.next
     var swapped = false
@@ -83,8 +87,18 @@ object BubbleSort {
       Nil
     case Some(xe) =>
       BubbleSort().sortList(xe)
-      Element.toSeq(xe)
+      Element.toRevSeq(xe)
   }
+//
+//  def sortByJava[X: Ordering: ClassTag](xs: Seq[X]): Seq[X] = {
+//    val sorter = new BubbleSortJava[X](implicitly[Ordering[X]])
+//    import scala.language.implicitConversions
+//
+//    val xs1: Array[X] = xs.toArray
+//    sorter.sort(xs1)
+//    xs1 to List
+//  }
+
 }
 
 /**
@@ -109,9 +123,15 @@ object Element {
     * @tparam X the underlying type of the input and the result.
     * @return an optional Element[X] (will be None if xs is empty).
     */
-  def create[X](xs: Seq[X]): Option[Element[X]] = xs match {
-    case h :: t => Some(Element(h, create(t)))
-    case Nil => None
+  def create[X](xs: Seq[X]): Option[Element[X]] = {
+    @tailrec
+    def inner(result: Option[Element[X]], _xs: Seq[X]): Option[Element[X]] = {
+    _xs match {
+      case Nil => result
+      case h :: t => inner(Some(Element(h, result)), t)
+    }
+    }
+    inner(None, xs.reverse)
   }
 
   /**
@@ -121,13 +141,28 @@ object Element {
     * @tparam X the underlying type of the input and result.
     * @return a Seq[X].
     */
-  def toSeq[X](head: Element[X]): Seq[X] = {
+  def toRevSeq[X](head: Element[X]): Seq[X] = {
     @tailrec
     def inner(xs: Seq[X], xeo: Option[Element[X]]): Seq[X] = xeo match {
       case None => xs
-      case Some(xe) => inner(xs :+ xe.x, xe.next)
+      case Some(xe) => inner(xe.x +: xs, xe.next)
     }
 
     inner(Nil, Some(head))
   }
+}
+
+object BenchmarkBubbleSort extends App {
+
+  val random = new Random()
+
+  def doSort(n: Int) {
+    val xs: Seq[Int] = LazyList.continually(random.nextInt()) take n to List
+
+
+    val result: Seq[Int] = BubbleSort.sort(xs)
+//    println(result)
+  }
+
+  doSort(100000)
 }

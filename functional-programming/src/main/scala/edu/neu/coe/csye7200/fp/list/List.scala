@@ -54,11 +54,17 @@ trait List[+A] extends (Int => Option[A]) {
 
   def x9(f: A => Unit): Unit
 
-  def foldLeft[B](z: B)(f: (B, A) => B): B
+  @tailrec
+  final def foldLeft[B](z: B)(f: (B, A) => B): B = this match {
+    case h Cons t => t.foldLeft(f(z, h))(f)
+    case Nil => z
+  }
+
+  def foldRight[B](z: B)(f: (A, B) => B): B
 
   def sum[B >: A : Numeric]: B = foldLeft(implicitly[Numeric[B]].zero)(implicitly[Numeric[B]].plus(_, _))
 
-  def sumByIteration[B >: A : Numeric] = {
+  def sumByIteration[B >: A : Numeric]: B = {
     var result = implicitly[Numeric[B]].zero
     x9(a => result = implicitly[Numeric[B]].plus(result, a))
     result
@@ -100,7 +106,9 @@ case object Nil extends List[Nothing] {
 
   def x9(f: Nothing => Unit): Unit = ()
 
-  def foldLeft[B](z: B)(f: (B, Nothing) => B): B = z
+//  def foldLeft[B](z: B)(f: (B, Nothing) => B): B = z
+
+  def foldRight[B](z: B)(f: (Nothing, B) => B): B = z
 }
 
 case class Cons[+A](head: A, tail: List[A]) extends List[A] {
@@ -169,7 +177,15 @@ case class Cons[+A](head: A, tail: List[A]) extends List[A] {
 
   def x9(f: A => Unit): Unit = { f(head); tail.x9(f) }
 
-  def foldLeft[B](z: B)(f: (B, A) => B): B = tail.foldLeft(f(z, head))(f)
+  def foldRight[B](z: B)(f: (A, B) => B): B = // NOTE: equivalent to: f(head, tail.foldRight(z)(f))
+  {
+    @tailrec
+    def inner(as: List[A], b: B): B = as match {
+      case Nil => b
+      case Cons(h, t) => inner(t, f(h, b))
+    }
+    inner(this, z)
+  }
 }
 
 abstract class Counter[-A] extends (A => Int)
@@ -177,10 +193,10 @@ abstract class Counter[-A] extends (A => Int)
 object List {
   type IntList = List[Int]
 
-  def sum(ints: IntList): Int = ints match {
-    case Nil => 0
-    case Cons(x, xs) => x + sum(xs)
-  }
+//  def sum(ints: IntList): Int = ints match {
+//    case Nil => 0
+//    case Cons(x, xs) => x + sum(xs)
+//  }
 
   def apply[A](as: A*): List[A] =
     if (as.isEmpty) Nil

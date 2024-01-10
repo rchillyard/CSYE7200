@@ -17,7 +17,7 @@ class BubbleSortSpec extends AnyFlatSpec with should.Matchers {
         fail("create failed")
       case Some(xe) =>
         intSorter.sortList(xe)
-        xe shouldBe Element(1, Some(Element(2, Some(Element(3, None)))))
+        xe shouldBe Element(3, Some(Element(2, Some(Element(1, None)))))
     }
   }
 

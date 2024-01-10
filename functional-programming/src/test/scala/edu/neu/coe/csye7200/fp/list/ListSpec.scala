@@ -12,7 +12,9 @@ import org.scalatest.matchers.should.Matchers
   */
 class ListSpec extends AnyFlatSpec with Matchers {
 
-  "Nil" should "have zero length" in {
+  behavior of "Nil"
+
+  it should "have zero length" in {
     Nil.length should be(0)
   }
   it should "equal Nil" in {
@@ -43,7 +45,8 @@ class ListSpec extends AnyFlatSpec with Matchers {
     (x ++ Nil).equals(x) shouldBe true
   }
 
-  "IList(1,2,3)" should "have 3 length" in {
+  behavior of "List(1,2,3)"
+  it should "have 3 length" in {
     List(1, 2, 3).length should be(3)
   }
   it should "equal IList(1,2,3)" in {
@@ -59,7 +62,7 @@ class ListSpec extends AnyFlatSpec with Matchers {
     val x: List[Int] = List(1, 2, 3)
     x.apply(2) shouldBe Some(3)
   }
-  it should "be IList(1,2,3) on map" in {
+  it should "be List(1,2,3) on map" in {
     val x: List[Int] = List(1, 2, 3)
     x.x7(_.toString) shouldBe List("1", "2", "3")
   }
@@ -67,7 +70,7 @@ class ListSpec extends AnyFlatSpec with Matchers {
     val x: List[Int] = List(1, 2, 3)
     x.x8({ e => List(e.toString) }) shouldBe List("1", "2", "3")
   }
-  it should "be IList(1,2,3,4,5,6) on ++" in {
+  it should "be List(1,2,3,4,5,6) on ++" in {
     val x: List[Int] = List(1, 2, 3)
     val y: List[Int] = List(4, 5, 6)
     (x ++ y) shouldBe List(1, 2, 3, 4, 5, 6)
@@ -85,5 +88,29 @@ class ListSpec extends AnyFlatSpec with Matchers {
   it should "sum by iteration" in {
     val xs: List[Int] = List(1, 2, 3)
     xs.sumByIteration shouldBe 6
+  }
+  it should "foldLeft 1" in {
+    val xs: List[Int] = List(1, 2, 3)
+    xs.foldLeft(0)(_+_) shouldBe 6
+  }
+  it should "foldLeft 2" in {
+    val xs: List[Int] = List(1, 2, 3)
+    xs.foldLeft(6)(_ - _) shouldBe 0
+  }
+  it should "foldLeft 3" in {
+    val xs: List[Int] = List(1, 2, 3)
+    xs.foldLeft(-2)(_ + _) shouldBe 4
+  }
+  it should "foldRight 1" in {
+    val xs: List[Int] = List(1, 2, 3)
+    xs.foldRight(0)(_ + _) shouldBe 6
+  }
+  it should "foldRight 2" in {
+    val xs: List[Int] = List(1, 2, 3)
+    xs.foldRight(6)(-_ + _) shouldBe 0
+  }
+  it should "foldRight 3" in {
+    val xs: List[Int] = List(1, 2, 3)
+    xs.foldRight(-2)(_ + _) shouldBe 4
   }
 }

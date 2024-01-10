@@ -45,7 +45,10 @@ object FutureExercise extends App {
   xf foreach { x => println(s"Sum: $x") }
   private val c10 = chunk * 10
   private val expected = xf filter (_ == BigInt((1L + c10) * c10 / 2))
-  expected foreach { _ => println("OK") }
+  expected onComplete {
+    case scala.util.Success(value) => println(value)
+    case scala.util.Failure(x) => System.err.println(x.getLocalizedMessage)
+  }
   Await.ready(expected, 10000 milli)
   println("Goodbye")
 }
