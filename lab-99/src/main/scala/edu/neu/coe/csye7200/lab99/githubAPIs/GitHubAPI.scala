@@ -2,6 +2,7 @@ package edu.neu.coe.csye7200.lab99.githubAPIs
 
 import edu.neu.coe.csye7200.lab99.githubAPIs.Tries.{tryEquals, tryNotEquals}
 import requests.Response
+import scala.annotation.unused
 import scala.collection.mutable
 import scala.util.{Failure, Success, Try}
 import ujson.Value
@@ -17,6 +18,7 @@ object GitHubAPI extends App {
     print(resp1)
 
     // Retrieving all of uPickle's issues
+    @unused
     val resp2: Try[Value] = for (z <- getIssuesJson(token); q <- Try(ujson.read(z))) yield q
 //    print(resp2)
 
@@ -40,7 +42,7 @@ object GitHubAPI extends App {
             issue("user")("login").str
     )
     print(issueData)
-    Success()
+    Success(())
   }
 
   case class IssueData(number: Int, title: String, body: String, user: User, url: String, repository_url: String,
@@ -119,7 +121,7 @@ object GitHubAPI extends App {
 
   private def showException(ex: Throwable) = {
     println(ex)
-    Success()
+    Success(())
   }
 
 }

@@ -78,6 +78,7 @@ class SortedSpec extends AnyFlatSpec with Matchers with Futures with ScalaFuture
     whenReady(xsf) { xs =>
       val result = xs.grouped(2).scanLeft(true) {
         case (b, (x :: y :: Nil)) => b && x <= y
+        case _ => fail("logic error")
       }
       result.forall(x => x) shouldBe true
     }

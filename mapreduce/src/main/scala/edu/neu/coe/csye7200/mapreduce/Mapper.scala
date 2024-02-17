@@ -31,7 +31,7 @@ import scala.util._
 class Mapper[K1, V1, K2, V2](f: (K1, V1) => (K2, V2)) extends Actor with ActorLogging {
 
   override def receive: PartialFunction[Any, Unit] = {
-    case i: Incoming[K1, V1] =>
+    case i: Incoming[K1, V1]@unchecked =>
       log.info(s"received $i")
       log.debug(s"with map ${i.m}")
       val v2k2ts = for ((k1, v1) <- i.m) yield Try(f(k1, v1))

@@ -13,6 +13,10 @@ class CleanSpec extends FlatSpec with Matchers {
 
   implicit val logger: Logger = Logger(classOf[CleanSpec])
 
+  it should "clean 0" in {
+    val cleaner = new FileCleaner("SOLUTION", "STUB", "END SOLUTION")
+    cleaner.clean("assignment-web-crawler/src/main/scala/edu/neu/coe/csye7200/asstwc/SolutionTemplateTest.sc", "output.txt")
+  }
   it should "clean 1" in {
     val cleaner = new FileCleaner("SOLUTION", "STUB", "END SOLUTION")
     cleaner.clean("../INFO6205/src/main/java/edu/neu/coe/info6205/BinarySearch.java", "output.txt")

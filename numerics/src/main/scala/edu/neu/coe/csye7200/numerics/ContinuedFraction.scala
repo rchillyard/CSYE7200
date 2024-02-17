@@ -253,6 +253,7 @@ object ContinuedFraction {
 
   private def eFunction(xs: List[Pair]): List[Pair] = xs match {
     case List(x, y, z) => List(x, Pair(y.b + 2, y.a), z)
+    case _ => throw new Exception("logic error")
   }
 }
 

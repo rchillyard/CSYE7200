@@ -2,8 +2,6 @@ name := "FunctionalProgramming"
 
 version := "1.0"
 
-scalaVersion := "2.13.4"
-
 Compile / doc / scalacOptions ++= Seq("-Vimplicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
 scalacOptions ++= Seq("-encoding", "UTF-8")
 

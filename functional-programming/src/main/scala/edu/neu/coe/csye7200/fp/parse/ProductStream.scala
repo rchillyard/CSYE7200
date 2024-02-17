@@ -51,7 +51,6 @@ trait ProductStream[X <: Product] {
   def map[Y <: Product](f: X => Y): ProductStream[Y] = // Assignment6 5
 
 // TO BE IMPLEMENTED 
-
 ???
 
   /**
@@ -63,7 +62,6 @@ trait ProductStream[X <: Product] {
   def flatMap[Y <: Product](f: X => Iterable[Y]): ProductStream[Y] = { // Assignment6 5
 
 // TO BE IMPLEMENTED 
-
 ???
   }
 
@@ -101,7 +99,6 @@ abstract class ProductStreamBase[X <: Product] extends ProductStream[X] {
   def asMaps: LazyList[Map[String, Any]] =  // Assignment6 14
 
 // TO BE IMPLEMENTED 
-
 ???
 }
 
@@ -241,7 +238,6 @@ object TupleStream {
   def toTuple[X <: Product](ats: Seq[Try[Any]]): Try[X] = // Assignment6 8 Hint: use MonadOps.sequence; Tuples.toTuple; and asInstanceOf
 
 // TO BE IMPLEMENTED 
-
 ???
 
   def seqToTuple[X <: Product](ws: Seq[String])(f: String => Try[Any]): Try[X] = toTuple(ws map f)
@@ -305,7 +301,6 @@ case class CsvParser(
   lazy val row: Parser[List[String]] = // Assignment6 3: row ::= term { delimiter term }
 
 // TO BE IMPLEMENTED 
-
 ???
 
   /**
@@ -318,7 +313,6 @@ case class CsvParser(
   lazy val term: Parser[String] = // Assignment6 7: term ::= quoteChar text quoteChar | text
 
 // TO BE IMPLEMENTED 
-
 ???
 
   /**

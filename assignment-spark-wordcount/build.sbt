@@ -2,8 +2,6 @@ name := "SparkWordCount"
 
 version := "0.1"
 
-scalaVersion := "2.12.12"
-
 Compile / doc / scalacOptions ++= Seq("-Vimplicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
 
 val scalaTestVersion = "3.2.3"

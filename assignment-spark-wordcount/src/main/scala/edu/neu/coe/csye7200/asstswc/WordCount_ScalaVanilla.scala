@@ -8,7 +8,6 @@ object WordCount_ScalaVanilla {
     //hint: you may start with flatMap() then consider the steps to process data in Spark
     def wordCount(list: List[String]): Map[String, Int] = {
 // TO BE IMPLEMENTED 
-
 ???
     }
 }

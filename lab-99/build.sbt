@@ -2,11 +2,9 @@ name := "lab-99"
 
 version := "1.0"
 
-scalaVersion := "2.13.1"
-
 Compile / scalacOptions ++= Seq("-Vimplicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
 
-libraryDependencies += "org.scalactic" %% "scalactic" % "3.1.0"
+libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.2"
 libraryDependencies += "com.lihaoyi" %% "os-lib" % "0.9.0"
 libraryDependencies += "com.lihaoyi" %% "requests" % "0.8.0"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.0" % "test"

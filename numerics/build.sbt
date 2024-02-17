@@ -4,23 +4,22 @@ name := "Numerics"
 
 version := "1.0.0-SNAPSHOT"
 
-scalaVersion := "2.13.1"
-
 Compile / doc / scalacOptions ++= Seq("-Vimplicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
 
-val scalaTestVersion = "3.1.1"
+val scalaTestVersion = "3.2.15"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
 
 resolvers += "Typesafe Repository" at "https://repo.typesafe.com/typesafe/releases/"
 
 libraryDependencies ++= Seq(
-  "org.scala-lang.modules" %% "scala-xml" % "1.2.0",
-  //  "org.spire-math" %% "spire" % "0.13.0",
-  "org.typelevel" %% "cats-core" % "2.2.0",
-  "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2",
+  "org.scala-lang.modules" %% "scala-xml" % "2.1.0",
+  "org.typelevel" %% "cats-core" % "2.9.0",
+  "org.scala-lang.modules" %% "scala-parser-combinators" % "2.2.0",
   "org.apache.commons" % "commons-math3" % "3.6.1",
-  "org.scalacheck" %% "scalacheck" % "1.14.1" % "test"
-//  "org.scalatestplus" %% "scalacheck-1-15" % "3.2.2.0" % "test"
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
+  "ch.qos.logback" % "logback-core" % "1.4.5",
+  "ch.qos.logback" % "logback-classic" % "1.4.5" % "runtime",
+  "org.scalatest" %% "scalatest" % "3.2.15" % "test",
+  "org.scalacheck" %% "scalacheck" % "1.17.0" % "test"
 )
-

@@ -10,8 +10,8 @@ import org.scalatest.tagobjects.Slow
 import org.scalatest.time._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-
 import java.net.URL
+import scala.annotation.unused
 import scala.concurrent.duration._
 //import scala.language.postfixOps
 
@@ -38,7 +38,7 @@ class MapReduceSpec extends AnyFlatSpec with Matchers with Futures with ScalaFut
 
   `spec1` should "work for http://www.bbc.com/ http://www.cnn.com/ http://default/" taggedAs Slow in {
     //noinspection ScalaUnusedSymbol
-    def mapper(q: Unit, w: String): (URL, String) = {
+    def mapper(@unused q: Unit, w: String): (URL, String) = {
       val u = MockURL(w); (u.get, u.content)
     }
 
@@ -75,7 +75,7 @@ class MapReduceSpec extends AnyFlatSpec with Matchers with Futures with ScalaFut
   }
 
   `spec0` should "work for http://www.bbc.com/ http://www.cnn.com/ http://default/" taggedAs Slow in {
-    def mapper1(q: Unit, w: String): (URL, String) = {
+    def mapper1(@unused q: Unit, w: String): (URL, String) = {
       val u = MockURL(w); (u.get, u.content)
     }
 
@@ -101,7 +101,7 @@ class MapReduceSpec extends AnyFlatSpec with Matchers with Futures with ScalaFut
   }
 
   it should "fail because mapper is incorrectly defined" taggedAs Slow in {
-    def mapper1(q: Unit, w: String): (URL, String) = {
+    def mapper1(@unused q: Unit, w: String): (URL, String) = {
       val u = MockURL(w); (u.get, u.content)
     }
 

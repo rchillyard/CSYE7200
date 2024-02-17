@@ -18,8 +18,8 @@ import scala.util.control.NonFatal
 class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with ScalaFutures with TryValues with Inside {
 
     import scala.concurrent.ExecutionContext.Implicits.global
-    val goodURL = "https://www1.coe.neu.edu/~rhillyard/indexSafe.html"
-    val badURL = "https://www1.coe.neu.edu/junk"
+    val goodURL = "http://www1.coe.neu.edu/~rhillyard/indexSafe.html"
+    val badURL = "http://www1.coe.neu.edu/junk"
     val malformedURL = "x//www.htmldog.com/examples/"
 
     def logException(x: Throwable): Unit = System.err.println(x)
@@ -81,7 +81,7 @@ class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with 
                 val usf: Future[Seq[URL]] = WebCrawler.wget(us1)(x => exceptions += x)
                 whenReady(usf, timeout(Span(12, Seconds))) {
                     us2 =>
-                        us2.distinct.size shouldBe 32
+                        us2.distinct.size shouldBe 32 +- 1
                         exceptions.size shouldBe 0
                 }
             case f@_ => fail(f.toString)

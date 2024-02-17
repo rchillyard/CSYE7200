@@ -102,14 +102,6 @@ object Movie extends App {
   object MoviesProtocol extends DefaultJsonProtocol {
     // 20 points
     // TO BE IMPLEMENTED 
-
-
-
-
-
-
-
-    // STUB
     // END SOLUTION
   }
 
@@ -131,8 +123,6 @@ object Movie extends App {
   def testSerializationAndDeserialization(ms: Seq[Movie]): Boolean = {
     // 5 points
     // TO BE IMPLEMENTED 
-
-
 ???
   }
 

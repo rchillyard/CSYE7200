@@ -1,7 +1,8 @@
 package edu.neu.coe.csye7200.prime
 
 import com.typesafe.scalalogging.Logger
-import edu.neu.coe.csye7200.prime.Prime.{logger, primes}
+import edu.neu.coe.csye7200.prime.Prime.primes
+import edu.neu.coe.csye7200.primeAlt.Prime.logger
 
 case class Prime(x: BigInt, var valid: Option[Boolean]) {
 
@@ -27,20 +28,22 @@ case class Prime(x: BigInt, var valid: Option[Boolean]) {
 
   /**
    * Mutating method to determine if this Prime is truly prime.
+   * As a side-effect, <code>valid</code> will be set to Some(true) if truly prime, otherwise, Some(false)
    *
    * @return a Boolean.
    */
   private def validate: Boolean = {
-    def composite = primes.takeWhile(p => p.x * p.x <= x).exists(p => x % p.x == 0)
 
-    val isPrime = x == BigInt(2) || x == BigInt(3) || !composite
     valid match {
       case None =>
+        def composite = primes.takeWhile(p => p.x * p.x <= x).exists(p => x % p.x == 0)
+        val isPrime = x == BigInt(2) || x == BigInt(3) || !composite
         logger.whenDebugEnabled(if (isPrime) logger.debug(s"$x is prime"))
         valid = Some(isPrime)
+        isPrime
       case _ =>
+        isPrime
     }
-    isPrime
   }
 }
 

@@ -7,9 +7,6 @@ object WordCount_foldByKey{
   //hint: what is the key difference between reduceByKey and aggregateByKey, zeroValue!
   def wordCount(lines: RDD[String], separator: String): RDD[(String, Int)] =
 // TO BE IMPLEMENTED 
-
-
-
 ???
 
 }

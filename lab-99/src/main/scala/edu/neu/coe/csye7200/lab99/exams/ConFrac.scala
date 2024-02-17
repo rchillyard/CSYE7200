@@ -16,6 +16,7 @@ case class Convergent(h: BigInt, k: BigInt, maybePrevious: Option[Convergent]) {
 
   def next(a: Int): Convergent = maybePrevious match {
     case Some(Convergent(v, w, _)) => Convergent(a * h + v, a * k + w, Some(this))
+    case _ => throw new Exception("logic error")
   }
 }
 

@@ -2,13 +2,11 @@ name := """SparkCsv"""
 
 version := "1.0"
 
-scalaVersion := "2.12.12"
-
-scalacOptions in(Compile, doc) ++= Seq("-groups", "-implicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused" )
+Compile / doc / scalacOptions ++= Seq("-groups", "-implicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused" )
 
 unmanagedBase := baseDirectory.value / "spark-csv/lib"
 
-parallelExecution in Test := false
+Test / parallelExecution := false
 
 val sparkVersion = "3.2.1"
 
@@ -20,5 +18,3 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-sql" % sparkVersion,
   "org.apache.spark" %% "spark-mllib" % sparkVersion
 )
-
-parallelExecution in Test := false

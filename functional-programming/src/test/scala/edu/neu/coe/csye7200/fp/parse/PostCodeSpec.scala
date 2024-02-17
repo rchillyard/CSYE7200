@@ -32,22 +32,27 @@ class PostCodeSpec extends AnyFlatSpec with Matchers {
   }
   behavior of "digit"
   it should "parse 1" in {
-    parser.parseAll(parser.digit, "1") should matchPattern { case parser.Success(parser.Digit(1), _) => }
+    val expected = parser.Digit(1)
+    parser.parseAll(parser.digit, "1") should matchPattern { case parser.Success(`expected`, _) => }
   }
   behavior of "district"
   it should "parse 1A" in {
-    parser.parseAll(parser.district, "1A") should matchPattern { case parser.Success(parser.District(parser.Digit(1), None, Some('A')), _) => }
+    val expected = parser.District(parser.Digit(1), None, Some('A'))
+    parser.parseAll(parser.district, "1A") should matchPattern { case parser.Success(`expected`, _) => }
   }
   behavior of "inwardCode"
   it should "parse 7JX" in {
-    parser.parseAll(parser.inwardCode, "7JX") should matchPattern { case parser.Success(parser.InwardCode(parser.Digit(7), "JX"), _) => }
+    val expected = parser.InwardCode(parser.Digit(7), "JX")
+    parser.parseAll(parser.inwardCode, "7JX") should matchPattern { case parser.Success(`expected`, _) => }
   }
   it should "parse 1BB" in {
-    parser.parseAll(parser.inwardCode, "1BB") should matchPattern { case parser.Success(parser.InwardCode(parser.Digit(1), "BB"), _) => }
+    val expected = parser.InwardCode(parser.Digit(1), "BB")
+    parser.parseAll(parser.inwardCode, "1BB") should matchPattern { case parser.Success(`expected`, _) => }
   }
   behavior of "outwardCode"
   it should "parse EC1A" in {
-    parser.parseAll(parser.outwardCode, "EC1A") should matchPattern { case parser.Success(parser.OutwardCode("EC", parser.District(parser.Digit(1), None, Some('A'))), _) => }
+    val expected = parser.OutwardCode("EC", parser.District(parser.Digit(1), None, Some('A')))
+    parser.parseAll(parser.outwardCode, "EC1A") should matchPattern { case parser.Success(`expected`, _) => }
   }
   behavior of "postCode"
   it should "parse " + code1 in {

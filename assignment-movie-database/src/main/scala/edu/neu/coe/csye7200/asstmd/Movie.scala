@@ -100,8 +100,6 @@ object Movie extends App {
      */
     def parse(w: String): Try[Movie] = {
 // TO BE IMPLEMENTED 
-
-      // STUB
        Try(???)
       // END
     }
@@ -127,8 +125,6 @@ object Movie extends App {
     // 6 points
     val result: Seq[String] = {
       // TO BE IMPLEMENTED 
-
-      // STUB
        ???
       // END
     }
@@ -213,12 +209,6 @@ object Rating {
   // 13 points
   def apply(s: String): Rating = {
 // TO BE IMPLEMENTED 
-
-
-
-
-
-    // STUB
      ???
     // END
   }

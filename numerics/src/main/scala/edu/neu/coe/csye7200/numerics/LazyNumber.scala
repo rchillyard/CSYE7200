@@ -27,7 +27,6 @@ abstract class LazyNumber[X: Fractional](x: => X, f: X => X) extends Valuable[X]
   // 7 points
   def flatMap(g: X => LazyNumber[X]): LazyNumber[X] = {
 // TO BE IMPLEMENTED 
-
 ???
   }
 

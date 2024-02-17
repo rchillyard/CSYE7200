@@ -7,8 +7,6 @@ object WordCount_countByValue {
   //hint: check the data type of output, why it is not RDD
   def wordCount(lines: RDD[String], separator: String): collection.Map[String, Long] =
 // TO BE IMPLEMENTED 
-
-
 ???
 
 }

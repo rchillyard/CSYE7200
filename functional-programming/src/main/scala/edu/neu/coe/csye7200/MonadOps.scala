@@ -13,7 +13,6 @@ object MonadOps {
   // 6 points.
   def flatten[X](xyf: Future[Try[X]])(implicit executor: ExecutionContext): Future[X] =
   // TO BE IMPLEMENTED 
-
 ???
 
   def flatten[X](xfy: Try[Future[X]]): Future[X] =
@@ -31,9 +30,6 @@ object MonadOps {
   // 6 points.
   def flatten[X](xsfs: Seq[Future[Seq[X]]])(implicit ec: ExecutionContext): Future[Seq[X]] =
   // TO BE IMPLEMENTED 
-
-
-
 ???
 
   def flattenRecover[X](esf: Future[Seq[Either[Throwable, Seq[X]]]], f: => Throwable => Unit)(implicit executor: ExecutionContext): Future[Seq[X]] = {
@@ -61,10 +57,6 @@ object MonadOps {
   def sequence[X](xy: Try[X]): Either[Throwable, X] =
 
 // TO BE IMPLEMENTED 
-
-
-
-
 ???
 
   def sequence[X](xf: Future[X])(implicit executor: ExecutionContext): Future[Either[Throwable, X]] = {
@@ -110,7 +102,6 @@ object MonadOps {
   // 6 points.
   def sequence[X](xfs: Seq[Future[X]])(implicit executor: ExecutionContext): Seq[Future[Either[Throwable, X]]] =
 // TO BE IMPLEMENTED 
-
 ???
 
   def sequence[X](xys: Seq[Try[X]]): Try[Seq[X]] = xys.foldLeft(Try(Seq[X]())) {
@@ -129,7 +120,6 @@ object MonadOps {
   // 7 points.
   def sequence[X](xe: Either[Throwable, X]): Option[X] =
 // TO BE IMPLEMENTED 
-
 ???
 
   def zip[A, B](ao: Option[A], bo: Option[B]): Option[(A, B)] = for (a <- ao; b <- bo) yield (a, b)

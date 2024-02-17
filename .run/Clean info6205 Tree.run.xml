@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Clean info6205 Tree" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="edu.neu.coe.csye7200.util.CleanTree" />
+    <module name="LabParser" />
+    <option name="PROGRAM_PARAMETERS" value="$PROJECT_DIR$/../INFO6205 $PROJECT_DIR$/../INFO6205_Spring2023 &quot;SOLUTION&quot; SKELETON" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="edu.neu.coe.csye7200.util.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

@@ -22,9 +22,6 @@ object Function {
    */
   def map2[T1, T2, R](t1y: Try[T1], t2y: Try[T2])(f: (T1, T2) => R): Try[R] =
   // TO BE IMPLEMENTED 
-
-
-
 ???
 
   /**
@@ -38,7 +35,6 @@ object Function {
   // You know this one
   def lift[T, R](f: T => R): Try[T] => Try[R] =
   // TO BE IMPLEMENTED 
-
 ???
 
   /**
@@ -53,7 +49,6 @@ object Function {
   // Think Simple, Elegant, Obvious
   def lift2[T1, T2, R](f: (T1, T2) => R): (Try[T1], Try[T2]) => Try[R] =
   // TO BE IMPLEMENTED 
-
 ???
 
   /**
@@ -69,7 +64,6 @@ object Function {
   // If you can do lift2, you can do lift3
   def lift3[T1, T2, T3, R](f: (T1, T2, T3) => R): (Try[T1], Try[T2], Try[T3]) => Try[R] =
   // TO BE IMPLEMENTED 
-
 ???
 
   /**
@@ -87,10 +81,6 @@ object Function {
    */
   def map3[T1, T2, T3, R](t1y: Try[T1], t2y: Try[T2], t3y: Try[T3])(f: (T1, T2, T3) => R): Try[R] =
   // TO BE IMPLEMENTED 
-
-
-
-
 ???
 
   /**
@@ -111,7 +101,6 @@ object Function {
   def lift7[T1, T2, T3, T4, T5, T6, T7, R](f: (T1, T2, T3, T4, T5, T6, T7) => R):
   (Try[T1], Try[T2], Try[T3], Try[T4], Try[T5], Try[T6], Try[T7]) => Try[R] =
   // TO BE IMPLEMENTED 
-
 ???
 
   /**
@@ -120,7 +109,6 @@ object Function {
   def map7[T1, T2, T3, T4, T5, T6, T7, R](t1y: Try[T1], t2y: Try[T2], t3y: Try[T3], t4y: Try[T4], t5y: Try[T5], t6y: Try[T6], t7y: Try[T7])
                                          (f: (T1, T2, T3, T4, T5, T6, T7) => R): Try[R] =
   // TO BE IMPLEMENTED 
-
 ???
 
   /**
@@ -136,7 +124,6 @@ object Function {
   // NOTE: you won't be able to use the "_" character here because the compiler infers an ordering that you don't want
   def invert2[T1, T2, R](f: T1 => T2 => R): T2 => T1 => R =
   // TO BE IMPLEMENTED 
-
 ???
 
   /**
@@ -152,7 +139,6 @@ object Function {
   // If you can do invert2, you can do this one too
   def invert3[T1, T2, T3, R](f: T1 => T2 => T3 => R): T3 => T2 => T1 => R =
   // TO BE IMPLEMENTED 
-
 ???
 
   /**
@@ -169,7 +155,6 @@ object Function {
   // If you can do invert3, you can do this one too
   def invert4[T1, T2, T3, T4, R](f: T1 => T2 => T3 => T4 => R): T4 => T3 => T2 => T1 => R =
   // TO BE IMPLEMENTED 
-
 ???
 
   /**
@@ -188,7 +173,6 @@ object Function {
   // This one is a bit harder. But again, think in terms of an anonymous function that is what you want to return
   def uncurried2[T1, T2, T3, R](f: T1 => T2 => T3 => R): (T1, T2) => T3 => R =
   // TO BE IMPLEMENTED 
-
 ???
 
   /**
@@ -208,7 +192,6 @@ object Function {
   // If you can do uncurried2, then you can do this one
   def uncurried3[T1, T2, T3, T4, R](f: T1 => T2 => T3 => T4 => R): (T1, T2, T3) => T4 => R =
   // TO BE IMPLEMENTED 
-
 ???
 
   /**
@@ -228,7 +211,6 @@ object Function {
   // If you can do uncurried3, then you can do this one
   def uncurried7[T1, T2, T3, T4, T5, T6, T7, T8, R](f: T1 => T2 => T3 => T4 => T5 => T6 => T7 => T8 => R): (T1, T2, T3, T4, T5, T6, T7) => T8 => R =
   // TO BE IMPLEMENTED 
-
 ???
 
 

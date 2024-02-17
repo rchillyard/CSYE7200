@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200.util
 
-import edu.neu.coe.csye7200.util.FileCleaner.{getConfiguration, noleak, noleakFlat, sequence}
+import edu.neu.coe.csye7200.util.FileCleaner.{discardLine, getConfiguration, noleak, noleakFlat, sequence, validExtensions}
 import java.io.{BufferedWriter, File, FileWriter, Writer}
 import java.nio.file.FileSystems.getDefault
 import java.nio.file.Files.walk
@@ -20,8 +20,9 @@ class FileCleaner(solution: String, stub: String, terminator: String) extends Ja
   def getDefaultStub(inputFile: String): String = {
     val extension = """^.+\.(\w+)$""".r
     inputFile match {
-      case extension("scala") => DEFAULTSTUB_SCALA
       case extension("java") => DEFAULTSTUB_JAVA
+      case extension("scala") => DEFAULTSTUB_SCALA
+      case extension(_) => DEFAULTSTUB_UNKNOWN
       case _ => throw CleanParseException(s"getDefaultStub: not supported for $inputFile")
     }
   }
@@ -66,10 +67,16 @@ class FileCleaner(solution: String, stub: String, terminator: String) extends Ja
   case class ParsedLine(n: Int, prefix: String, maybeMaybeString: Option[Option[String]], suffix: String) {
     def render(isStub: Boolean): String =
       (maybeMaybeString, suffix) match {
-        case (Some(Some(`solution`)), b) => s"$prefix// " + TOBEIMPLEMENTED + s" $b"
-        case (Some(Some(a)), b) => s"$prefix// $a$b"
-        case (Some(None), b) if !isStub => s"$prefix//$b"
-        case (_, b) => s"$prefix$b"
+        case (Some(Some(`solution`)), b) =>
+          s"$prefix// " + TOBEIMPLEMENTED + s" $b"
+        case (Some(Some(`stub`)), b) =>
+          discardLine
+        case (Some(Some(a)), b) =>
+          s"$prefix// $a$b"
+        case (Some(None), b) if !isStub =>
+          s"$prefix//$b"
+        case (_, b) =>
+          s"$prefix$b"
       }
   }
 
@@ -101,13 +108,18 @@ class FileCleaner(solution: String, stub: String, terminator: String) extends Ja
           } else
             isStub = false
         case _ =>
+          logger.logDebug("ordinary line")
       }
-      if (defaultStub) defaultStubString else if (transition || output) commentedLine.render(isStub) else ""
+      if (defaultStub) defaultStubString else if (transition || output) commentedLine.render(isStub) else discardLine
     }
 
     val result = FileCleaner.sequence(for (l <- source.getLines().zipWithIndex) yield parseLine(l)) match {
       case scala.util.Success(cs) =>
-        val str = (for (c <- cs) yield process(c)).mkString("\n")
+        val strings = for {
+          c <- cs
+          x = process(c) if x != discardLine
+        } yield x
+        val str = strings.mkString("\n")
         destination.append(str)
         str.length
       case scala.util.Failure(x) => throw x
@@ -133,6 +145,7 @@ class FileCleaner(solution: String, stub: String, terminator: String) extends Ja
 
   val DEFAULTSTUB_SCALA = "???"
   val DEFAULTSTUB_JAVA = """throw new RuntimeException("implementation missing");"""
+  val DEFAULTSTUB_UNKNOWN = "???"
   val TOBEIMPLEMENTED = "TO BE IMPLEMENTED"
 }
 
@@ -164,9 +177,17 @@ object FileCleaner {
   def getConfiguration(sa: Array[String]): List[String] = {
     def merge(x: (String, String)): String = if (x._1.nonEmpty) x._1 else x._2
 
-    val arguments = sa.toList zipAll(List("", "", "SOLUTION", "STUB", "END"), "", "")
+    val arguments = sa.toList zipAll(List("", "", solutionScala, stubScala, endScala), "", "")
     arguments map merge
   }
+
+  val validExtensions = Seq(".java", ".scala", ".sbt", ".sc", ".conf", ".xml", ".properties") // .csv?
+
+  val solutionScala = "SOLUTION"
+  val stubScala = "STUB"
+  val endScala = "END"
+
+  val discardLine = "//************//"
 
 }
 
@@ -180,11 +201,13 @@ object CleanTree extends App {
   if (sourcePath.isEmpty || destPath.isEmpty) System.err.println("You must provide root paths for source and destination (at least)")
   else {
     val cleaner = new FileCleaner(solution, stub, terminator)
-    val toInclude: Path => Boolean = p => Files.isRegularFile(p) && (p.getFileName.toString.endsWith(".java") || p.getFileName.toString.endsWith(".scala"))
+    val toInclude: Path => Boolean = p => Files.isRegularFile(p) && validateExt(p.getFileName.toString)
     val toExclude: Path => Boolean = p => p.getFileName.toString.startsWith(".")
     val result = cleaner.cleanTree(sourcePath, destPath, toInclude, toExclude).get
     if (result) println("CleanTree complete") else System.err.println("CleanTree: At least one destination file is empty")
   }
+
+  private def validateExt(filename: String): Boolean = (for (ext <- validExtensions if filename.endsWith(ext)) yield ext).nonEmpty
 }
 
 object Clean extends App {

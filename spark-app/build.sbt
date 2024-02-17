@@ -2,8 +2,6 @@ name := """SparkApp"""
 
 version := "1.0"
 
-scalaVersion := "2.12.12"
-
 Compile / doc / scalacOptions ++= Seq("-Vimplicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
 
 libraryDependencies ++= Seq(

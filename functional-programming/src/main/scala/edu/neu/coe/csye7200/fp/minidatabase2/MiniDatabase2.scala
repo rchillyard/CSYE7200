@@ -11,20 +11,11 @@ object MiniDatabase2 extends App {
   // Similar to the map2 you already know (4 points)
   def map3[A, B, C, D](a: Option[A], b: Option[B], c: Option[C])(f: (A, B, C) => D): Option[D] =
 // TO BE IMPLEMENTED 
-
-
-
-
-
 ???
 
   // Similar to the map2 you already know (4 points)
   def map2[A, B, C](a: Try[A], b: Try[B])(f: (A, B) => C): Try[C] =
 // TO BE IMPLEMENTED 
-
-
-
-
 ???
 
   def load(filename: String) = {

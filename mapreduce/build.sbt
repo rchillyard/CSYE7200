@@ -2,8 +2,6 @@ name := "MapReduce"
 
 version := "1.0.0-SNAPSHOT"
 
-scalaVersion := "2.13.4"
-
 Compile / scalacOptions ++= Seq("-Vimplicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
 
 //mainClass in (Compile, run) := Some("edu.neu.coe.scala.mapreduce.MapReduce")

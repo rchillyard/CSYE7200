@@ -1,6 +1,6 @@
 name := "lab-akka-streams"
 organization    := "com.phasmidsoftware"
-scalaVersion    := "2.11.9"
+scalaVersion    := "2.11.12"
 version :="0.1.0-SNAPSHOT"
 
 Compile / doc / scalacOptions ++= Seq("-Vimplicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
@@ -21,8 +21,8 @@ libraryDependencies ++= Seq(
       "com.typesafe.akka" %% "akka-stream"          % akkaVersion,
       "com.typesafe.akka" %% "akka-actor"           % akkaVersion,
       "com.typesafe.akka" %% "akka-slf4j"           % akkaVersion,
-      "ch.qos.logback"    % "logback-classic"       % "1.0.9",
-      "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0",
+      "ch.qos.logback"    % "logback-classic"       % "1.4.5",
+      "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
       "org.json4s"        %% "json4s-jackson"       % "3.6.7",
       "org.scalaj"        %% "scalaj-http"          % "2.4.2",
       "com.typesafe.akka" %% "akka-http-testkit"    % akkaHttpVersion % Test,

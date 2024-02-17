@@ -4,6 +4,7 @@ import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import akka.pattern.ask
 import akka.util.Timeout
 import com.typesafe.config.Config
+import scala.annotation.unused
 import scala.collection.immutable
 import scala.concurrent.duration._
 import scala.concurrent._
@@ -25,7 +26,7 @@ trait ByReduce[K1, V1, K2, V2, V3 >: V2] {
 
   // TODO f is never used.
   // TODO z is never used.
-  def reducerProps(f: (K1, V1) => (K2, V2), g: (V3, V2) => V3, z: () => V3): Props = Props.create(classOf[Reducer[K2, V2, V3]], g)
+  def reducerProps(@unused f: (K1, V1) => (K2, V2), g: (V3, V2) => V3, @unused z: () => V3): Props = Props.create(classOf[Reducer[K2, V2, V3]], g)
 }
 
 //noinspection ScalaUnusedSymbol
@@ -34,7 +35,7 @@ trait ByFold[K1, V1, K2, V2, V3] {
     if (config.getBoolean("forgiving")) Props.create(classOf[Mapper_Forgiving[K1, V1, K2, V2]], f) else Props.create(classOf[Mapper[K1, V1, K2, V2]], f)
 
   // TODO f is never used.
-  def reducerProps(f: (K1, V1) => (K2, V2), g: (V3, V2) => V3, z: () => V3): Props = Props.create(classOf[Reducer_Fold[K2, V2, V3]], g, z)
+  def reducerProps(@unused f: (K1, V1) => (K2, V2), g: (V3, V2) => V3, z: () => V3): Props = Props.create(classOf[Reducer_Fold[K2, V2, V3]], g, z)
 }
 
 /**
@@ -56,7 +57,7 @@ abstract class MasterSeqBase[V1, K2, V2, V3](config: Config, f: (Unit, V1) => (K
   import context.dispatcher
 
   override def receive: PartialFunction[Any, Unit] = {
-    case v1s: Seq[V1] =>
+    case v1s: Seq[V1]@unchecked =>
       log.info(s"received Seq[V]: with ${v1s.length} elements")
       val caller = sender()
       doMapReduce(Incoming.sequence[Unit, V1](v1s)).onComplete {
@@ -95,7 +96,7 @@ abstract class MasterBase[K1, V1, K2, V2, V3](config: Config, f: (K1, V1) => (K2
   }
 
   override def receive: Receive = {
-    case v1K1m: Map[K1, V1] =>
+    case v1K1m: Map[K1, V1]@unchecked =>
       log.info(s"received Map[K1,V1]: with ${v1K1m.size} elements")
       maybeLog("received", v1K1m)
       val caller = sender()

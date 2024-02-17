@@ -6,30 +6,18 @@ import scala.util.{Failure, Success, Try}
 case class Family(father: Person, mother: Person, children: Seq[Person]) {
   def birth(child: Person): Family =
   // TO BE IMPLEMENTED 
-
 ???
 }
 
 case class Person(name: String, gender: Gender, age: Option[Int]) {
   def marry(person: Person): Try[Family] =
   // TO BE IMPLEMENTED 
-
-
-
-
-
-
 ???
 }
 
 case class Gender(maybeMale: Option[Boolean]) {
   def join(other: Gender): Option[Match] =
   // TO BE IMPLEMENTED 
-
-
-
-
-
 ???
 
   override def toString: String = maybeMale match {

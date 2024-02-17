@@ -35,7 +35,6 @@ object Primes {
          */
         def hasFactor(that: BigInt): Boolean = {
 // TO BE IMPLEMENTED 
-
 ???
         }
 
@@ -47,7 +46,6 @@ object Primes {
        */
       def coprime(that: BigInt): Boolean = {
 // TO BE IMPLEMENTED 
-
 ???
       }
 
@@ -71,7 +69,6 @@ object Primes {
        */
       lazy val isPrime: Boolean =
 // TO BE IMPLEMENTED 
-
 ???
 
       // NOTE: we leave this here for unit testing
@@ -91,7 +88,6 @@ object Primes {
    */
   def EulerPrime(n: Int): Option[BigInt] =
 // TO BE IMPLEMENTED 
-
 ???
 
   /**
@@ -100,7 +96,6 @@ object Primes {
    */
   val primes: LazyList[Long] =
 // TO BE IMPLEMENTED 
-
 ???
 
   /**
@@ -111,6 +106,5 @@ object Primes {
    */
   lazy val eulerPrimes: List[Option[BigInt]] =
 // TO BE IMPLEMENTED 
-
 ???
 }

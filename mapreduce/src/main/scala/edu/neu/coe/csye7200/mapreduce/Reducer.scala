@@ -44,7 +44,7 @@ class Reducer_Fold[K2, V2, V3](g: (V3, V2) => V3, z: => V3) extends ReducerBase[
 abstract class ReducerBase[K2, V2, V3] extends Actor with ActorLogging {
 
   override def receive: Receive = {
-    case i: Intermediate[K2, V2] =>
+    case i: Intermediate[K2, V2]@unchecked =>
       log.info(s"received $i")
       log.debug(s"with elements ${i.vs}")
       sender() ! (i.k, Master.sequence(Try(getValue(i.vs))))

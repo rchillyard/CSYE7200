@@ -39,6 +39,5 @@ object Substring {
 
   private def startsWith(s: Seq[Char], p: Seq[Char]): Boolean =
 // TO BE IMPLEMENTED 
-
 ???
 }

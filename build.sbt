@@ -2,7 +2,9 @@ name := "CSYE7200"
 
 version := "1.0"
 
-scalaVersion := "2.12.10"
+ThisBuild / scalaVersion := "2.13.10"
+
+lazy val scalaVersion2_12 = "2.12.17"
 
 lazy val asstfc = project in file("assignment-functional-composition")
 
@@ -16,7 +18,9 @@ lazy val asstrs = project in file("assignment-random-state")
 
 lazy val asstwc = project in file("assignment-web-crawler")
 
-lazy val asstsw = project in file("assignment-spark-wordcount")
+lazy val asstsw = (project in file("assignment-spark-wordcount")).settings(
+  scalaVersion := scalaVersion2_12
+)
 
 lazy val asstch = project in file("asst-cache")
 
@@ -36,9 +40,13 @@ lazy val mapred = project in file("mapreduce")
 
 lazy val num = project in file("numerics")
 
-lazy val sparkapp = project in file("spark-app")
+lazy val sparkapp = (project in file("spark-app")).settings(
+  scalaVersion := scalaVersion2_12
+)
 
-lazy val sparkcsv = project in file("spark-csv")
+lazy val sparkcsv = (project in file("spark-csv")).settings(
+  scalaVersion := scalaVersion2_12
+)
 
 lazy val root = (project in file(".")).aggregate(assthw, asstmd, asstrs, asstfc, asstwc, asstsw, fp, num,  mapred, concor, labsort, labparser, labactors, lab99, asstch, sparkapp, sparkcsv)
 

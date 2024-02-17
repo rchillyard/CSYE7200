@@ -15,7 +15,6 @@ object Pell {
    */
   val pell: LazyList[Long] =
 // TO BE IMPLEMENTED 
-
 ???
 
   def apply(n: Int): Long = pell(n)
@@ -26,7 +25,6 @@ object Pell {
    */
   val pellBigInt: LazyList[BigInt] =
 // TO BE IMPLEMENTED 
-
 ???
 
   /**
@@ -35,7 +33,6 @@ object Pell {
    */
   val pellAlt: LazyList[BigInt] =
 // TO BE IMPLEMENTED 
-
 ???
 
   /**

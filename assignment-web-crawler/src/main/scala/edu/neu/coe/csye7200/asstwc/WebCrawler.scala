@@ -140,16 +140,6 @@ object WebCrawler extends App {
         // 16 points.
         def getURLs(ns: Node): Seq[Try[URL]] =
 // TO BE IMPLEMENTED 
-
-
-
-
-
-
-
-
-
-// STUB
  ???
 // END SOLUTION
 
@@ -161,8 +151,6 @@ object WebCrawler extends App {
         // 9 points.
 
 // TO BE IMPLEMENTED 
-
-        // STUB
          ???
         // END SOLUTION
     }

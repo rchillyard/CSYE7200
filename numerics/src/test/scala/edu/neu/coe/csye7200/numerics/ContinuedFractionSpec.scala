@@ -511,12 +511,6 @@ class ContinuedFractionSpec extends flatspec.AnyFlatSpec with should.Matchers {
   it should "calculate pi" in {
 
     // TO BE IMPLEMENTED 
-
-
-
-
-
-    // STUB
     // END
   }
 }
