@@ -1,32 +1,40 @@
 package edu.neu.coe.csye7200.util
 
+import edu.neu.coe.csye7200.util.CleanTree.{toExclude, toInclude}
 import edu.neu.coe.csye7200.util.FileCleaner.{noleak, noleakFlat}
 import java.io.{BufferedWriter, File, FileWriter}
-import org.scalatest.{FlatSpec, Matchers}
+import java.nio.file.FileSystems.getDefault
+import java.nio.file.Path
+import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 import scala.io.Source
-import scala.util.{Failure, Success, Try}
+import scala.util.{Success, Try}
 
-class CleanSpec extends FlatSpec with Matchers {
-
-  behavior of "Clean"
+class CleanSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
 
   implicit val logger: Logger = Logger(classOf[CleanSpec])
-  val binarySearchJava = "../INFO6205/src/main/java/com/phasmidsoftware/dsaipg/BinarySearch.java"
+
+  override def beforeAll(): Unit = {
+    logger.logInfo(s"current directory is ${new File(".").getAbsolutePath}")
+  }
+
+  val binarySearchJava = "../INFO6205/src/main/java/com/phasmidsoftware/dsaipg/misc/BinarySearch.java"
+
+  behavior of "Clean"
 
   it should "clean 0" in {
     val cleaner = new FileCleaner("SOLUTION", "STUB", "END SOLUTION")
     val result = cleaner.clean("assignment-web-crawler/src/main/scala/edu/neu/coe/csye7200/asstwc/SolutionTemplateTest.sc", "output.txt")
-    result shouldBe Success(2897)
+    result shouldBe Success(2916)
   }
   it should "clean 1" in {
     val cleaner = new FileCleaner("SOLUTION", "STUB", "END SOLUTION")
     val result = cleaner.clean(binarySearchJava, "output.txt")
-    result shouldBe Success(1260)
+    result shouldBe Success(1265)
   }
   it should "clean 2" in {
     val cleaner = new FileCleaner("SOLUTION", "STUB", "END SOLUTION")
     val result = cleaner.clean("assignment-web-crawler/src/main/scala/edu/neu/coe/csye7200/asstwc/WebCrawler.scala", "output.txt")
-    result shouldBe Success(7185)
+    result shouldBe Success(19679)
   }
   it should "clean 3" in {
     val cleaner = new FileCleaner("SOLUTION", "STUB", "END SOLUTION")
@@ -69,6 +77,34 @@ class CleanSpec extends FlatSpec with Matchers {
     val cleaner = new FileCleaner("SOLUTION", "STUB", "END SOLUTION")
     cleaner.parseAll(cleaner.slashes, w1) should matchPattern { case cleaner.Success(_, _) => }
     cleaner.parseAll(cleaner.slashes, w2) should matchPattern { case cleaner.Failure(_, _) => }
+  }
+
+  it should "doClean" in {
+    val args = Array("assignment-web-crawler/src/main/scala/edu/neu/coe/csye7200/asstwc/SolutionTemplateTest.sc", "output.txt", "", "SOLUTION", "STUB", "END SOLUTION")
+    val result: Int = Clean.doClean(args)
+    result shouldBe 2916
+  }
+
+  behavior of "CleanTree"
+
+  it should "clean 0" in {
+    val List(sourcePath, _, exclusionString, solution, stub, terminator) = List("assignment-web-crawler/src", "/tmp", "-SolutionTemplateTest", "SOLUTION", "STUB", "END SOLUTION")
+    val exclusions = exclusionString.replace("-", "").split(":").map(_.trim).filter(_.nonEmpty).toList
+    val cleaner = new FileCleaner(solution, stub, terminator)
+    val sourceDir = getDefault.getPath(sourcePath)
+    val paths = cleaner.chooseFiles(toInclude, toExclude(exclusions), sourceDir).toList
+    paths.size shouldBe 15
+  }
+
+  it should "clean 1" in {
+    val List(sourcePath, destPath, exclusionString, solution, stub, terminator) = List("assignment-web-crawler/src", "/tmp/src", "-SolutionTemplateTest", "SOLUTION", "STUB", "END SOLUTION")
+    val exclusions = exclusionString.replace("-", "").split(":").map(_.trim).filter(_.nonEmpty).toList
+    val cleaner = new FileCleaner(solution, stub, terminator)
+    val sourceDir = getDefault.getPath(sourcePath)
+    val destDir = getDefault.getPath(destPath)
+    val paths: Iterator[Path] = cleaner.chooseFiles(toInclude, toExclude(exclusions), sourceDir)
+    val tuples = paths map (p => p -> destDir.resolve(sourceDir.relativize(p)))
+    cleaner.processFiles(tuples) shouldBe Success(true)
   }
 
   behavior of "FileCleaner"

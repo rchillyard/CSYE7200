@@ -23,7 +23,7 @@ object Parent {
     * Tail-recursive method to traverse a tree-like object (defined as something that implements Parent).
     *
     * @param f  the map function which takes a T and produces an R for just that parent object (not its children).
-    * @param g  the reduce function which accumulates the result (the accumulator is passed as its first parameter).
+   * @param g   the reduceAsync function which accumulates the result (the accumulator is passed as its first parameter).
     * @param q  the quick return function which, if q(r) yields true, the method immediately returns r.
     * @param z  the function which builds the T list from the existing T list and the given T (parent node).
     * @param ts a list of Ts to be worked on.

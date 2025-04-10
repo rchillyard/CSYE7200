@@ -12,6 +12,9 @@ object Fibonacci {
   /**
     * A stream of Fibonacci numbers of form LazyList[Long].
     * This formulation is due to http://www.luigip.com/?p=200
+   *
+   * NOTE that we only provide results up to Fib 92 because a Long cannot handle any higher values.
+   * NOTE however, it seems that LazyList still provides values beyond what should be the limit.
     */
   val fibonacci: LazyList[Long] = 0L #:: fibonacci.scanLeft(1L)(_ + _)
 
@@ -26,8 +29,6 @@ object Fibonacci {
     * This uses a less elegant (but more comprehensible perhaps) formulation.
     */
   val fibonacciAlt: LazyList[BigInt] = BigInt(0) #:: BigInt(1) #:: fibonacciAlt.zip(fibonacciAlt.tail).map(n => n._1 + n._2)
-
-//  println(fibonacciBigInt take 100 toList)
 
   /**
     * Method to yield that largest Fibonacci number which is less than or equal to x

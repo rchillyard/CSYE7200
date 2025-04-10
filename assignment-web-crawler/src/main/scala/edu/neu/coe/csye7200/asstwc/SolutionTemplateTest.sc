@@ -29,7 +29,7 @@ def wget(url: URL)(implicit ec: ExecutionContext): Future[Seq[URL]] = {
     val ny: Try[Node] = HTMLParser.parse(g) recoverWith { case f => Failure(new RuntimeException(s"parse problem with URL $url: $f")) }
     for (n <- ny; uys = getURLs(n); us <- FP.sequenceForgiveSubsequent(uys) { case _: WebCrawlerProtocolException => true; case _ => false }) yield us
   }
-  // Hint: write as a for-comprehension, using getURLContent (above) and getLinks above. You will also need FP.asFuture
+  // Hint: write as a for-comprehension, using fetchURLContent (above) and getLinks above. You will also need FP.asFuture
   // 9 points.
 
   // TO BE IMPLEMENTED 

@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200.asstwc
 
-import edu.neu.coe.csye7200.asstwc.WebCrawler.{canParse, fetchAndParseLinks}
+import edu.neu.coe.csye7200.asstwc.WebCrawler.{isParseableURL, fetchAndParseLinks}
 import edu.neu.coe.csye7200.asstwc.fp.FP.flatten
 import edu.neu.coe.csye7200.asstwc.fp.{Crawler, FP}
 import java.net.{MalformedURLException, URL}
@@ -27,8 +27,8 @@ class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with 
 
     def logException(x: Throwable): Unit = System.err.println(x)
 
-    "getURLContent" should s"succeed for $goodURL" taggedAs Slow in {
-        val wf = WebCrawler.getURLContent(new URL(goodURL))
+    "fetchURLContent" should s"succeed for $goodURL" taggedAs Slow in {
+        val wf = WebCrawler.fetchURLContent(new URL(goodURL))
         whenReady(wf, timeout(Span(6, Seconds))) { w => w.length / 100 shouldBe 50 }
     }
 
@@ -105,7 +105,7 @@ class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with 
         val expected = 9
         val args = List(s"$goodURL")
         val uys = for (arg <- args) yield Try(new URL(arg))
-        val usft = for {us <- FP.sequence(uys)} yield WebCrawler(max).crawl(us)(WebCrawler.fetchAndParseLinks, canParse)
+        val usft = for {us <- FP.sequence(uys)} yield WebCrawler(max).crawl(us)(WebCrawler.fetchAndParseLinks, isParseableURL)
         val usf = FP.flatten(usft)
         whenReady(usf, timeout(Span(30, Seconds))) {
             us =>

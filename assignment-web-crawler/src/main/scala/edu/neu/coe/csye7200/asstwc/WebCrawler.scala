@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200.asstwc
 
-import edu.neu.coe.csye7200.asstwc.WebCrawler.{canParse, createURL, fetchAndParseLinks}
+import edu.neu.coe.csye7200.asstwc.WebCrawler.{isParseableURL, createURL, fetchAndParseLinks}
 import edu.neu.coe.csye7200.asstwc.fp.FP._
 import edu.neu.coe.csye7200.asstwc.fp.{Crawler, Timer}
 import java.net.{MalformedURLException, URL}
@@ -42,7 +42,7 @@ case class WebCrawler(maxHops: Int, parallelism: Int = 8) extends Crawler[URL](m
    */
   def doMain(args: Seq[String]): Seq[URL] = {
     import scala.concurrent.ExecutionContext.Implicits.global
-    val usf = doCrawl(args)(createURL)(fetchAndParseLinks, canParse)
+    val usf = doCrawl(args)(createURL)(fetchAndParseLinks, isParseableURL)
     // NOTE that we do not attempt to handle any (unhandled) exceptions here:
     // let them bubble up to the caller.
     Await.result(usf, Duration("360 second"))
@@ -81,7 +81,7 @@ object WebCrawler extends App {
    * @return a Future containing the content of the URL as a String, or a failed Future
    *         if an error occurs during the fetch or reading of the content.
    */
-  def getURLContent(u: URL)(implicit ec: ExecutionContext): Future[String] =
+  def fetchURLContent(u: URL)(implicit ec: ExecutionContext): Future[String] =
     for {
       s <- asFuture(SourceFromURL(u))
       w <- asFuture(sourceToString(s, s"Cannot read from source at $u"))
@@ -116,19 +116,12 @@ object WebCrawler extends App {
    * @param u the URL to be evaluated
    * @return true if the URL can be parsed, false otherwise
    */
-  def canParse(u: URL): Boolean = notNull[URL, String](_.getPath)(u) match {
-    case Success(fileNameExtensionR(_, _, _, null)) => true
-    case Success(fileNameExtensionR(_, _, _, ext)) => ext match {
-      case "html" | "htm" => true
-      case _ => false
-    }
-    case _ => true
-  }
+  def isParseableURL(u: URL): Boolean = isValidExtension(notNull[URL, String](_.getPath)(u))
 
   /**
    * Fetches and parses the content of the given URL to extract the list of linked URLs.
    *
-   * This method retrieves the content of the provided URL using `getURLContent`
+   * This method retrieves the content of the provided URL using `fetchURLContent`
    * and extracts all the valid links using the `getLinks` method. It returns a
    * sequence of resolved and valid links as a `Future`.
    *
@@ -137,7 +130,7 @@ object WebCrawler extends App {
    * @return a Future containing a sequence of resolved and valid URLs extracted from the content of the input URL.
    */
   def fetchAndParseLinks(url: URL)(implicit ec: ExecutionContext): Future[Seq[URL]] =
-    // Hint: write as a for-comprehension, using getURLContent (above) and getLinks (below).
+    // Hint: write as a for-comprehension, using fetchURLContent (above) and getLinks (below).
     // You will also need FP.asFuture
     // 9 points.
     // TO BE IMPLEMENTED 
@@ -200,6 +193,25 @@ object WebCrawler extends App {
    */
   private def isValidURLString(w: String) =
     !w.startsWith("tel:") && !w.startsWith("mailto:") && !w.contains("javascript")
+
+  /**
+   * Determines the validity of a file extension from a string wrapped in a `Try`.
+   *
+   * This method checks if the input `Try` contains a valid file extension such as "html" or "htm".
+   * If the input is a `Success` matching the specified regex without an extension, or with a valid extension,
+   * the method returns true. Otherwise, it evaluates the extension and returns false for unsupported types.
+   *
+   * @param wy a `Try[String]` containing the file name or null to be validated.
+   * @return true if the file extension is valid or null; false otherwise.
+   */
+  private def isValidExtension(wy: Try[String]): Boolean = wy match {
+    case Success(fileNameExtensionR(_, _, _, null)) => true
+    case Success(fileNameExtensionR(_, _, _, ext)) => ext match {
+      case "html" | "htm" => true
+      case _ => false
+    }
+    case _ => true
+  }
 
   /**
    * Determines whether a URL can be read, based on its validity and file extension.
