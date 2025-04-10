@@ -22,7 +22,7 @@ class MovieDatabaseAnalyzerTest extends AnyFlatSpec with Matchers {
 
     import MovieParser._
     import spark.implicits._
-    val mdy: Try[Dataset[Movie]] = movieTableParser.parseResource("movie_metadata.csv")
+    val mdy: Try[Dataset[Movie]] = movieTableParser.parseResource("/movie_metadata.csv")
     mdy.isSuccess shouldBe true
     mdy foreach {
       d =>
