@@ -147,7 +147,7 @@ object MovieParser extends CellParsers {
     override val listEnclosure: String = ""
   }
 
-  implicit val parser: StandardRowParser[Movie] = StandardRowParser.create[Movie]
+  implicit val parser: StandardRowParser[Movie] = StandardRowParser[Movie]
 
   implicit object MovieTableParser extends StringTableParser[Table[Movie]] {
     protected def builder(rows: Iterable[Movie], header: Header): Table[Movie] = HeadedTable(rows, header)
