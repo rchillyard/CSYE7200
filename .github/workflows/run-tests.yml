@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  trigger-tests:
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 3
+
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: 11
+        distribution: 'temurin'
+
+    - name: Run tests for changed projects only
+      run: |
+        modified_projects=$(git diff --name-only HEAD^ HEAD | grep 'asst' | cut -d/ -f9 -s | sort -u)
+        for project in $modified_projects; do
+          echo "============================================================================"
+          echo "Running tests for project: $project"
+          sbt -v "$project/test"
+        done
+        echo "============================================================================"
+        echo "Completed running tests"
