@@ -559,7 +559,7 @@ object Number {
     p.composeDyadic(q, factor)(_ * _, _ * _, _ * _, _ * _).getOrElse(Number()).specialize
   }
 
-  private def negate(x: Number): Number = x.composeMonadic(-_, _.unary_-, _.negate, -_).getOrElse(Number())
+  private def negate(x: Number): Number = x.composeMonadic(-_, -_, _.negate, -_).getOrElse(Number())
 
   private def inverse(x: Number): Number = {
     val maybeNumber = x.value match {
@@ -573,7 +573,8 @@ object Number {
   }
 
   // NOTE: This may throw an exception
-  private def signum(x: Number): Int = x.composeMonadic(identity, _.signum, _.signum, Math.signum).flatMap(_.toInt).get
+  private val rationalSignum: Rational => Rational = (x: Rational) => Rational(signum(Number(x)))
+  private def signum(x: Number): Int = x.composeMonadic(identity, _.signum, rationalSignum, Math.signum).flatMap(_.toInt).get
 
 }
 

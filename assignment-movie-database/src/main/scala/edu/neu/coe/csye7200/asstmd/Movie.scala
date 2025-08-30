@@ -89,7 +89,7 @@ case class Rating(code: String, age: Option[Int]) {
   override def toString: String = code + age.map("-" + _).getOrElse("")
 }
 
-object Movie extends App {
+object Movie /* removed extends App to avoid side effects during initialization */ {
 
   implicit object ParsableMovie extends Parsable[Movie] {
     /**
@@ -101,29 +101,47 @@ object Movie extends App {
      * @return a Try[Movie]
      */
     def parse(w: String): Try[Movie] = {
-// TO BE IMPLEMENTED 
-       Try(???)
+      // TO BE IMPLEMENTED 
+      Try(???)
       // END
     }
   }
 
-  val movies = doMain(args.head)
-  println(s"There are $movies Kiwi movies")
+  // Removed side-effectful initialization:
+  // val movies = doMain(args.head)
+  // println(s"There are $movies Kiwi movies")
 
-  private def doMain(filename: String): Int = {
-    if (args.length > 0) {
-      lazy val ingester = new Ingest[Movie]()
-      val source = Source.fromFile(filename)
-      val triedMovies: Iterator[Try[Movie]] = for (my <- ingester(source)) yield for (m <- my; if m.production.isKiwi) yield m
-      val optionalMovies: Seq[Option[Movie]] = triedMovies to List map (_.toOption)
+  // Expose a pure method that processes a file and returns the count of Kiwi movies.
+  def runFile(filename: String): Int = {
+    val ingester = new Ingest[Movie]()
+    val source = Source.fromFile(filename)
+    try {
+      val triedMovies: Iterator[Try[Movie]] =
+        for (my <- ingester(source)) yield for (m <- my; if m.production.isKiwi) yield m
+      val optionalMovies: Seq[Option[Movie]] = triedMovies.toList.map(_.toOption)
       val kiwiMovies: Option[Seq[Movie]] = sequenceOptimistic(optionalMovies)
-      kiwiMovies foreach (_ foreach println)
-      source.close()
+      kiwiMovies.foreach(_.foreach(println))
       kiwiMovies.getOrElse(Nil).size
+    } finally {
+      source.close()
     }
-    else
-      throw new Exception("Syntax: Movie filename")
   }
+
+  // Kept private helper removed, replaced by runFile above.
+  // private def doMain(filename: String): Int = {
+    // if (args.length > 0) {
+    //   lazy val ingester = new Ingest[Movie]()
+    //   val source = Source.fromFile(filename)
+    //   val triedMovies: Iterator[Try[Movie]] = for (my <- ingester(source)) yield for (m <- my; if m.production.isKiwi) yield m
+    //   val optionalMovies: Seq[Option[Movie]] = triedMovies to List map (_.toOption)
+    //   val kiwiMovies: Option[Seq[Movie]] = sequenceOptimistic(optionalMovies)
+    //   kiwiMovies foreach (_ foreach println)
+    //   source.close()
+    //   kiwiMovies.getOrElse(Nil).size
+    // }
+    // else
+    //   throw new Exception("Syntax: Movie filename")
+  // }
 
   /**
     * Form a list from the elements explicitly specified (by position) from the given list
@@ -137,7 +155,7 @@ object Movie extends App {
     // 6 points
     val result: Seq[String] = {
       // TO BE IMPLEMENTED 
-       ???
+  ???
       // END
     }
     result.toList

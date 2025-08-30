@@ -34,5 +34,5 @@ object MergeSortStackOverflow extends App {
         sorter.sort(list)
     }
 
-    println(doMain(10000))
+    println(doMain(100)) // TODO 10000 to make it more interesting
 }

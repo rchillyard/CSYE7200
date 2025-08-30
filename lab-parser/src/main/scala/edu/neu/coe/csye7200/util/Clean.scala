@@ -116,7 +116,7 @@ class FileCleaner(solution: String, stub: String, terminator: String) extends Ja
         w =>
           noleak(Try(Source.fromFile(inputFile))) { s =>
             logger.logInfo(s"clean $inputFile $outputFile '$defaultStubString'")
-            clean(s, w, defaultStubString)
+            clean(w, defaultStubString, s.getLines())
           }
       }
     } else Try {
@@ -149,13 +149,21 @@ class FileCleaner(solution: String, stub: String, terminator: String) extends Ja
    * @param suffix           The suffix of the line, which may contain additional code or comments.
    */
   case class ParsedLine(n: Int, prefix: String, maybeMaybeString: Option[Option[String]], suffix: String) {
+    val indented = """^(\s+)(\S+)$""".r
     def render(isStub: Boolean): String =
       (maybeMaybeString, suffix) match {
-        case (Some(Some(`solution`)), b) => s"$prefix// " + TOBEIMPLEMENTED + s" $b"
-        case (Some(Some(`stub`)), b) => discardLine
-        case (Some(Some(a)), b) => s"$prefix// $a$b"
-        case (Some(None), b) if !isStub => s"$prefix//$b"
-        case (_, b) => s"$prefix$b"
+        case (Some(Some(`solution`)), b) =>
+          s"$prefix// " + TOBEIMPLEMENTED + s" $b"
+        case (Some(Some(`stub`)), b) =>
+          discardLine
+        case (Some(Some(a)), b) =>
+          s"$prefix// $a$b"
+        case (Some(None), b) if !isStub =>
+          s"$prefix//$b"
+        case (_, indented(indent,b)) if isStub =>
+          s"$indent$indent$b" // This isn't really correct. Instead of the first copy of indent, we should have a non-empty prefix
+        case (_, b) =>
+          s"$prefix$b"
       }
   }
 
@@ -176,13 +184,13 @@ class FileCleaner(solution: String, stub: String, terminator: String) extends Ja
    * handle different types of markers (e.g., solution, stub, terminator) and
    * ensures proper content transformation based on these markers.
    *
-   * @param source            the source to read input lines from
    * @param destination       the writer to which cleaned content is appended
    * @param defaultStubString the default string to use when generating stub content
+   * @param lines an Iterator of String
    * @param logger            an implicit logger for logging debug or warning messages
    * @return the total length of the content written to the destination
    */
-  def clean(source: Source, destination: Writer, defaultStubString: String)(implicit logger: Logger): Int = {
+  def clean(destination: Writer, defaultStubString: String, lines: Iterator[String])(implicit logger: Logger): Int = {
     // CONSIDER avoiding vars
     var output = true
     var isStub = false
@@ -205,10 +213,16 @@ class FileCleaner(solution: String, stub: String, terminator: String) extends Ja
             isStub = false
         case _ =>
       }
-      if (defaultStub) defaultStubString else if (transition || output) commentedLine.render(isStub) else discardLine
+      if (defaultStub) {
+        // This line is a bit of a kluge, but it's necessary for working with Scala 3
+        s"${commentedLine.prefix}${commentedLine.prefix}$defaultStubString"
+      } else if (transition || output)
+        commentedLine.render(isStub)
+      else
+        discardLine
     }
 
-    val result = FileCleaner.sequence(for (l <- source.getLines().zipWithIndex) yield parseLine(l)) match {
+    val result = FileCleaner.sequence(for (l <- lines.zipWithIndex) yield parseLine(l)) match {
       case scala.util.Success(cs) =>
         val strings = for {
           c <- cs

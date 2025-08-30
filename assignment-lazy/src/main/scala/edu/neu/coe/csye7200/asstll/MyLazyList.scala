@@ -96,7 +96,6 @@ case class MyLazyList[X](x: X, lazyTail: () => ListLike[X]) extends LazyListLike
     else if (n > 0)
       this match {
         case MyLazyList(h, f) => MyLazyList(h, () => f() take n - 1)
-        case _ => EmptyList
       }
     else
       throw LazyListException("cannot take negative number of elements")
@@ -114,7 +113,6 @@ case class MyLazyList[X](x: X, lazyTail: () => ListLike[X]) extends LazyListLike
       if (n > 0)
         this match {
           case MyLazyList(_, f) => f().drop(n - 1)
-          case _ => EmptyList
         }
       else
         throw LazyListException("cannot drop negative number of elements")
@@ -407,7 +405,7 @@ object MyLazyList {
    */
   def from(start: Int, step: Int): ListLike[Int] = {
 // TO BE IMPLEMENTED 
-???
+        ???
   }
 
 

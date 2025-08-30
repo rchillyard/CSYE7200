@@ -5,13 +5,14 @@
 package edu.neu.coe.csye7200.parse
 
 import com.phasmid.laScala.values.{QuotedStringScalar, Scalar}
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
   * Created by scalaprof on 10/19/16.
   */
 //noinspection ScalaStyle
-class InvocationSpec extends FlatSpec with Matchers {
+class InvocationSpec extends AnyFlatSpec with Matchers {
 
   def mapLookup[X]: Map[String, X] => String => Option[X] = { m => s => m.get(s) }
 

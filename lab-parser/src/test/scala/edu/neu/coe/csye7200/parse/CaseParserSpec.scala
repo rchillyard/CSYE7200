@@ -5,13 +5,14 @@
 package edu.neu.coe.csye7200.parse
 
 import com.phasmid.laScala.values.Scalar
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
   * Created by scalaprof on 10/19/16.
   */
 //noinspection ScalaStyle,ScalaStyle
-class CaseParserSpec extends FlatSpec with Matchers {
+class CaseParserSpec extends AnyFlatSpec with Matchers {
 
   private val p = CaseParser
   private val w0 = "WHEN true THEN 42"

@@ -22,7 +22,7 @@ def wget(url: URL)(implicit ec: ExecutionContext): Future[Seq[URL]] = {
   // 16 points.
   def getURLs(ns: Node): Seq[Try[URL]] =
 // TO BE IMPLEMENTED 
- ???
+  ???
 // END SOLUTION
 
   def getLinks(g: String): Try[Seq[URL]] = {
@@ -33,7 +33,7 @@ def wget(url: URL)(implicit ec: ExecutionContext): Future[Seq[URL]] = {
   // 9 points.
 
   // TO BE IMPLEMENTED 
-   ???
+  ???
   // END SOLUTION
 
   /**

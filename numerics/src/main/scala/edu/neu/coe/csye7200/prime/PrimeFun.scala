@@ -18,7 +18,7 @@ object PrimeFun extends App {
 
   private def show(magicNumber: Int): String = {
     // TO BE IMPLEMENTED 
-     ???
+  ???
     // END
 
     s"""$magicNumber: ${ys.mkString(",")}"""

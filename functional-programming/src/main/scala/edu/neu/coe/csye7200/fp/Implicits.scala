@@ -11,7 +11,7 @@ object Implicits extends App {
 
   def myAdd(x: Int, y: Int): Int = x + y
 
-  // For some reason it is best not to give a type here
+  // For some reason it is best not to give a type here (maybe because you can't chain implicit conversions)
   implicit def stringToInt(x: String) = x.toInt
 
   println(myAdd("1", "2"))

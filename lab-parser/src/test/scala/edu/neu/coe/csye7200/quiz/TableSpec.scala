@@ -1,9 +1,10 @@
 package edu.neu.coe.csye7200.quiz
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import scala.util.Random
 
-class TableSpec extends FlatSpec with Matchers {
+class TableSpec extends AnyFlatSpec with Matchers {
 
   behavior of "Table"
 

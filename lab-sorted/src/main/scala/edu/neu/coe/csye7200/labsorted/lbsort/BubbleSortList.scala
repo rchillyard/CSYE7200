@@ -20,7 +20,7 @@ class BubbleSortList[X: Ordering] {
           unsorted match {
             case Nil => largestSorted
             case _ =>
-              val max :: tail = inner(Nil, unsorted)
+              val max :: tail = inner(Nil, unsorted): @unchecked
               outer(max :: largestSorted, tail)
           }
         outer(Nil, xs)
@@ -38,7 +38,7 @@ object BenchmarkBubbleSortList extends App {
 
   val random = new Random()
 
-  def doSort(n: Int) {
+  def doSort(n: Int): Unit = {
     val xs: List[Int] = LazyList.continually(random.nextInt()) take n to List
 
 

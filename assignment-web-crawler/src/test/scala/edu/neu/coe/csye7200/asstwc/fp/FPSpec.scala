@@ -3,7 +3,7 @@ package edu.neu.coe.csye7200.asstwc.fp
 import edu.neu.coe.csye7200.asstwc.{WebCrawler, WebCrawlerException}
 import java.net.URL
 import java.util.concurrent.TimeoutException
-import org.scalatest.concurrent._
+import org.scalatest.concurrent.*
 import org.scalatest.flatspec
 import org.scalatest.matchers.should
 import org.scalatest.tagobjects.Slow
@@ -17,7 +17,7 @@ import scala.util.{Failure, Success, Try}
   */
 class FPSpec extends flatspec.AnyFlatSpec with should.Matchers with Futures with ScalaFutures {
 
-  import edu.neu.coe.csye7200.asstwc.fp.FP._
+  import edu.neu.coe.csye7200.asstwc.fp.FP.*
   import scala.concurrent.ExecutionContext.Implicits.global
 
   behavior of "LiftFuture"
@@ -177,7 +177,7 @@ class FPSpec extends flatspec.AnyFlatSpec with should.Matchers with Futures with
         }
         val result: Try[Iterable[Int]] = sequenceForgivingWith(Seq(try1, try2, try3))(handleException)
         result should matchPattern { case Success(List(1, 2)) => }
-      sb.toString shouldBe "forgiving: edu.neu.coe.csye7200.asstwc.fp.MonadOpsException: "
+        sb.toString shouldBe "forgiving: edu.neu.coe.csye7200.asstwc.fp.MonadOpsException: "
     }
 
     it should "sequenceForgivingTransform" in {
@@ -191,7 +191,7 @@ class FPSpec extends flatspec.AnyFlatSpec with should.Matchers with Futures with
         }
         val result: Try[Iterable[Int]] = sequenceForgivingTransform(Seq(try1, try2, try3))(x => Success(Some(x + 1)), handleException)
         result should matchPattern { case Success(List(2, 3)) => }
-      sb.toString shouldBe "forgiving: edu.neu.coe.csye7200.asstwc.fp.MonadOpsException: "
+        sb.toString shouldBe "forgiving: edu.neu.coe.csye7200.asstwc.fp.MonadOpsException: "
     }
     it should "sequenceForgiveSubsequent 0" in {
         val try2 = Success(1)

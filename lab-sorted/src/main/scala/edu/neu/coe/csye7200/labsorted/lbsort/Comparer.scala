@@ -16,7 +16,7 @@ trait Comparer[T] extends (((T, T)) => Comparison) {
   //noinspection ConvertExpressionToSAM
   def toOrdering: Ordering[T] =
 // TO BE IMPLEMENTED 
-???
+    ???
 
   def >(tt: (T, T)): Boolean = {
 // TO BE IMPLEMENTED 

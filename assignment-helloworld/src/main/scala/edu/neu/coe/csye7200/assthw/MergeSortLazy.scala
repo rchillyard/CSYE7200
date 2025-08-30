@@ -41,5 +41,5 @@ object MergeSortLazy extends App {
         sorter.sort(list)
     }
 
-    println(doMain(100000))
+//    println(doMain(100000))
 }

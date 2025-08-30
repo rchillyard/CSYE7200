@@ -3,7 +3,7 @@ package edu.neu.coe.csye7200.numerics
 /**
   * This is support for PowerPoint 4.0 Functional Composition.
   */
-object TemperatureConverter extends App {
+object TemperatureConverter {
 
   def fToC(x: Double): Double = (x - 32) * 5 / 9
 
@@ -18,10 +18,13 @@ object TemperatureConverter extends App {
 
   def cToFs(x: String): String = convert(x)(cToF, "F")
 
-  val fc = args.isEmpty || args.contains("F")
-  val scanner = new java.util.Scanner(System.in)
-  System.err.print(s"Temperature in ${if (fc) "Fahrenheit" else "Celsius"}? ")
-  val x = scanner.nextLine()
-  val f = if (fc) fToCs _ else cToFs _
-  println(f(x))
+  // NOTE this needs to be a main method as "extends App" doesn't work here.
+  def main(args: Array[String]): Unit = {
+    val fc = args.isEmpty || args.contains("F")
+    val scanner = new java.util.Scanner(System.in)
+    System.err.print(s"Temperature in ${if (fc) "Fahrenheit" else "Celsius"}? ")
+    val x = scanner.nextLine()
+    val f = if (fc) fToCs _ else cToFs _
+    println(f(x))
+  }
 }

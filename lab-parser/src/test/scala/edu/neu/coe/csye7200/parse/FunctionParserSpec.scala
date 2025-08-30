@@ -5,15 +5,15 @@
 package edu.neu.coe.csye7200.parse
 
 import com.phasmid.laScala.values.{DateScalar, QuotedStringScalar, Scalar}
-import org.scalatest.{FlatSpec, Matchers}
-
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import scala.util.Success
 
 /**
   * Created by scalaprof on 10/19/16.
   */
 //noinspection ScalaStyle
-class FunctionParserSpec extends FlatSpec with Matchers {
+class FunctionParserSpec extends AnyFlatSpec with Matchers {
 
   private val p = FunctionParser
 

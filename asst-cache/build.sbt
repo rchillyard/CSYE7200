@@ -6,13 +6,13 @@ Compile / doc / scalacOptions ++= Seq("-Vimplicits", "-deprecation", "-Ywarn-dea
 
 lazy val scalaModules = "org.scala-lang.modules"
 
-lazy val scalaModulesVersion = "1.3.0"
+lazy val scalaModulesVersion = "2.4.0"
 
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "3.2.2" % "test",
+  "org.scalatest" %% "scalatest" % "3.2.19" % "test",
   scalaModules %% "scala-xml" % scalaModulesVersion,
   "io.spray" %% "spray-json" % "1.3.6",
   "joda-time" % "joda-time" % "2.9.9",
   "junit" % "junit" % "4.12" % "test",
-  scalaModules %% "scala-parser-combinators" % "1.1.2"
+  scalaModules %% "scala-parser-combinators" % "2.4.0"
 )

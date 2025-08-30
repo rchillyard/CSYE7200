@@ -4,8 +4,8 @@ version := "1.0"
 
 Compile / doc / scalacOptions ++= Seq("-Vimplicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
 
-lazy val akkaVersion = "2.6.10"
-lazy val scalatestVersion = "3.1.4"
+lazy val akkaVersion = "2.8.8"
+lazy val scalatestVersion = "3.2.19"
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,

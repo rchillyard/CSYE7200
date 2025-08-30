@@ -9,7 +9,7 @@ import scala.util.Try
 /**
  * @author Yanda Yuan
  */
-class WordCountReduceByKeySpec extends flatspec.AnyFlatSpec with Matchers with BeforeAndAfter  {
+class WordCountSpec extends flatspec.AnyFlatSpec with Matchers with BeforeAndAfter {
 
   implicit var spark: SparkSession = _
 

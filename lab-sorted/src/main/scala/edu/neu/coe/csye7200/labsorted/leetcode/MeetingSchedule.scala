@@ -1,6 +1,7 @@
 package edu.neu.coe.csye7200.labsorted.leetcode
 
 import edu.neu.coe.csye7200.labsorted.lbsort.Comparer
+import edu.neu.coe.csye7200.labsorted.leetcode.Solution.solve
 import edu.neu.coe.csye7200.labsorted.leetcode.TransitionTime.OrderingTime
 
 /**
@@ -68,8 +69,28 @@ case class MeetingSchedule(ms: Seq[Meeting]) {
   val p = f andThen g andThen h
 }
 
+/**
+ * Object MeetingSchedule provides methods to manipulate and construct MeetingSchedule instances.
+ */
 object MeetingSchedule {
+  /**
+   * Creates a MeetingSchedule instance from a variable number of Meeting instances.
+   *
+   * @param ms a variable number of Meeting objects to include in the MeetingSchedule.
+   * @return a new MeetingSchedule containing the specified meetings.
+   */
   def create(ms: Meeting*): MeetingSchedule = MeetingSchedule(ms)
+
+  /**
+   * Parses a list of strings representing meetings into a MeetingSchedule.
+   * Each string in the input list is parsed using the Meeting.parse method,
+   * and the resulting valid Meeting objects are aggregated into a MeetingSchedule.
+   *
+   * @param meetings a list of strings, where each string represents a meeting in the format "hh:mm - hh:mm".
+   * @return a MeetingSchedule containing all valid Meeting objects parsed from the input list of strings.
+   */
+  def parse(meetings: List[String]): MeetingSchedule =
+    MeetingSchedule(meetings.flatMap(Meeting.parse))
 }
 
 /**
@@ -90,8 +111,19 @@ case class TransitionTime(hours: Int, minutes: Int) {
 }
 
 object TransitionTime {
+  /**
+   * Creates a TransitionTime instance representing a transition time in hours and minutes.
+   *
+   * @param t an integer representation of time in the format hhmm (e.g., 1230 for 12:30).
+   * @return a TransitionTime instance with hours and minutes extracted from the input integer.
+   */
   def apply(t: Int): TransitionTime = TransitionTime(t / 100, t % 100)
 
+  /**
+   * Defines an implicit ordering for instances of TransitionTime based on their elapsed minutes
+   * since midnight, represented by the `ticks` method of the TransitionTime class.
+   * This ordering allows TransitionTime instances to be compared using their `ticks` values.
+   */
   implicit object OrderingTime extends Ordering[TransitionTime] {
     def compare(x: TransitionTime, y: TransitionTime): Int = x.ticks.compare(y.ticks)
   }
@@ -107,6 +139,10 @@ case class Transition(t: TransitionTime, start: Boolean) {
   override def toString: String = s"""$t: ${if (start) "start" else "stop"}"""
 }
 
+/**
+ * Companion object for the Transition case class, providing factory methods
+ * and comparers for sorting Transition instances.
+ */
 object Transition {
 
   /**
@@ -143,9 +179,40 @@ object Transition {
   implicit val ordering: Ordering[Transition] = comparer.toOrdering
 }
 
+/**
+ * Represents a meeting with a defined start and stop time.
+ *
+ * @constructor Creates a Meeting with the specified start and stop times.
+ * @param start the start time of the meeting, represented as a TransitionTime.
+ * @param stop  the stop time of the meeting, represented as a TransitionTime.
+ */
 case class Meeting(start: TransitionTime, stop: TransitionTime)
 
+/**
+ * Companion object for the Meeting case class.
+ *
+ * Provides utility methods to create and parse Meeting objects.
+ */
 object Meeting {
-  def apply(start: Int, stop: Int): Meeting = Meeting(TransitionTime(start), TransitionTime(stop))
-}
+  def apply(start: Int, stop: Int): Meeting =
+    Meeting(TransitionTime(start), TransitionTime(stop))
 
+  /**
+   * Parses a string representing a meeting schedule into an Option[Meeting].
+   * The string should be in the format "hh:mm - hh:mm", where `hh` represents hours
+   * (0-23) and `mm` represents minutes (0-59).
+   *
+   * @param string the input string to parse, representing the meeting time range.
+   * @return an Option containing a Meeting object if the input string is valid;
+   *         otherwise, None.
+   */
+  def parse(string: String): Option[Meeting] = {
+    val regex = """(\d{2}):(\d{2}) - (\d{2}):(\d{2})""".r
+    string match {
+      case regex(s1, s2, e1, e2) =>
+        for (x1 <- s1.toIntOption;x2 <- s2.toIntOption;y1 <- e1.toIntOption;y2 <- e2.toIntOption)
+          yield Meeting(TransitionTime(x1, x2), TransitionTime(y1, y2))
+      case _ => None
+    }
+  }
+}

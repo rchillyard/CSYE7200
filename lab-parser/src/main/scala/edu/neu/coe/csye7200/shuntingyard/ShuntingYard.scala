@@ -51,7 +51,7 @@ case class ShuntingYard(valueStack: Stack[Int], operatorStack: Stack[Operator], 
     //      ???
 
     // TO BE IMPLEMENTED 
-???
+        ???
   }
 
   override def toString(): String = s"ShuntingYard($valueStack,$operatorStack,$depth)"

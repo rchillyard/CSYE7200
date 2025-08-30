@@ -193,7 +193,7 @@ object Rational {
 
     def fromInt(x: Int): Rational = Rational(x)
 
-    def rem(x: Rational, y: Rational): Rational = zero
+    def rem(x: Rational, y: Rational): Rational = Rational.zero
 
     def toInt(x: Rational): Int = x.toInt
 

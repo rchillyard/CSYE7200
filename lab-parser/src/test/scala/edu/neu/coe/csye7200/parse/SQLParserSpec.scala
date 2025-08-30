@@ -5,13 +5,14 @@
 package edu.neu.coe.csye7200.parse
 
 import com.phasmid.laScala.values.Scalar
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
   * Created by scalaprof on 10/19/16.
   */
 //noinspection ScalaStyle
-class SQLParserSpec extends FlatSpec with Matchers {
+class SQLParserSpec extends AnyFlatSpec with Matchers {
 
   private val p = SQLParser
   private val w0 = "SELECT * FROM t"

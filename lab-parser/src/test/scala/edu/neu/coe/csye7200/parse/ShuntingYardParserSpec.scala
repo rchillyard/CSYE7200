@@ -1,9 +1,10 @@
 package edu.neu.coe.csye7200.parse
 
 import edu.neu.coe.csye7200.shuntingyard.{Parenthesis, Plus, ShuntingYardParser}
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class ShuntingYardParserSpec extends FlatSpec with Matchers {
+class ShuntingYardParserSpec extends AnyFlatSpec with Matchers {
 
   behavior of "ShuntingYardParser"
 

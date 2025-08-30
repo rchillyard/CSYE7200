@@ -2,14 +2,16 @@ package edu.neu.coe.csye7200.util
 
 import edu.neu.coe.csye7200.util.CleanTree.{toExclude, toInclude}
 import edu.neu.coe.csye7200.util.FileCleaner.{noleak, noleakFlat}
-import java.io.{BufferedWriter, File, FileWriter}
+import java.io.{BufferedWriter, File, FileWriter, StringWriter}
 import java.nio.file.FileSystems.getDefault
 import java.nio.file.Path
-import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
+import org.scalatest.BeforeAndAfterAll
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import scala.io.Source
 import scala.util.{Success, Try}
 
-class CleanSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
+class CleanSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
 
   implicit val logger: Logger = Logger(classOf[CleanSpec])
 
@@ -29,22 +31,27 @@ class CleanSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
   it should "clean 1" in {
     val cleaner = new FileCleaner("SOLUTION", "STUB", "END SOLUTION")
     val result = cleaner.clean(binarySearchJava, "output.txt")
-    result shouldBe Success(1265)
+    result shouldBe Success(1289)
   }
   it should "clean 2" in {
     val cleaner = new FileCleaner("SOLUTION", "STUB", "END SOLUTION")
     val result = cleaner.clean("assignment-web-crawler/src/main/scala/edu/neu/coe/csye7200/asstwc/WebCrawler.scala", "output.txt")
-    result shouldBe Success(19679)
+    result shouldBe Success(19865)
   }
   it should "clean 3" in {
     val cleaner = new FileCleaner("SOLUTION", "STUB", "END SOLUTION")
     val result = cleaner.clean("assignment-functional-composition/src/main/scala/edu/neu/coe/csye7200/asstfc/Movie.scala", "output.txt")
-    result shouldBe Success(9141)
+    result shouldBe Success(9149)
   }
   it should "clean 4" in {
     val cleaner = new FileCleaner("SOLUTION", "STUB", "END")
     val result: Try[Int] = cleaner.clean("assignment-movie-database/src/main/scala/edu/neu/coe/csye7200/asstmd/Movie.scala", "badOutput.txt")
-    result shouldBe Success(10324)
+    result shouldBe Success(10318)
+  }
+  it should "clean 5" in {
+    val cleaner = new FileCleaner("SOLUTION", "STUB", "END")
+    val result: Try[Int] = cleaner.clean("assignment-helloworld/src/main/scala/edu/neu/coe/csye7200/assthw/HappyFamilies.scala", "happyFamilies.txt")
+//    result shouldBe Success(10318)
   }
 
   it should "parseLine 1" in {
@@ -69,6 +76,31 @@ class CleanSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     cleaner.parseLine(w1 -> 0).get.render(false) shouldBe w1
     cleaner.parseLine(w2 -> 0).get.render(false) shouldBe w2
     cleaner.parseLine(w3 -> 0) shouldBe Success(cleaner.ParsedLine(0, "            ", None, "int mid = lo + (hi - lo) / 2;"))
+  }
+
+  it should "parse lines" in {
+    val w = """  def getURLs(node: Node, url: URL): Seq[Try[URL]] =
+              |// SOLUTION
+              |    for {
+              |      a <- node \\ "a"
+              |      href <- a \ "@href"
+              |      w = href.text if isValidURLString(w)
+              |    }
+              |    yield for {
+              |      u <- createRelURL(Some(url), w)
+              |      ok <- validateURL(u)
+              |    } yield ok
+              |// STUB
+              |//  ???
+              |// END SOLUTION
+              |""".stripMargin
+    val lines: Seq[String] = w.split("\n").toList
+    val cleaner = new FileCleaner("SOLUTION", "STUB", "END SOLUTION")
+    val writer = new StringWriter()
+    val written: Int = cleaner.clean(writer, "STUB", lines.toIterator)
+    written shouldBe 98
+    println(writer.toString)
+    writer.toString shouldBe "  def getURLs(node: Node, url: URL): Seq[Try[URL]] =\n// TO BE IMPLEMENTED \n    ???\n// END SOLUTION".stripMargin
   }
 
   it should "slashes" in {

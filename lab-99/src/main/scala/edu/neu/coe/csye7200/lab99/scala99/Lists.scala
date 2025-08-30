@@ -128,7 +128,7 @@ object P13 {
 
   def encodeDirect[X](xs: List[X]): List[(Int, X)] = {
     // TO BE IMPLEMENTED 
-???
+        ???
   }
 }
 

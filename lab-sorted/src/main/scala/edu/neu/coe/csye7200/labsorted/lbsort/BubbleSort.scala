@@ -21,15 +21,14 @@ case class BubbleSort[X]()(implicit xo: Ordering[X]) {
     * @param head the head Element of a linked list of Xs.
     */
   def sortList(head: Element[X]): Unit = {
-    import scala.util.control.Breaks.{break, breakable}
-    var sorted: Element[X] = null
-    breakable(
-      do {
-        val stopped -> swapped = pass(head, sorted)
-        sorted = stopped
-        if (!swapped) break
-      } while (!(sorted eq head))
-    )
+    @annotation.tailrec
+    def loop(sorted: Element[X]): Unit = {
+      val (stopped, swapped) = pass(head, sorted)
+      if (swapped && !(stopped eq head)) {
+        loop(stopped)
+      }
+    }
+    loop(null)
   }
 
   /**
@@ -156,7 +155,7 @@ object BenchmarkBubbleSort extends App {
 
   val random = new Random()
 
-  def doSort(n: Int) {
+  def doSort(n: Int): Unit = {
     val xs: Seq[Int] = LazyList.continually(random.nextInt()) take n to List
 
 

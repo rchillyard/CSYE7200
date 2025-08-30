@@ -18,8 +18,9 @@ object Stocks extends App {
       context.log.info("Creation of the bank")
       val actorBank = context.spawn(Bank(), s"Bank")
 
-      Behaviors.receiveMessage { message =>
-        val name = message.clientName
+      Behaviors.receiveMessage {
+        message =>
+        val name = message.asInstanceOf[Start].clientName
         context.log.info(s"Start a new client: $name")
         context.spawn(BankClientUsingTheTellPattern(actorBank), name)
         Behaviors.same
@@ -29,13 +30,14 @@ object Stocks extends App {
     val system: ActorSystem[Stocks.Start] = ActorSystem(Stocks(), "Stocks")
     system ! Start("Alice")
     system ! Start("Bob")
+    Behaviors.same
 }
 
 object BankClientUsingTheAskPattern {
   def apply(bank: ActorRef[CreatePortfolio]): Behavior[Unit] =
     Behaviors.setup { context =>
       implicit val timeout: Timeout = 3.seconds
-      context.ask(bank, CreatePortfolio) {
+      context.ask(bank, CreatePortfolio.apply) {
         case Success(message) =>
           context.log.info("Portfolio received")
           message.portfolio ! Buy("AAPL", 100L)

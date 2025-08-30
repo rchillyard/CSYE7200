@@ -15,7 +15,7 @@ class RationalPropertySpec extends Properties("Rational") {
 
   property("FromString") = forAll { (a: Int, b: Short) =>
     val r = r"$a/$b"
-    Rational.hasCorrectRatio(r, a, b)
+    Rational.hasCorrectRatio(r, a, b.toInt)
   }
 
   property("FromIntAndShort") = forAll { (a: Int, b: Short) =>
@@ -35,7 +35,7 @@ class RationalPropertySpec extends Properties("Rational") {
     }
   }
 
-  property("Double") = forAll { x: Double =>
+  property("Double") = forAll { (x: Double) =>
     import org.scalactic.Tolerance._
     import org.scalactic.TripleEquals._
     // TODO check this is OK. Might need to be Rational(BigDecimal.valueOf(x))

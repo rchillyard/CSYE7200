@@ -84,7 +84,6 @@ sealed trait Fuzzy {
           case Success(p) => if (p > threshold) 0 else x.get.compare(y.get)
           case Failure(z) => System.err.println(s"exception thrown in prob method: $z"); 0
         }
-      case _ => throw new Exception("Logic error: compare")
     }
   }
 }
@@ -138,7 +137,6 @@ abstract class FuzzyBase(nominal: Double, delta: Double, distribution: AbstractR
   //Members declared in scala.math.Fractional
   def div(x: Fuzzy, y: Fuzzy): Fuzzy = x match {
     case f: FuzzyBase => f / y
-    case _ => throw new Exception("Logic error")
   }
 
   // Type definition for Fuzzy
@@ -196,7 +194,7 @@ case class Exact(x: Double) extends FuzzyBase(x, 0, new ConstantRealDistribution
 
   override def map(f: DiFunc[Double]): Fuzzy = Exact(f.f(x))
 
-  override def map2(f: DiFunc[Double])(delta: Double) = throw new UnsupportedOperationException("cannot introduce fuzz to Exact")
+  override def map2(f: DiFunc[Double])(delta: Double): Fuzzy = throw new UnsupportedOperationException("cannot introduce fuzz to Exact")
 
   def newFuzzy(x: Double, delta: Double): Fuzzy = {
     require(delta == 0)
@@ -221,7 +219,7 @@ case class Gaussian(mu: Double, sigma: Double) extends FuzzyBase(mu, sigma, new 
   // TODO implement me
   def parseString(str: String): Option[Fuzzy] = ???
 
-  override def map2(f: DiFunc[Double])(delta2: Double) = throw new UnsupportedOperationException("NYI")
+  override def map2(f: DiFunc[Double])(delta2: Double): Fuzzy = throw new UnsupportedOperationException("NYI")
 }
 
 case class Bounded(mu: Double, delta: Double) extends FuzzyBase(mu, delta, new UniformRealDistribution(mu - math.abs(delta), mu + math.abs(delta))) {
@@ -248,7 +246,7 @@ case class General(dist: AbstractRealDistribution) extends FuzzyBase(dist.getNum
 
   def newFuzzy(x: Double, delta: Double): Fuzzy = Gaussian(x, delta)
 
-  override def map2(f: DiFunc[Double])(delta2: Double) = throw new UnsupportedOperationException("NYI")
+  override def map2(f: DiFunc[Double])(delta2: Double): Fuzzy = throw new UnsupportedOperationException("NYI")
 
   // TODO implement me
   def parseString(str: String): Option[Fuzzy] = ???
@@ -345,7 +343,8 @@ object Fuzzy {
 
     def parseString(str: String): Option[Fuzzy] = Fuzzy.parse(str).toOption
 
-    def rem(x: Fuzzy, y: Fuzzy): Fuzzy = zero
+    val myZero: Fuzzy = Numeric.IntIsIntegral.zero
+    def rem(x: Fuzzy, y: Fuzzy): Fuzzy = myZero
 
     def toInt(g: Fuzzy): Int = toLong(g).toInt
 
@@ -357,7 +356,7 @@ object Fuzzy {
     def toFloat(g: Fuzzy): Float = toDouble(g).toFloat
 
     def toDouble(g: Fuzzy): Double = g match {
-      case Exact(x) => x.toDouble
+      case Exact(x) => x
       case _ => throw new UnsupportedOperationException(s"toDouble: $g (not exact)")
     }
   }

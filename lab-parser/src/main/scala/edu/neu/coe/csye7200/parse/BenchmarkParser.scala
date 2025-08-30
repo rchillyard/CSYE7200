@@ -38,7 +38,7 @@ class BenchmarkParser extends JavaTokenParsers {
       (xsy, xy) => for (xs <- xsy; x <- xy) yield xs :+ x
     }
     lsy match {
-      case scala.util.Success(xs) => xs partition { e: LogEntry => e.kind == "Raw" }
+      case scala.util.Success(xs) => xs.partition{ e: LogEntry => e.kind == "Raw" }
       case scala.util.Failure(x) => throw x
     }
   }
@@ -50,8 +50,9 @@ class BenchmarkParser extends JavaTokenParsers {
       (xsy, xy) => for (xs <- xsy; x <- xy) yield xs :+ x
     }
     xsy match {
-      case scala.util.Success(xs) => xs
+      case scala.util.Success(xs: Seq[Instrumentation]) => xs
       case scala.util.Failure(x) => throw x
+      case x => throw new Exception(s"getInstrumentation: unable to parse: $x")
     }
   }
 
@@ -83,7 +84,7 @@ class BenchmarkParser extends JavaTokenParsers {
   }
 
   def stats: Parser[List[(String, String)]] = (unset | repsep(statMode, semiColon) | failure("stats")) ^^ {
-    case ms: List[String ~ String] => for {a ~ b <- ms} yield a -> b
+    case ms: List[String ~ String] @unchecked => for {a ~ b <- ms} yield a -> b
     case _ => Nil
   }
 

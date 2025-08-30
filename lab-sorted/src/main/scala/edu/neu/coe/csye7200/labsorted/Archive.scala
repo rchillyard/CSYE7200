@@ -20,8 +20,7 @@ case class Archive[T: Ordering](archive: IndexedSeq[T], journal: Seq[T]) {
    */
   def insert(t: T): Archive[T] =
   // TO BE IMPLEMENTED  implement me. [7]
-   ???
-  // END
+    ???
 
   /**
    * Search the archive for the element <code>t</code>.
@@ -31,8 +30,7 @@ case class Archive[T: Ordering](archive: IndexedSeq[T], journal: Seq[T]) {
    */
   def search(t: T): Option[T] = {
     // TO BE IMPLEMENTED  implement me as described above (total points: 17)
-     ???
-    // END
+        ???
   }
 
   /**
@@ -56,8 +54,7 @@ object Archive {
    */
   def apply[P: Ordering](archive: Seq[P]): Archive[P] =
   // TO BE IMPLEMENTED  implement me [8]
-   ???
-  // END
+    ???
 
   /**
    * Method to perform a binary search on a sorted, indexed sequence.
@@ -75,23 +72,19 @@ object Archive {
   private def binarySearch[P: Ordering](p: P, ps: IndexedSeq[P])(from: Int, to: Int): Option[Int] = flatWhen(from < to) {
     val bs: (Int, Int) => Option[Int] =
     // TO BE IMPLEMENTED  implement an expression for bs [5]
-     ???
-    // END
+        ???
     val po: Ordering[P] =
     // TO BE IMPLEMENTED  implement me [3]
-     ???
-    // END
+        ???
     val mid = (from + to) / 2
     po.compare(p, ps(mid)) match {
       case 0 => Some(mid)
       case x if x > 0 =>
         // TO BE IMPLEMENTED  implement me by using bs appropriately. [3]
-       ???
-      // END
+            ???
       case _ =>
         // TO BE IMPLEMENTED  implement me by using bs appropriately. [3]
-       ???
-      // END
+            ???
     }
   }
 
@@ -104,7 +97,7 @@ object Archive {
    * @tparam P the underlying type of the result.
    * @return an <code>Option[P]</code> which will be <code>None</code> if the condition is <code>false</code>, otherwise <code>po</code>.
    */
-   // TO BE IMPLEMENTED  implement flatWhen. [7]
-  
-  // END
+  def flatWhen[P](condition: Boolean)(po: => Option[P]): Option[P] =
+    // TO BE IMPLEMENTED  implement flatWhen. [7]
+    ???
 }

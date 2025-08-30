@@ -13,7 +13,7 @@ object MonadOps {
   // 6 points.
   def flatten[X](xyf: Future[Try[X]])(implicit executor: ExecutionContext): Future[X] =
   // TO BE IMPLEMENTED 
-???
+    ???
 
   def flatten[X](xfy: Try[Future[X]]): Future[X] =
     xfy match {
@@ -30,7 +30,7 @@ object MonadOps {
   // 6 points.
   def flatten[X](xsfs: Seq[Future[Seq[X]]])(implicit ec: ExecutionContext): Future[Seq[X]] =
   // TO BE IMPLEMENTED 
-???
+    ???
 
   def flattenRecover[X](esf: Future[Seq[Either[Throwable, Seq[X]]]], f: => Throwable => Unit)(implicit executor: ExecutionContext): Future[Seq[X]] = {
     def filter(uses: Seq[Either[Throwable, Seq[X]]]): Seq[X] = {
@@ -57,7 +57,7 @@ object MonadOps {
   def sequence[X](xy: Try[X]): Either[Throwable, X] =
 
 // TO BE IMPLEMENTED 
-???
+    ???
 
   def sequence[X](xf: Future[X])(implicit executor: ExecutionContext): Future[Either[Throwable, X]] = {
     type Result = Either[Throwable, X]

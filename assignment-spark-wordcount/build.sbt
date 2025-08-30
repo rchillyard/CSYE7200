@@ -1,15 +1,27 @@
-name := "SparkWordCount"
+name := "assignment-spark-wordcount"
+version := "1.0"
 
-version := "0.1"
+// Using scalaVersion "2.12" (if you want to change it, go to build.sbt at the root of the project)
 
-Compile / doc / scalacOptions ++= Seq("-Vimplicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
+// Spark 3.5.x pairs well with Scala 2.12.x and JDK 17
+scalaVersion := "2.12.18"
 
-val scalaTestVersion = "3.2.3"
+val scalaTestVersion = "3.2.19"
+val sparkVersion = "3.0.1"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
+libraryDependencies ++= Seq(
+  "org.apache.spark" %% "spark-core" % sparkVersion,
+  "org.apache.spark" %% "spark-sql" % sparkVersion,
+  "org.scalatest" %% "scalatest" % scalaTestVersion % Test
+)
 
-libraryDependencies += "org.apache.spark" %% "spark-core" % "3.0.1"
+// Ensure tests fork a JVM (so we control the JDK used)
+Test / fork := true
 
-libraryDependencies += "org.apache.spark" %% "spark-sql" % "3.0.1"
-
-Test / parallelExecution := false
+// If you must run on JDK 17+, these are typically not needed with Spark 3.5.x,
+// but if your environment is restrictive, you can uncomment these:
+// Test / javaOptions ++= Seq(
+//   "--add-opens=java.base/java.nio=ALL-UNNAMED",
+//   "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+//   "--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED"
+// )

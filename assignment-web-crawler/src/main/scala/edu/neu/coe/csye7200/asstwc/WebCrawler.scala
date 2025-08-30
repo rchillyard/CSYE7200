@@ -134,7 +134,7 @@ object WebCrawler extends App {
     // You will also need FP.asFuture
     // 9 points.
     // TO BE IMPLEMENTED 
-     ???
+    ???
     // END SOLUTION
 
   /**
@@ -166,7 +166,7 @@ object WebCrawler extends App {
    */
   def getURLs(node: Node, url: URL): Seq[Try[URL]] =
 // TO BE IMPLEMENTED 
- ???
+    ???
 // END SOLUTION
 
   /**
@@ -415,3 +415,11 @@ case class Unstring(n: Int) extends CharSequence {
  * @param str a string providing details about the specific cause or context of the exception.
  */
 case class UnstringException(str: String) extends Exception(str)
+
+object Junk extends App {
+  import scala.concurrent.ExecutionContext.Implicits.global
+  val f1 = Future(1)
+  val f12= Future(2)
+  val f = f1.zip(f12)
+  Future.sequence(Seq(f1,f12))
+}

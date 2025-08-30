@@ -1,10 +1,9 @@
 package edu.neu.coe.csye7200.spam
 
-import org.apache.spark.mllib.regression.LabeledPoint
-import org.apache.spark.mllib.feature.HashingTF
+import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.mllib.classification.LogisticRegressionWithSGD
-import org.apache.spark.SparkConf
-import org.apache.spark.SparkContext
+import org.apache.spark.mllib.feature.HashingTF
+import org.apache.spark.mllib.regression.LabeledPoint
 
 /**
  * @author scalaprof
@@ -24,7 +23,8 @@ object Classifier extends App {
   val negExamples = normFeatures.map(f => LabeledPoint(0, f))
   val trainingData = posExamples.union(negExamples)
   trainingData.cache()
-  
+
+  // TODO fix this deprecation warning
   val model = new LogisticRegressionWithSGD().run(trainingData)
   
   val posTest = tf.transform("Subject: Cheap Stuff From: <omg.fu> O M G GET cheap stuff by sending money to Robin Hillyard".split(" "))

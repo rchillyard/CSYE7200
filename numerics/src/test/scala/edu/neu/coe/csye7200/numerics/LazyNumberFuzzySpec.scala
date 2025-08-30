@@ -14,8 +14,8 @@ class LazyNumberFuzzySpec extends flatspec.AnyFlatSpec with should.Matchers {
   private val fuzz2 = LazyFuzzy(1, Product(2))
 
   def squ(x: Fuzzy): Fuzzy = x match {
-    case f: FuzzyBase => f * x
-    case _ => throw new Exception("Logic error")
+    case f: FuzzyBase => 
+      f * x
   }
 
   private val fuzzSquare = Named[Fuzzy]("square", squ)

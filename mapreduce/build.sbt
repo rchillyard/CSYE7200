@@ -2,16 +2,16 @@ name := "MapReduce"
 
 version := "1.0.0-SNAPSHOT"
 
-Compile / scalacOptions ++= Seq("-Vimplicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
+Compile / scalacOptions ++= Seq("-deprecation")
 
 //mainClass in (Compile, run) := Some("edu.neu.coe.scala.mapreduce.MapReduce")
 
 val akkaGroup = "com.typesafe.akka"
-val akkaVersion = "2.6.10"
+val akkaVersion = "2.8.8"
 val sprayGroup = "io.spray"
 val sprayVersion = "1.3.3"
 val sprayJsonVersion = "1.3.6"
-val scalaTestVersion = "3.2.2"
+val scalaTestVersion = "3.2.19"
 
 //ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
 
@@ -36,9 +36,9 @@ libraryDependencies ++= Seq(
   akkaGroup %% "akka-slf4j" % akkaVersion,
   "com.typesafe" % "config" % "1.4.0",
   //	"com.github.nscala-time" %% "nscala-time" % "2.0.0",
-  "ch.qos.logback" % "logback-classic" % "1.0.0" % "runtime",
+  "ch.qos.logback" % "logback-classic" % "1.5.18" % "runtime",
   // xml and tagsoup are for WebCrawler example
-  "org.scala-lang.modules" %% "scala-xml" % "1.3.0",
+  "org.scala-lang.modules" %% "scala-xml" % "2.4.0",
   "org.ccil.cowan.tagsoup" % "tagsoup" % "1.2.1" % "test",
   "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
 )

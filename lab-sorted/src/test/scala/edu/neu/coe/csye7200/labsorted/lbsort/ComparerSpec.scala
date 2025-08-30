@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200.labsorted.lbsort
 
-import edu.neu.coe.csye7200.labsorted.lbsort.Comparison._
+import edu.neu.coe.csye7200.labsorted.lbsort.Comparison.*
 import org.scalatest.concurrent.{Futures, ScalaFutures}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -79,10 +79,17 @@ class ComparerSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutu
     val comparer1: Comparer[Int] = implicitly[Comparer[Int]]
     val comparer2: Comparer[String] = implicitly[Comparer[String]]
     val comparer3: Comparer[(Int, String)] = comparer1 compose comparer2
-    val x: (Int, String) = Composite.unapply(c1a).get
-    val y: (Int, String) = Composite.unapply(c1z).get
-    comparer3(x -> y) shouldBe less
-    //    comparer3(Composite(1, "a") -> Composite(1, "z")) shouldBe less
+    (c1a, c1z) match {
+      case (CompositeExtractor(ia, sa), CompositeExtractor(iz, sz)) =>
+        comparer3((ia,  sa), (iz, sz)) shouldBe less
+      case _ =>
+        fail("logic error")
+    }
+    // TODO try to reinstate something like this Scala 2 version of the code
+//    val x: (Int, String) = Composite.unapply(c1a).get
+//    val y: (Int, String) = Composite.unapply(c1z).get
+//    comparer3(x -> y) shouldBe less
+//        comparer3(Composite(1, "a") -> Composite(1, "z")) shouldBe less
 
 
   }
@@ -152,7 +159,6 @@ class ComparerSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutu
     whenReady(xsf) { xs => xs shouldBe List(1, 2, 3) }
   }
 
-
   behavior of "merge"
   it should "work" in {
     val l1 = List(1, 5, 8, 10, 11, 15)
@@ -172,5 +178,22 @@ object Composite {
   object OrderingCompositeString extends Ordering[Composite] {
     def compare(x: Composite, y: Composite): Int = x.s.compare(y.s)
   }
+}
 
+/**
+ * Object CompositeExtractor provides an extractor for the `Composite` case class.
+ *
+ * The `unapply` method is defined to extract the components of a `Composite` instance as a tuple.
+ * This allows pattern matching on instances of `Composite` to directly access the underlying fields.
+ *
+ * Example usage might include scenarios where you want to decompose a `Composite` instance into its individual components
+ * (`Int` and `String`) in a concise and functional style.
+ *
+ * The method always returns a `Some` wrapping a tuple of the two components.
+ *
+ * NOTE for some reason I don't totally understand, the old mechanism of unapply no longer seems to work
+ * for the test case Comparer/compose
+ */
+object CompositeExtractor {
+  def unapply(c: Composite): Option[(Int, String)] = Some((c.i, c.s))
 }

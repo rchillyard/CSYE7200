@@ -11,7 +11,7 @@ class LazyFunctionSpec extends flatspec.AnyFlatSpec with should.Matchers {
   //  private val one = LazyRational(1)
   private val double = Product(Rational(2))
   private val half = Product(Rational.one / 2)
-  private val genericDouble = Named("double", { x: Rational => x * 2 })
+  private val genericDouble = Named("double", { (x: Rational) => x * 2 })
 
   //  "Identity" should "combine invisibly with anything" in {
   //    Identity[Rational]().compose(genericDouble) shouldBe (genericDouble)

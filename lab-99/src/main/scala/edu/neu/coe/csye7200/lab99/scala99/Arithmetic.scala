@@ -17,12 +17,12 @@ class Arithmetic(val start: Int) {
   // P33
   def isCoprimeTo(n: Int): Boolean =
   // TO BE IMPLEMENTED 
-???
+    ???
 
   // P34
   def totientP34: Int =
   // TO BE IMPLEMENTED 
-???
+    ???
 
   // P37
   def totient: Int = // SOLUTION
@@ -31,12 +31,12 @@ class Arithmetic(val start: Int) {
         case (p, m) => r * (p - 1) * Math.pow(p, m - 1).toInt
       }
     }
-???
+    ???
 
   // P35 (amended by P36)
   def primeFactors: Seq[Int] =
   // TO BE IMPLEMENTED 
-???
+    ???
 
   // P36
   def primeFactorMultiplicity: Map[Int, Int] = {
@@ -47,7 +47,7 @@ class Arithmetic(val start: Int) {
   // P40
   def goldbach: (Int, Int) =
   // TO BE IMPLEMENTED 
-???
+    ???
 }
 
 object Arithmetic {
@@ -60,12 +60,12 @@ object Arithmetic {
   @scala.annotation.tailrec
   def gcd(m: Int, n: Int): Int =
   // TO BE IMPLEMENTED 
-???
+    ???
 
   // P39
   def listPrimesInRange(r: Range): Seq[Int] =
   // TO BE IMPLEMENTED 
-???
+    ???
 
   // P41
   def printGoldbachList(r: Range): Unit = {

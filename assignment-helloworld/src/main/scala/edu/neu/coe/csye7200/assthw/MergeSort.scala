@@ -24,10 +24,12 @@ class MergeSort[X: Ordering] {
                     case (Nil, _) | (_, Nil) =>
                         OneList(l, r) match {
                             case OneList(x) => result ++: x
+                            case _ => throw new Exception("MergeSort: OneList result unexpected: " + result + " l: " + l + " r: " + r + "")
                         }
                     case _ =>
                         CompareLists(l, r) match {
                             case CompareLists(h, t, other) => merge(result += h, t, other)
+                            case _ => throw new Exception("MergeSort: CompareLists result unexpected: " + result + " l: " + l + " r: " + r + "")
                         }
                 }
 
@@ -45,7 +47,7 @@ object MergeSort extends App {
         sorter.sort(list)
     }
 
-    println(doMain(100000))
+//    println(doMain(100000))
 }
 
 case class CompareLists[X](left: List[X], right: List[X])(implicit val ordering: Ordering[X])
@@ -67,5 +69,6 @@ object OneList {
     def unapply[X](cl: OneList[X]): Option[List[X]] = (cl.left,cl.right) match {
         case (_, Nil) => Some(cl.left)
         case (Nil, _) => Some(cl.right)
+        case _ => None
     }
 }

@@ -6,7 +6,7 @@ val numbers: Array[Int] = args map (_.toInt)
 def show(magicNumber: Int): String = {
   val ys: LazyList[BigInt] = primes.drop(2).map(p => (p.x * p.x) % magicNumber).take(100)
 
-???
+    ???
 
   s"""$magicNumber: ${ys.mkString(",")}"""
 }

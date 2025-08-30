@@ -323,7 +323,7 @@ class ConFrac(val b: BigInt, co: => Option[CF]) extends Evaluatable with Takeabl
     }
 
     // NOTE: coefficients always returns a lazy list of at least one pair.
-    val h #:: z = coefficients
+    val h #:: z = coefficients: @unchecked
     Rational(h.b) #:: inner(1, h.b, 0, 1, z)
   }
 
@@ -384,7 +384,7 @@ class ConFrac(val b: BigInt, co: => Option[CF]) extends Evaluatable with Takeabl
       case p #:: tail => p.a / (inner(tail) + p.b)
     }
 
-    val h #:: z = coefficients
+    val h #:: z = coefficients: @unchecked
     inner(z) + h.b
   }
 
