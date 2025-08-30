@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200.fp.parse
 
-import edu.neu.coe.csye7200.MonadOps
+import edu.neu.coe.csye7200.MonadOps.sequence
 import edu.neu.coe.csye7200.fp.util.{Trial, Tuples}
 import java.io.{File, InputStream}
 import java.net.URI

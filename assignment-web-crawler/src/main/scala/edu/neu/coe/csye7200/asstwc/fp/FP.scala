@@ -259,8 +259,8 @@ object FP {
    * @return if xe is a Right(x) then Some(x) else None.
    */
   def asOption[X](xe: Either[Throwable, X]): Option[X] =
-// TO BE IMPLEMENTED 
-???
+  // TO BE IMPLEMENTED 
+    ???
 
 
   /**

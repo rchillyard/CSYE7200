@@ -4,8 +4,7 @@
 
 package edu.neu.coe.csye7200.fp
 
-import edu.neu.coe.csye7200.MonadOps
-
+import edu.neu.coe.csye7200.MonadOps.sequence
 import scala.util._
 import scala.util.parsing.combinator.RegexParsers
 
@@ -14,7 +13,6 @@ case class Arg[X](name: Option[String], value: Option[X]) extends Ordered[Arg[X]
     case Some(e) => e.isOptional
     case _ => throw InvalidOptionException(this)
   }
-
 
   def byName(w: String): Option[Arg[X]] = name match {
     case Some(`w`) => Some(this)
@@ -128,7 +126,7 @@ case class Args[X](xas: Seq[Arg[X]]) extends Iterable[Arg[X]] {
 
   def process(fm: Map[String, Option[X] => Unit]): Try[Seq[X]] =
   // CONSIDER using traverse
-    MonadOps.sequence(for (xa <- xas) yield for (x <- xa.process(fm)) yield x) match {
+    sequence(for (xa <- xas) yield for (x <- xa.process(fm)) yield x) match {
       case Success(xos) => Success(xos.flatten)
       case Failure(x) => Failure(x)
     }
@@ -155,7 +153,7 @@ object Args {
 
     // CONSIDER using traverse
     val tys = for (a <- args) yield p.parseToken(a)
-    val ts = MonadOps.sequence(tys) match {
+    val ts = sequence(tys) match {
       case Success(ts_) => ts_
       case Failure(x) => System.err.println(x.getLocalizedMessage); Seq[p.Token]()
     }
