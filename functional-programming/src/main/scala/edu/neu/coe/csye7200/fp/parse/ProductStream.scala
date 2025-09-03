@@ -223,10 +223,12 @@ object TupleStream {
 
   def apply[X <: Product](input: InputStream): TupleStream[X] = apply(CsvParser(), input)
 
+  // TODO use Using
   def apply[X <: Product](parser: CsvParser, input: File): TupleStream[X] = apply(parser, Source.fromFile(input).getLines().to(LazyList))
 
   def apply[X <: Product](input: File): TupleStream[X] = apply(CsvParser(), input)
 
+  // TODO use Using
   def apply[X <: Product](parser: CsvParser, input: URI): TupleStream[X] = apply(parser, Source.fromFile(input).getLines().to(LazyList))
 
   def apply[X <: Product](input: URI): TupleStream[X] = apply(CsvParser(), input)
@@ -254,10 +256,12 @@ object CSV {
 
   def apply[X <: Product](input: InputStream): CSV[X] = apply(CsvParser(), input)
 
+  // TODO use Using
   def apply[X <: Product](parser: CsvParser, input: File): CSV[X] = apply(parser, Source.fromFile(input).getLines().to(LazyList))
 
   def apply[X <: Product](input: File): CSV[X] = apply(CsvParser(), input)
 
+  // TODO use Using
   def apply[X <: Product](parser: CsvParser, input: URI): CSV[X] = apply(parser, Source.fromFile(input).getLines().to(LazyList))
 
   def apply[X <: Product](input: URI): CSV[X] = apply(CsvParser(), input)
