@@ -32,8 +32,10 @@ object TimeClient extends ZIOAppDefault {
   def run: ZIO[ZIOAppArgs & Scope, IOException, Unit] = {
     val program: ZIO[Client, Throwable, Unit] = for {
       tz <- readTZ(s"Enter timezone (default: ${ZoneId.systemDefault}), or Area, or '?' for help: ", None)
-      _ <- Console.printLine(s"Fetching time for Timezone: $tz...")
-      myTime <- getTimeForTimezone(tz)
+      etc = tz.getId.startsWith("Etc/GMT")
+      timezoneMessage = s"Fetching time for Timezone: $tz... " + (if (etc) "(Note that 'Etc' timezone names appear to be backwards)" else "")
+      _ <- Console.printLine(timezoneMessage)
+      myTime <- requestResponseJson[WorldTime](s"$worldTimeAPI/$tz")
       _ <- Console.printLine(myTime.toString)
     } yield ()
 
@@ -44,24 +46,46 @@ object TimeClient extends ZIOAppDefault {
   }
 
   /**
-   * Makes a generic API call to a specified URL, validates the URL, sends a GET request, and decodes
-   * the response JSON into the desired result type.
+   * Sends an HTTP GET request to the provided URL, decodes the response body as JSON,
+   * and returns the decoded result.
    *
-   * @param u the URL string representing the API endpoint to be called.
-   * @param j an implicit `JsonDecoder` to decode the response body into the desired result type `Result`.
-   * @return a ZIO effect that requires a `Client` environment, producing either a value of type `Result`
-   *         on a successful API call or a `TimeClientException` on failure.
+   * This method performs the following steps:
+   * - Validates the provided URL.
+   * - Sends a GET request to the validated URL.
+   * - Ensures the response has a status of OK (200).
+   * - Confirms the response content type is JSON.
+   * - Parses the response body as JSON into the specified type.
+   *
+   * @param u the URL to which the HTTP GET request will be sent.
+   * @param j an implicit `JsonDecoder` instance to decode the response JSON into the required type `Result`.
+   * @return a ZIO effect that requires a `Client` environment and either produces the decoded result of type `Result`
+   *         on success or fails with a `TimeClientException` in case of error.
    */
   def requestResponseJson[Result](u: String)(implicit j: JsonDecoder[Result]): ZIO[Client, TimeClientException, Result] = ZIO.scoped {
     for {
       client <- ZIO.service[Client]
       url <- ZIO.fromEither(URL.decode(u)).orElseFail(InvalidURL(u))
       response <- client.request(Request.get(url)).mapError(ClientException.apply)
-      _ <- ZIO.when(response.status != Status.Ok)(ZIO.fail(ApiFailure(response.status)))
+      _ <- checkOK(response.status == Status.Ok)(ApiFailure(response.status))
+      _ <- checkOK(response.headers.hasJsonContentType)(LogicException("response is not JSON"))
       body <- response.body.asString.mapError(ClientException.apply)
       result <- ZIO.fromEither(body.fromJson[Result]).mapError(msg => JsonException(msg))
     } yield result
   }
+
+  /**
+   * Checks a condition and fails with the provided `TimeClientException` if the condition is not satisfied.
+   * In other words, this is an assertion.
+   *
+   * This method evaluates the given predicate `p`, and if the result is `false`, it fails with the provided
+   * exception `ex`. Otherwise, it completes successfully with `None`.
+   *
+   * @param p  a lazily evaluated predicate that determines whether the operation should proceed (expected to be `true`).
+   * @param ex a lazily evaluated `TimeClientException` that is used as the failure reason if the predicate evaluates to `false`.
+   * @return a ZIO effect that succeeds with `Option[Nothing]` if the condition is satisfied, or fails with the
+   *         provided `TimeClientException` if the condition is not met.
+   */
+  def checkOK(p: => Boolean)(ex: => TimeClientException): ZIO[Any, TimeClientException, Option[Nothing]] = ZIO.when(!p)(ZIO.fail(ex))
 
   /**
    * Reads a timezone input from the user, validates and resolves it into a `ZoneId`.
@@ -80,16 +104,19 @@ object TimeClient extends ZIOAppDefault {
         zioZoneId(ZoneId.systemDefault())
       case "?" =>
         promptAndRead("Enter the area or UTC-based zone you want: ", ZIO.succeed(helpList), None, "")
-      case offsetRegex(h) =>
-        zioZoneId(s"Etc/GMT$h")
+      case offsetRegex(null, null) =>
+        zioZoneId(s"UTC")
+      case offsetRegex(s, h) =>
+        zioZoneId(s"Etc/GMT${flipSign(s)}$h")
       case tzRegex(name, _, null) =>
+        val cityPrompt = "Enter the city you want: "
         maybePrefix match {
-          case Some(x) if prompt == "Enter the city you want: " =>
+          case Some(x) if prompt == cityPrompt =>
             zioZoneId(s"$x/$name")
           case None if singleWordList.contains(name) =>
             zioZoneId(s"$name")
           case _ =>
-            promptAndRead("Enter the city you want: ", getCityList(name), Some(name), "\n")
+            promptAndRead(cityPrompt, getCityList(name), Some(name), "\n")
         }
       case tzRegex(area, _, city) =>
         zioZoneId(s"$area/$city")
@@ -124,7 +151,33 @@ object TimeClient extends ZIOAppDefault {
 
   val tzRegex: Regex = """([a-zA-Z0-9_]+)(/([a-zA-Z0-9_]+))?""".r
 
-  val offsetRegex: Regex = """UTC([+-]\d{1,2})?""".r
+  val offsetRegex: Regex = """UTC([+-])?(\d{1,2})?""".r
+
+  /**
+   * Retrieves a list of city names based on the specified category name.
+   * This method fetches raw city data from the World Time API,
+   * parses the response, and processes the list to return cleaned city names.
+   *
+   * @param name the category name used to filter and retrieve city names from the API.
+   *             The response from the API is expected to have city names prefixed with this category,
+   *             which will be stripped in the final result.
+   * @return a ZIO effect that produces a list of strings representing city names,
+   *         after removing the category prefix.
+   */
+  private def getCityList(name: String) =
+    requestResponseJson[List[String]](s"$worldTimeAPI/$name").map(x => x.map(s => s.replace(s"$name/", "")))
+
+  /**
+   * Determines the opposite sign for a given string representing a sign.
+   * This is required for handling the Etc time zones (please see FYI of worldtimeapi.org).
+   *
+   * This method inspects the input string to determine if it starts with a
+   * negative sign ("-"). If so, it returns "+"; otherwise, it returns "-".
+   *
+   * @param s the input string representing a sign, expected to start with either "-" or "+".
+   * @return a string representing the opposite sign ("+" if the input starts with "-", otherwise "-").
+   */
+  private def flipSign(s: String): String = if (s.startsWith("-")) "+" else "-"
 
   /**
    * Wraps a `ZoneId` instance into a ZIO effect.
@@ -165,32 +218,6 @@ object TimeClient extends ZIOAppDefault {
       result <- readTZ(select, maybePrefix)
     } yield result
   }
-
-  /**
-   * Fetches the current time information for a given timezone.
-   *
-   * This method communicates with a remote API to retrieve the current time details
-   * for the specified timezone. It validates the API URL, sends a request, and parses
-   * the response into a `WorldTime` object.
-   *
-   * @param tz the `ZoneId` representing the desired timezone for which the time information
-   *           is to be retrieved.
-   * @return a ZIO effect that requires a `Client` environment, producing either
-   *         a `WorldTime` object on success or a `TimeClientException` on failure.
-   */
-  private def getTimeForTimezone(tz: ZoneId): ZIO[Client, TimeClientException, WorldTime] =
-    requestResponseJson[WorldTime](s"$worldTimeAPI/$tz")
-
-  /**
-   * Retrieves a list of city names for the given area by communicating with a remote API.
-   * The response is processed to remove the area prefix from each city name.
-   *
-   * @param area the name of the area for which the city list is to be retrieved.
-   * @return a ZIO effect that requires a `Client` environment, producing either a list of
-   *         city names as `List[String]` on success or a `TimeClientException` on failure.
-   */
-  private def getCityList(area: String): ZIO[Client, TimeClientException, List[String]] =
-    requestResponseJson[List[String]](s"$worldTimeAPI/$area").map(x => x.map(s => s.replace(s"$area/", "")))
 
   private val worldTimeAPI = "https://worldtimeapi.org/api/timezone"
 

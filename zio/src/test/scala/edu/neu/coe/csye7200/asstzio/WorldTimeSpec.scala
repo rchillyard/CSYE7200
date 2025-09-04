@@ -19,7 +19,7 @@ class WorldTimeSpec extends AnyFlatSpec with Matchers {
     ZoneId.of("America/New_York") shouldBe WorldTime.getTZ("America/New_York")
   }
 
-  ignore should "get correct timezone for specific timezone -4" in {
+  ignore should "get correct timezone for specific timezone -5" in {
     val UTC_5: ZoneId = ZoneId.of("UTC-5")
     println(UTC_5)
     val NewYork: ZoneId = WorldTime.getTZ("America/New_York")
@@ -63,7 +63,7 @@ class WorldTimeSpec extends AnyFlatSpec with Matchers {
 
   it should "match offsetRegex(UTC)" in {
     "UTC" match {
-      case TimeClient.offsetRegex(null) =>
+      case TimeClient.offsetRegex(null, null) =>
         println("UTC")
       case x =>
         fail(s"unexpected match, got $x")
@@ -72,8 +72,9 @@ class WorldTimeSpec extends AnyFlatSpec with Matchers {
 
   it should "match offsetRegex(UTC-4)" in {
     "UTC-4" match {
-      case TimeClient.offsetRegex(h) =>
-        h shouldBe "-4"
+      case TimeClient.offsetRegex(s, h) =>
+        s shouldBe "-"
+        h shouldBe "4"
       case x =>
         fail(s"unexpected match, got $x")
     }
