@@ -11,3 +11,6 @@ libraryDependencies ++= Seq(
   "org.scala-lang.modules" %% "scala-parallel-collections" % "1.2.0",
   "org.ccil.cowan.tagsoup" % "tagsoup" % "1.2.1"
 )
+
+// In build.sbt - only run actual test classes
+Test / testOptions += Tests.Filter(name => name.endsWith("Test") || name.endsWith("Spec"))

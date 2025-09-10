@@ -55,19 +55,7 @@ case class WebCrawler(maxHops: Int, parallelism: Int = 8) extends Crawler[URL](m
  * This object leverages concurrency to crawl multiple URLs simultaneously. It includes functionality
  * to validate, fetch, and parse web page contents, extracting all reachable and parsable links in the process.
  */
-object WebCrawler extends App {
-
-  /**
-   * A private instance of `Timer` created using its companion object's `apply` method.
-   * This timer is likely used internally for scheduled tasks or timing operations within the enclosing class or object.
-   */
-  private val timer: Timer = Timer.apply
-
-  val result = WebCrawler(20).doMain(args toList)
-  println(s"WebCrawler: total URLs retrieved: ${result.size}")
-  result foreach println
-
-  println(s"WebCrawler: total time (mSecs): ${timer.lap._1}")
+object WebCrawler {
 
   /**
    * Fetches the content of a given URL as a string asynchronously.
@@ -311,6 +299,27 @@ object WebCrawler extends App {
 
   private lazy val fileNameExtensionR: Regex = """^([\/\-_~\w]*\/)?([-_\w]*)?(\.(\w*))?$""".r
   private lazy val decomposePath = """(.*)\.(\w+)$""".r
+}
+
+/**
+ * The `WebCrawler` object implements a basic web crawler to parse and extract URLs from web pages.
+ *
+ * This object leverages concurrency to crawl multiple URLs simultaneously. It includes functionality
+ * to validate, fetch, and parse web page contents, extracting all reachable and parsable links in the process.
+ */
+object WebCrawlerMain extends App {
+
+  /**
+   * A private instance of `Timer` created using its companion object's `apply` method.
+   * This timer is likely used internally for scheduled tasks or timing operations within the enclosing class or object.
+   */
+  private val timer: Timer = Timer.apply
+
+  val result = WebCrawler(20).doMain(args toList)
+  println(s"WebCrawler: total URLs retrieved: ${result.size}")
+  result foreach println
+
+  println(s"WebCrawler: total time (mSecs): ${timer.lap._1}")
 }
 
 /**

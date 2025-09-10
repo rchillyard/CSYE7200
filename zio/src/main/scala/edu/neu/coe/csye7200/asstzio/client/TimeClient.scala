@@ -164,7 +164,7 @@ object TimeClient extends ZIOAppDefault {
    * @return a ZIO effect that produces a list of strings representing city names,
    *         after removing the category prefix.
    */
-  private def getCityList(name: String) =
+  def getCityList(name: String): ZIO[Client, TimeClientException, List[String]] =
     requestResponseJson[List[String]](s"$worldTimeAPI/$name").map(x => x.map(s => s.replace(s"$name/", "")))
 
   /**

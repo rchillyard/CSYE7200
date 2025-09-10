@@ -79,3 +79,5 @@ ThisBuild / run / fork := true
 
 // If you have any Java sources, compile them against Java 17 APIs.
 ThisBuild / javacOptions ++= Seq("--release", "17")
+
+Test / testOptions += Tests.Filter(name => name.endsWith("Test") || name.endsWith("Spec"))

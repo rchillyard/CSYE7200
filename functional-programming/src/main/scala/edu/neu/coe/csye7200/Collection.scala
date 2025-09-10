@@ -244,7 +244,7 @@ case class LazyCollectionOnceOnly[S, T](private val ts: Iterator[S])(f: S => T) 
     // Be sure to ignore any instance fields from `this`.
     // You should only use the types S and T from `this` together with the parameters provided to `unit`.
     // XXX 5 (c)
-    case c: LazyCollectionBase[S, T] => LazyCollectionOnceOnly(c.xs)(g)
+    case c: LazyCollectionBase[S, T] @unchecked => LazyCollectionOnceOnly(c.xs)(g)
   }
 
 }

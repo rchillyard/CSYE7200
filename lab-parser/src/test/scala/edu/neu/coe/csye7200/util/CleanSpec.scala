@@ -19,13 +19,15 @@ class CleanSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
     logger.logInfo(s"current directory is ${new File(".").getAbsolutePath}")
   }
 
-  val binarySearchJava = "../INFO6205/src/main/java/com/phasmidsoftware/dsaipg/misc/BinarySearch.java"
+  val rootDirectory = new java.io.File(".").getAbsolutePath.replace("lab-parser/", "").replace("/.", "")
+
+  val binarySearchJava = s"$rootDirectory/../INFO6205/src/main/java/com/phasmidsoftware/dsaipg/misc/BinarySearch.java"
 
   behavior of "Clean"
 
   it should "clean 0" in {
     val cleaner = new FileCleaner("SOLUTION", "STUB", "END SOLUTION")
-    val result = cleaner.clean("assignment-web-crawler/src/main/scala/edu/neu/coe/csye7200/asstwc/SolutionTemplateTest.sc", "output.txt")
+    val result = cleaner.clean(s"$rootDirectory/assignment-web-crawler/src/main/scala/edu/neu/coe/csye7200/asstwc/SolutionTemplateTest.sc", "output.txt")
     result shouldBe Success(2916)
   }
   it should "clean 1" in {
@@ -35,22 +37,22 @@ class CleanSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
   }
   it should "clean 2" in {
     val cleaner = new FileCleaner("SOLUTION", "STUB", "END SOLUTION")
-    val result = cleaner.clean("assignment-web-crawler/src/main/scala/edu/neu/coe/csye7200/asstwc/WebCrawler.scala", "output.txt")
+    val result = cleaner.clean(s"$rootDirectory/assignment-web-crawler/src/main/scala/edu/neu/coe/csye7200/asstwc/WebCrawler.scala", "output.txt")
     result shouldBe Success(19865)
   }
   it should "clean 3" in {
     val cleaner = new FileCleaner("SOLUTION", "STUB", "END SOLUTION")
-    val result = cleaner.clean("assignment-functional-composition/src/main/scala/edu/neu/coe/csye7200/asstfc/Movie.scala", "output.txt")
+    val result = cleaner.clean(s"$rootDirectory/assignment-functional-composition/src/main/scala/edu/neu/coe/csye7200/asstfc/Movie.scala", "output.txt")
     result shouldBe Success(9149)
   }
   it should "clean 4" in {
     val cleaner = new FileCleaner("SOLUTION", "STUB", "END")
-    val result: Try[Int] = cleaner.clean("assignment-movie-database/src/main/scala/edu/neu/coe/csye7200/asstmd/Movie.scala", "badOutput.txt")
-    result shouldBe Success(10318)
+    val result: Try[Int] = cleaner.clean(s"$rootDirectory/assignment-movie-database/src/main/scala/edu/neu/coe/csye7200/asstmd/Movie.scala", "badOutput.txt")
+    result shouldBe Success(11176)
   }
   it should "clean 5" in {
     val cleaner = new FileCleaner("SOLUTION", "STUB", "END")
-    val result: Try[Int] = cleaner.clean("assignment-helloworld/src/main/scala/edu/neu/coe/csye7200/assthw/HappyFamilies.scala", "happyFamilies.txt")
+    val result: Try[Int] = cleaner.clean(s"$rootDirectory/assignment-helloworld/src/main/scala/edu/neu/coe/csye7200/assthw/HappyFamilies.scala", "happyFamilies.txt")
 //    result shouldBe Success(10318)
   }
 
@@ -112,7 +114,7 @@ class CleanSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
   }
 
   it should "doClean" in {
-    val args = Array("assignment-web-crawler/src/main/scala/edu/neu/coe/csye7200/asstwc/SolutionTemplateTest.sc", "output.txt", "", "SOLUTION", "STUB", "END SOLUTION")
+    val args = Array(s"$rootDirectory/assignment-web-crawler/src/main/scala/edu/neu/coe/csye7200/asstwc/SolutionTemplateTest.sc", "output.txt", "", "SOLUTION", "STUB", "END SOLUTION")
     val result: Int = Clean.doClean(args)
     result shouldBe 2916
   }
@@ -120,7 +122,7 @@ class CleanSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
   behavior of "CleanTree"
 
   it should "clean 0" in {
-    val List(sourcePath, _, exclusionString, solution, stub, terminator) = List("assignment-web-crawler/src", "/tmp", "-SolutionTemplateTest", "SOLUTION", "STUB", "END SOLUTION")
+    val List(sourcePath, _, exclusionString, solution, stub, terminator) = List(s"$rootDirectory/assignment-web-crawler/src", "/tmp", "-SolutionTemplateTest", "SOLUTION", "STUB", "END SOLUTION")
     val exclusions = exclusionString.replace("-", "").split(":").map(_.trim).filter(_.nonEmpty).toList
     val cleaner = new FileCleaner(solution, stub, terminator)
     val sourceDir = getDefault.getPath(sourcePath)
@@ -129,7 +131,7 @@ class CleanSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
   }
 
   it should "clean 1" in {
-    val List(sourcePath, destPath, exclusionString, solution, stub, terminator) = List("assignment-web-crawler/src", "/tmp/src", "-SolutionTemplateTest", "SOLUTION", "STUB", "END SOLUTION")
+    val List(sourcePath, destPath, exclusionString, solution, stub, terminator) = List(s"$rootDirectory/assignment-web-crawler/src", "/tmp/src", "-SolutionTemplateTest", "SOLUTION", "STUB", "END SOLUTION")
     val exclusions = exclusionString.replace("-", "").split(":").map(_.trim).filter(_.nonEmpty).toList
     val cleaner = new FileCleaner(solution, stub, terminator)
     val sourceDir = getDefault.getPath(sourcePath)

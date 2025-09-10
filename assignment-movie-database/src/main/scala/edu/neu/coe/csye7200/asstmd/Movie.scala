@@ -155,8 +155,7 @@ object Movie /* removed extends App to avoid side effects during initialization 
     // 6 points
     val result: Seq[String] = {
       // TO BE IMPLEMENTED 
-  ???
-      // END
+            ???
     }
     result.toList
   }

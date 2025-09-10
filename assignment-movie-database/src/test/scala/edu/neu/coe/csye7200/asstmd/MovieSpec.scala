@@ -150,7 +150,8 @@ class MovieSpec extends AnyFlatSpec with Matchers {
   behavior of "sequence"
   it should "do sequenceOptimistic 1" in {
     lazy val ingester = new Ingest[Movie]()
-    val source = Source.fromFile("assignment-movie-database/src/test/resources/movie_metadata.csv")
+    val source = Source.fromResource("movie_metadata.csv")
+//    val source = Source.fromFile("assignment-movie-database/src/test/resources/movie_metadata.csv")
     val triedMovies: Iterator[Try[Movie]] = for (my <- ingester(source)) yield for (m <- my; if m.production.isKiwi) yield m
     val optionalMovies: Seq[Option[Movie]] = triedMovies to List map (_.toOption)
     val kiwiMovies: Option[Seq[Movie]] = sequenceOptimistic(optionalMovies)
@@ -159,7 +160,8 @@ class MovieSpec extends AnyFlatSpec with Matchers {
   }
   it should "do sequenceOptimistic 2" in {
     lazy val ingester = new Ingest[Movie]()
-    val source = Source.fromFile("assignment-movie-database/src/test/resources/movie_metadata.csv")
+    val source = Source.fromResource("movie_metadata.csv")
+//    val source = Source.fromFile("assignment-movie-database/src/test/resources/movie_metadata.csv")
     val triedMovies: Iterator[Try[Movie]] = for (my <- ingester(source)) yield for (m <- my; if m.production.isCheap) yield m
     val optionalMovies: Seq[Option[Movie]] = triedMovies to List map (_.toOption)
     val cheapMovies: Option[Seq[Movie]] = sequenceOptimistic(optionalMovies)
@@ -168,7 +170,8 @@ class MovieSpec extends AnyFlatSpec with Matchers {
   }
   it should "do sequencePessimistic 1" in {
     lazy val ingester = new Ingest[Movie]()
-    val source = Source.fromFile("assignment-movie-database/src/test/resources/movie_metadata.csv")
+    val source = Source.fromResource("movie_metadata.csv")
+//    val source = Source.fromFile("assignment-movie-database/src/test/resources/movie_metadata.csv")
     val triedMovies: Iterator[Try[Movie]] = for (my <- ingester(source)) yield for (m <- my; if m.production.isKiwi) yield m
     val optionalMovies: Seq[Option[Movie]] = triedMovies to List map (_.toOption)
     val kiwiMovies: Option[Seq[Movie]] = sequencePessimistic(optionalMovies)
@@ -177,7 +180,8 @@ class MovieSpec extends AnyFlatSpec with Matchers {
   }
   it should "do sequencePessimistic 2" in {
     lazy val ingester = new Ingest[Movie]()
-    val source = Source.fromFile("assignment-movie-database/src/test/resources/movie_metadata.csv")
+    val source = Source.fromResource("movie_metadata.csv")
+//    val source = Source.fromFile("assignment-movie-database/src/test/resources/movie_metadata.csv")
     val triedMovies: Iterator[Try[Movie]] = for (my <- ingester(source)) yield for (m <- my) yield m
     val optionalMovies: Seq[Option[Movie]] = triedMovies to List map (_.toOption) filter (_.isDefined)
     val maybeMovies: Option[Seq[Movie]] = sequencePessimistic(optionalMovies)

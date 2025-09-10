@@ -6,13 +6,17 @@ import org.scalatest.matchers.should
 
 class FizzBuzzSpec extends AnyFlatSpec with should.Matchers {
 
-    behavior of "FizzBuzz"
+  behavior of "FizzBuzz"
 
-    it should "fizzBuzz" in {
-        fizzBuzz(15) shouldBe "FizzBuzz"
-        fizzBuzz(1) shouldBe "1"
-        fizzBuzz(3) shouldBe "Fizz"
-        fizzBuzz(5) shouldBe "Buzz"
-    }
+  it should "fizzBuzz for positive x" in {
+    fizzBuzz(15) shouldBe "FizzBuzz"
+    fizzBuzz(1) shouldBe "1"
+    fizzBuzz(3) shouldBe "Fizz"
+    fizzBuzz(5) shouldBe "Buzz"
+  }
+
+  it should "not fizzBuzz for negative x" in {
+    a[IllegalArgumentException] shouldBe thrownBy(fizzBuzz(0))
+  }
 
 }

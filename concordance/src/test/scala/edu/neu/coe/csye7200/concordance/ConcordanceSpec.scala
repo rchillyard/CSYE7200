@@ -9,9 +9,9 @@ import org.scalatest.matchers.should.Matchers
   */
 class ConcordanceSpec extends AnyFlatSpec with Matchers with Inside {
 
-  private def parse(s: String) = {
+  private def parse (s: String): Seq[PositionalString] = {
     object CP extends ConcordanceParser
-    CP.parseAll(CP.sentence, s) match {
+    CP.parseAll[Seq[PositionalString]](CP.sentence, s) match {
       case CP.Success(ws, _) => ws
       case CP.Failure(e, _) => println(e); List()
       case CP.Error(e, _) => println(e); List()
@@ -19,7 +19,7 @@ class ConcordanceSpec extends AnyFlatSpec with Matchers with Inside {
   }
 
   "Concordance" should "read Hello World!" in {
-    val r = parse("Hello World!")
+    val r: Seq[PositionalString] = parse("Hello World!")
     r should matchPattern { case _ :: _ => }
     r.head should matchPattern { case PositionalString("Hello") => }
     inside(r.head) { case p@PositionalString(_) =>
@@ -48,7 +48,7 @@ class ConcordanceSpec extends AnyFlatSpec with Matchers with Inside {
   }
 
   it should "doMain" in {
-    val concordance = ConcordanceParser.doMain(Array("README.md"))
+    val concordance = ConcordanceParser.doMain(Array("../README.md"))
     concordance.size shouldBe 1
   }
 }

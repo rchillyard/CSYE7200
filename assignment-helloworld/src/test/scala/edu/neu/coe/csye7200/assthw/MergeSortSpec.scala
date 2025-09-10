@@ -2,6 +2,7 @@ package edu.neu.coe.csye7200.assthw
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
+import scala.util.Success
 
 class MergeSortSpec extends AnyFlatSpec with should.Matchers {
 
@@ -10,58 +11,58 @@ class MergeSortSpec extends AnyFlatSpec with should.Matchers {
   behavior of "MergeSort"
 
   it should "sort empty list" in {
-    new MergeSort[Int].sort(Nil) shouldBe Nil
+    new MergeSort[Int].sort(Nil) shouldBe Success(Nil)
   }
 
   it should "sort singleton list" in {
     val list = List(1)
-    new MergeSort[Int].sort(list) shouldBe list
+    new MergeSort[Int].sort(list) shouldBe Success(list)
   }
 
-  it should "sort doubleton list A" in {
+  it should "sort doubleton Success(Nil) A" in {
     val list = List(1, 2)
-    new MergeSort[Int].sort(list) shouldBe list
+    new MergeSort[Int].sort(list) shouldBe Success(list)
   }
 
   it should "sort doubleton list B" in {
     val expected = List(1, 2)
     val list = List(2, 1)
-    new MergeSort[Int].sort(list) shouldBe expected
+    new MergeSort[Int].sort(list).get shouldBe expected
   }
 
   it should "sort tripleton list A" in {
     val list = List(1, 2, 3)
-    new MergeSort[Int].sort(list) shouldBe list
+    new MergeSort[Int].sort(list) shouldBe Success(list)
   }
 
   it should "sort tripleton list B" in {
     val expected = List(1, 2, 3)
     val list = List(2, 1, 3)
-    new MergeSort[Int].sort(list) shouldBe expected
+    new MergeSort[Int].sort(list).get shouldBe expected
   }
 
   it should "sort tripleton list C" in {
     val expected = List(1, 2, 3)
     val list = List(2, 3, 1)
-    new MergeSort[Int].sort(list) shouldBe expected
+    new MergeSort[Int].sort(list).get shouldBe expected
   }
 
   it should "sort tripleton list D" in {
     val expected = List(1, 2, 3)
     val list = List(3, 2, 1)
-    new MergeSort[Int].sort(list) shouldBe expected
+    new MergeSort[Int].sort(list).get shouldBe expected
   }
 
   it should "sort tripleton list E" in {
     val expected = List(1, 2, 3)
     val list = List(3, 1, 2)
-    new MergeSort[Int].sort(list) shouldBe expected
+    new MergeSort[Int].sort(list).get shouldBe expected
   }
 
   it should "sort tripleton list F" in {
     val expected = List(1, 2, 3)
     val list = List(3, 2, 1)
-    new MergeSort[Int].sort(list) shouldBe expected
+    new MergeSort[Int].sort(list).get shouldBe expected
   }
 
   it should "work for doMain" in {

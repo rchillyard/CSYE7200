@@ -46,5 +46,5 @@ object BenchmarkBubbleSortList extends App {
 //    println(result)
   }
 
-  doSort(100000)
+  doSort(1000) // We can easily do 100000 here but it uses up a lot of space in the output
 }
