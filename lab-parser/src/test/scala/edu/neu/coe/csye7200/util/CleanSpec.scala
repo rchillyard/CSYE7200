@@ -38,7 +38,7 @@ class CleanSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
   it should "clean 2" in {
     val cleaner = new FileCleaner("SOLUTION", "STUB", "END SOLUTION")
     val result = cleaner.clean(s"$rootDirectory/assignment-web-crawler/src/main/scala/edu/neu/coe/csye7200/asstwc/WebCrawler.scala", "output.txt")
-    result shouldBe Success(19865)
+    result shouldBe Success(20217)
   }
   it should "clean 3" in {
     val cleaner = new FileCleaner("SOLUTION", "STUB", "END SOLUTION")

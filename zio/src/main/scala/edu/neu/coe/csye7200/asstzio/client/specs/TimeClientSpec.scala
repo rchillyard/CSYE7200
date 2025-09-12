@@ -12,11 +12,11 @@ object TimeClientSpec extends ZIOSpecDefault {
 
   def spec: Spec[TestEnvironment & Scope, Any] = test("requestResponseJson") {
 
-    val zioWorldTime: ZIO[http.Client, TimeClientException, WorldTime] = requestResponseJson[WorldTime]("https://worldtimeapi.org/api/timezone/UTC")
+    val zioWorldTime: ZIO[http.Client, TimeClientException, WorldTime] =
+      requestResponseJson[WorldTime]("https://worldtimeapi.org/api/timezone/UTC")
     assertZIO(zioWorldTime.provide(Client.default))(Assertion.assertion("should be OK") {
       utcTime =>
-        utcTime.timezone == "UTC"
-        utcTime.utc_offset == ZoneOffset.UTC
+        utcTime.timezone == "UTC" && utcTime.utc_offset == ZoneOffset.UTC
     })
   }
 }
