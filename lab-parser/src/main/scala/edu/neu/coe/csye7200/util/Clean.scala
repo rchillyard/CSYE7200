@@ -61,7 +61,7 @@ class FileCleaner(solution: String, stub: String, terminator: String) extends Ja
     val sourceDir = getDefault.getPath(sourcePath)
     val destDir = getDefault.getPath(destPath)
     logger.logInfo(s"cleanTree: $sourceDir $destDir")
-    processFiles(chooseFiles(toInclude, toExclude, sourceDir) map (p => p -> destDir.resolve(sourceDir.relativize(p))), write)
+    processFiles(chooseFiles(toInclude, toExclude, sourceDir) map (p => p -> destDir.resolve(sourceDir.relativize(p))), toExclude, write)
   }
 
   /**
@@ -77,9 +77,10 @@ class FileCleaner(solution: String, stub: String, terminator: String) extends Ja
    * @return a Try containing true if all files were successfully processed and written; false if any file
    *         failed to process; or a Failure with an exception if an error occurs
    */
-  def processFiles(pathTuples: Iterator[(Path, Path)], write: Boolean = true)(implicit logger: Logger): Try[Boolean] = {
+  def processFiles(pathTuples: Iterator[(Path, Path)], toExclude: Path => Boolean, write: Boolean = true)(implicit logger: Logger): Try[Boolean] = {
     val xys = for {
-      (s, d) <- pathTuples
+      (s, d) <- pathTuples if !toExclude(s)
+//      _ = logger.logInfo(s"processFiles: $s $d")
       destination = d.toAbsolutePath.toFile
       _ = ensureCanWriteFile(destination)
     } yield clean(s.toFile, destination, getDefaultStub(s.toString), write)
@@ -405,7 +406,11 @@ object CleanTree extends App {
    * @param p the path to be evaluated
    * @return true if the path is a regular file and its filename has a valid extension, false otherwise
    */
-  def toInclude(p: Path): Boolean = Files.isRegularFile(p) && validateExt(p.getFileName.toString)
+  def toInclude(p: Path): Boolean = {
+    val result = Files.isRegularFile(p) && validateExt(p.getFileName.toString)
+//    logger.logInfo(s"toInclude: $result $p")
+    result
+  }
 
   /**
    * Determines if the given path should be excluded based on the provided list of exclusions.
@@ -417,7 +422,11 @@ object CleanTree extends App {
    * @param p          The path to evaluate for exclusion.
    * @return true if the path is determined to be excluded, false otherwise.
    */
-  def toExclude(exclusions: List[String])(p: Path): Boolean = isExcluded(p, exclusions)
+  def toExclude(exclusions: List[String])(p: Path): Boolean = {
+    val result = isExcluded(p, exclusions)
+//    logger.logInfo(s"toExclude($exclusions): $result $p")
+    result
+  }
 
   /**
    * Determines if the provided path is excluded based on the specified list of exclusions.
@@ -431,15 +440,27 @@ object CleanTree extends App {
    * @return true if the path is excluded, false otherwise
    */
   private def isExcluded(path: Path, exclusions: List[String]): Boolean =
-    if (path.getFileName.startsWith(".")) true
-    else {
-      val result = (for {
-        x <- getPathComponents(path)
-      } yield exclusions.exists(x.startsWith)).exists(b => b)
-      if (result)
-        logger.logInfo(s"exclude: $path")
-      result
-    }
+    path.getFileName.startsWith(".") ||
+//      isDirectory(path, LinkOption.NOFOLLOW_LINKS) &&
+              excludedComponent(path, exclusions)
+
+
+  /**
+   * Determines if any component of the specified path starts with a string from the exclusions list.
+   * If a match is found, the method logs the excluded path and returns true. Otherwise, it returns false.
+   *
+   * @param path       the path to evaluate for exclusions
+   * @param exclusions a list of strings representing exclusion criteria
+   * @return true if any path component matches an exclusion, false otherwise
+   */
+  private def excludedComponent(path: Path, exclusions: List[String]) = {
+    val pathComponentsExcluded: Seq[Boolean] = for {
+      x <- getPathComponents(path)
+    } yield exclusions.exists(x.startsWith)
+    val result = pathComponentsExcluded.exists(b => b)
+//    if (result) logger.logInfo(s"exclude: $path")
+    result
+  }
 
   /**
    * Extracts the components of the specified path as an immutable indexed sequence of strings.

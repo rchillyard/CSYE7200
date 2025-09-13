@@ -54,8 +54,11 @@ class ListsSpec extends flatspec.AnyFlatSpec with should.Matchers {
   it should "throw an exception for -1, fib0" in {
     a[NoSuchElementException] should be thrownBy kth(-1, fib0)
   }
-  it should "get 3 for 3, fib5" in {
-    kth(3, fib5) shouldBe 3
+  it should "get 1 for 0, fib5" in {
+    kth(0, fib5) shouldBe 1
+  }
+  it should "get 8 for 5, fib5" in {
+    kth(5, fib5) shouldBe 8
   }
 
   behavior of "P04.length"

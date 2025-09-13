@@ -138,7 +138,7 @@ class CleanSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
     val destDir = getDefault.getPath(destPath)
     val paths: Iterator[Path] = cleaner.chooseFiles(toInclude, toExclude(exclusions), sourceDir)
     val tuples = paths map (p => p -> destDir.resolve(sourceDir.relativize(p)))
-    cleaner.processFiles(tuples) shouldBe Success(true)
+    cleaner.processFiles(tuples, toExclude(exclusions)) shouldBe Success(true)
   }
 
   behavior of "FileCleaner"
@@ -173,5 +173,19 @@ class CleanSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
     // NOTE: previously, this was matching Failure(_).
     // I'm not sure what this was supposed to test but it does seem to work correctly.
     triedUnit should matchPattern { case Success(()) => }
+  }
+
+  behavior of "toInclude"
+
+  it should "include Clean source code" in {
+    toInclude(getDefault.getPath("/Users/rhillyard/IdeaProjects/CSYE7200/lab-parser/src/main/scala/edu/neu/coe/csye7200/util/Clean.scala")) shouldBe true
+    toInclude(getDefault.getPath("/Users/rhillyard/IdeaProjects/CSYE7200/lab-parser/target/scala-2.12/classes/edu/neu/coe/csye7200/util/Clean.class")) shouldBe false
+  }
+
+  behavior of "toExclude"
+
+  it should "exclude exams but not util" in {
+    toExclude(Nil)(getDefault.getPath("/Users/rhillyard/IdeaProjects/CSYE7200/lab-parser/src/main/scala/edu/neu/coe/csye7200/util/Clean.scala")) shouldBe false
+    toExclude(List("exams"))(getDefault.getPath("/Users/rhillyard/IdeaProjects/CSYE7200/lab-99/src/main/scala/edu/neu/coe/csye7200/lab99/exams/CF.sc")) shouldBe true
   }
 }
