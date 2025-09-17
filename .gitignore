@@ -17,3 +17,25 @@ output\.html
 /draft final.pages
 /.bsp/
 /logFile
+
+lab-parser/badOutput.txt
+
+functional-programming/logFile
+
+lab-parser/*.txt
+
+lab-parser/lib/
+
+lab-parser/src/main/scala/edu/neu/coe/csye7200/quiz/
+
+lab-parser/src/main/scala/edu/neu/coe/csye7200/util/Clean.scala
+
+lab-parser/src/main/scala/edu/neu/coe/csye7200/yaml/ClassGenerator.scala
+
+lab-parser/src/main/scala/edu/neu/coe/csye7200/yaml/ClassGeneratorQ.scala
+
+lab-parser/src/main/scala/edu/neu/coe/csye7200/yaml/NamedProduct.scala
+
+lab-parser/src/test/scala/edu/neu/coe/csye7200/quiz/
+
+lab-parser/src/test/scala/edu/neu/coe/csye7200/util/CleanSpec.scala

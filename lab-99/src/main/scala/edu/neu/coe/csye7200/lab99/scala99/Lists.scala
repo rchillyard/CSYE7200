@@ -147,3 +147,19 @@ object P15 {
     ???
   }
 }
+
+
+object P16 {
+
+  def sum[X: Numeric](xs: List[X]): X = {
+    val nx: Numeric[X] = implicitly[Numeric[X]]
+
+    @tailrec
+    def inner(result: X, work: List[X]): X = work match {
+      case Nil => result
+      case h :: t => inner(nx.plus(result, h), t)
+    }
+
+    inner(nx.zero, xs)
+  }
+}

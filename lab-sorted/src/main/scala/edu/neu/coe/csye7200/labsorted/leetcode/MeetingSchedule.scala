@@ -2,7 +2,7 @@ package edu.neu.coe.csye7200.labsorted.leetcode
 
 import edu.neu.coe.csye7200.labsorted.lbsort.Comparer
 import edu.neu.coe.csye7200.labsorted.leetcode.Solution.solve
-import edu.neu.coe.csye7200.labsorted.leetcode.TransitionTime.OrderingTime
+import edu.neu.coe.csye7200.labsorted.leetcode.TransitionTime.*
 
 /**
   * Meeting schedule class.
@@ -124,7 +124,7 @@ object TransitionTime {
    * since midnight, represented by the `ticks` method of the TransitionTime class.
    * This ordering allows TransitionTime instances to be compared using their `ticks` values.
    */
-  implicit object OrderingTime extends Ordering[TransitionTime] {
+  given TransitionTimeOrdering: Ordering[TransitionTime] with {
     def compare(x: TransitionTime, y: TransitionTime): Int = x.ticks.compare(y.ticks)
   }
 }
@@ -171,12 +171,13 @@ object Transition {
   def stop(t: Int): Transition = apply(t, start = false)
 
   // NOTE that we need to sort transitions first by time, and then by boolean (false should come before true)
-  val comparerTransitionTime: Comparer[TransitionTime] = OrderingTime
+  val comparerTransitionTime: Comparer[TransitionTime] = TransitionTime.TransitionTimeOrdering
   val comparerBoolean: Comparer[Boolean] = implicitly[Ordering[Boolean]]
   val comparerTime: Comparer[Transition] = comparerTransitionTime.unMap(_.t)
   val comparerStart: Comparer[Transition] = comparerBoolean.unMap(_.start)
   val comparer: Comparer[Transition] = comparerTime orElse comparerStart
-  implicit val ordering: Ordering[Transition] = comparer.toOrdering
+
+  given ordering: Ordering[Transition] = comparer.toOrdering
 }
 
 /**

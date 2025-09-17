@@ -1,8 +1,6 @@
 package edu.neu.coe.csye7200.labsorted.leetcode
 
-import edu.neu.coe.csye7200.labsorted.lbsort.Comparer
 import edu.neu.coe.csye7200.labsorted.leetcode.Solution.solve
-import edu.neu.coe.csye7200.labsorted.leetcode.TransitionTime.OrderingTime
 
 /**
  * The `solve` method of the `Solution` object is where a candidate writes their code.
@@ -36,7 +34,8 @@ object Solution {
     val leetCodeMeetings2: MeetingSchedule = MeetingSchedule.parse(input.slice(2, 5))
 
     // The following are (optional) assertions that the solver wants to assert before returning the result.
-    import edu.neu.coe.csye7200.labsorted.leetcode.ScalaTemplate.TestableInt
+//    import edu.neu.coe.csye7200.labsorted.leetcode.ScalaTemplate.TestableInt
+    import edu.neu.coe.csye7200.labsorted.leetcode.ScalaTemplate.*
     noMeetings.totalRooms shouldBe 0
     justLunchMeeting.totalRooms shouldBe 1
     scumeAndLunch.totalRooms shouldBe 2
@@ -85,13 +84,13 @@ object ScalaTemplate extends App {
   
   println("Test completed")
 
-  implicit class TestableInt(actual: Int) {
+  extension (actual: Int)
     def shouldBe(expected: Int): Unit = if (actual != expected) System.err.println(s"$actual should be $expected")
-  }
-  implicit class TestableString(actual: String) {
+
+  extension (actual: String) {
     def shouldBe(expected: String): Unit = if (actual != expected) System.err.println(s"$actual should be $expected")
   }
-  implicit class TestableStringList(actual: List[String]) {
+  extension (actual: List[String]) {
     def shouldBe(expected: List[String]): Unit = actual zip expected foreach { case (a, e) => a shouldBe e }
   }
 }

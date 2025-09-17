@@ -7,7 +7,7 @@ package edu.neu.coe.csye7200.labsorted.benchmark
 import scala.language.implicitConversions
 
 /**
-  * Declaration of implicit class Rep within Benchmark.
+ * Declaration of Int extension within package object.
   *
   * Created by scalaprof on 8/17/16.
   */

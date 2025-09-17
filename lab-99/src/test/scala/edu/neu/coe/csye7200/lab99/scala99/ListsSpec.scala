@@ -14,7 +14,7 @@ class ListsSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   behavior of "P01.last"
 
-  import edu.neu.coe.csye7200.lab99.scala99.P01._
+  import edu.neu.coe.csye7200.lab99.scala99.P01.*
 
   it should "throw an exception for Nil" in {
     a[NoSuchElementException] should be thrownBy last(Nil)
@@ -32,7 +32,7 @@ class ListsSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   behavior of "P02.penultimate"
 
-  import edu.neu.coe.csye7200.lab99.scala99.P02._
+  import edu.neu.coe.csye7200.lab99.scala99.P02.*
 
   it should "throw an exception for fib0" in {
     a[NoSuchElementException] should be thrownBy penultimate(fib0)
@@ -43,7 +43,7 @@ class ListsSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   behavior of "P03.kth"
 
-  import edu.neu.coe.csye7200.lab99.scala99.P03._
+  import edu.neu.coe.csye7200.lab99.scala99.P03.*
 
   it should "throw an exception for 0, Nil" in {
     a[NoSuchElementException] should be thrownBy kth(0, Nil)
@@ -75,7 +75,7 @@ class ListsSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   behavior of "P05.reverse"
 
-  import edu.neu.coe.csye7200.lab99.scala99.P05._
+  import edu.neu.coe.csye7200.lab99.scala99.P05.*
 
   it should "reverse Nil to Nil" in {
     reverse(Nil) shouldBe Nil
@@ -93,7 +93,7 @@ class ListsSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   behavior of "P06"
 
-  import edu.neu.coe.csye7200.lab99.scala99.P06._
+  import edu.neu.coe.csye7200.lab99.scala99.P06.*
 
   it should "be true for Nil" in {
     isPalindrome(Nil) shouldBe true
@@ -234,6 +234,16 @@ class ListsSpec extends flatspec.AnyFlatSpec with should.Matchers {
   }
   it should "be correct for fib5" in {
     P15.duplicateN(3, fib5) shouldBe List(1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 5, 5, 5, 8, 8, 8)
+  }
+
+  behavior of "P16"
+  it should "be 0 for Nil" in {
+    val emptyList: List[Int] = Nil
+    P16.sum(emptyList) shouldBe 0
+  }
+  it should "be 6 for List(1,2,3)" in {
+    val list: List[Int] = List(1, 2, 3)
+    P16.sum(list) shouldBe 6
   }
 
 }

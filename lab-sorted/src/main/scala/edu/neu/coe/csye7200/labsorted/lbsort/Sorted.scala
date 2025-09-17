@@ -8,15 +8,15 @@ case class Sorted[T: Comparer](ts: Seq[T]) extends (() => Seq[T]) {
 
   private val ct = implicitly[Comparer[T]]
 
-  implicit val ordering: Ordering[T] = ct.toOrdering
+  given ordering: Ordering[T] = ct.toOrdering
 
   def sort(o: Comparer[T]): Sorted[T] = Sorted(ts)(ct orElse o)
 
   def apply(): Seq[T] = ts.sorted
 
-  def async(implicit ec: ExecutionContext): Future[Seq[T]] = Future(apply())
+  def async(using ec: ExecutionContext): Future[Seq[T]] = Future(apply())
 
-  def parSort(implicit ec: ExecutionContext): Future[Seq[T]] = Sorted.mergeSort(ts)
+  def parSort(using ec: ExecutionContext): Future[Seq[T]] = Sorted.mergeSort(ts)
 }
 
 object Sorted {
@@ -24,9 +24,9 @@ object Sorted {
 
   def verify[T: Comparer](xs: Seq[T]): Boolean = xs.zip(xs.tail).forall(z => implicitly[Comparer[T]].<=(z._1, z._2))
 
-  def parSort[T: Ordering](tst: (Seq[T], Seq[T]))(implicit ec: ExecutionContext): Future[Seq[T]] = map2(mergeSort(tst._1), mergeSort(tst._2))(merge)
+  def parSort[T: Ordering](tst: (Seq[T], Seq[T]))(using ec: ExecutionContext): Future[Seq[T]] = map2(mergeSort(tst._1), mergeSort(tst._2))(merge)
 
-  def mergeSort[T: Ordering](ts: Seq[T])(implicit ec: ExecutionContext): Future[Seq[T]] =
+  def mergeSort[T: Ordering](ts: Seq[T])(using ec: ExecutionContext): Future[Seq[T]] =
     ts.length match {
       case 0 | 1 => Future(ts)
       case n if n <= 16 => Future(BubbleSort.sort(ts))
@@ -50,7 +50,7 @@ object Sorted {
     inner(Nil, ts1, ts2)
   }
 
-  def map2[T: Ordering](t1f: Future[Seq[T]], t2f: Future[Seq[T]])(f: (Seq[T], Seq[T]) => Seq[T])(implicit ec: ExecutionContext): Future[Seq[T]] = for {t1 <- t1f; t2 <- t2f} yield f(t1, t2)
+  def map2[T: Ordering](t1f: Future[Seq[T]], t2f: Future[Seq[T]])(f: (Seq[T], Seq[T]) => Seq[T])(using ec: ExecutionContext): Future[Seq[T]] = for {t1 <- t1f; t2 <- t2f} yield f(t1, t2)
 
 }
 

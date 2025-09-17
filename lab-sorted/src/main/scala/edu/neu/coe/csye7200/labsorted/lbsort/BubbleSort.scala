@@ -1,7 +1,5 @@
 package edu.neu.coe.csye7200.labsorted.lbsort
 
-import edu.neu.coe.csye7200.sort.BubbleSortJava
-import scala.reflect.ClassTag
 import scala.util.Random
 
 /**
@@ -10,7 +8,7 @@ import scala.util.Random
   * @param xo the evidence for Ordering[X].
   * @tparam X the underlying type that this class knows how to sort.
   */
-case class BubbleSort[X]()(implicit xo: Ordering[X]) {
+case class BubbleSort[X]()(using xo: Ordering[X]) {
 
   /**
     * Mutating method to sort a list of Xs defined by the head element of type Element[X].
