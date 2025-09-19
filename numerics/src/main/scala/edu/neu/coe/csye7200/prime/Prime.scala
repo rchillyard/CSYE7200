@@ -90,6 +90,6 @@ object Prime {
 
 }
 
-object Eratosthenes extends App {
+@main def Eratosthenes(): Unit = {
   println(primes take 10 to List)
 }

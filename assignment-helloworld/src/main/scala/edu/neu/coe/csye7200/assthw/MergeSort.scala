@@ -5,6 +5,8 @@ import scala.annotation.tailrec
 import scala.collection.mutable.Queue
 import scala.util.{Failure, Success, Try}
 
+@main def runMergeSort(): Unit = println(MergeSort.doMain(100000))
+
 /**
  * This is the most elegant version of MergeSort.
  * There are no explicit reversal operations.
@@ -55,13 +57,12 @@ class MergeSort[X: Ordering]:
       } yield result
   }
 
-
 /**
  * Companion object that demonstrates the MergeSort algorithm by ordering a list
  * of integers in ascending order. The `doMain` method generates a list
  * of integers, sorts them using the MergeSort algorithm, and outputs the result.
  */
-object MergeSort extends App {
+object MergeSort {
 
   /**
    * Executes a sorting operation on a list of integers from 1 to `n` in descending order,
@@ -79,9 +80,8 @@ object MergeSort extends App {
       case Failure(e) => throw e
     }
   }
-
-  println(doMain(1000)) // We like to do 100000 but it uses up a lot of space in the output.
 }
+
 
 /**
  * A case class for comparing two lists of type `X` using an implicit ordering.

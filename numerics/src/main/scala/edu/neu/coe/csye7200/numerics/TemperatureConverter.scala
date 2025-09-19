@@ -18,7 +18,6 @@ object TemperatureConverter {
 
   def cToFs(x: String): String = convert(x)(cToF, "F")
 
-  // NOTE this needs to be a main method as "extends App" doesn't work here.
   def main(args: Array[String]): Unit = {
     val fc = args.isEmpty || args.contains("F")
     val scanner = new java.util.Scanner(System.in)

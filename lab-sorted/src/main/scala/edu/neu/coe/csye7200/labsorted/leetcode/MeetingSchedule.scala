@@ -176,7 +176,6 @@ object Transition {
   val comparerTime: Comparer[Transition] = comparerTransitionTime.unMap(_.t)
   val comparerStart: Comparer[Transition] = comparerBoolean.unMap(_.start)
   val comparer: Comparer[Transition] = comparerTime orElse comparerStart
-
   given ordering: Ordering[Transition] = comparer.toOrdering
 }
 

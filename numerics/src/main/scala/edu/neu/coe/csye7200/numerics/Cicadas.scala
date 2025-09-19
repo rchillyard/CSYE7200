@@ -19,7 +19,7 @@ case class Cicada(next: Int, period: Int) extends (Int => Boolean) {
 /**
   * This app prints the next n years in which Broods XIX and XIV will emerge together.
   */
-object Cicadas extends App {
+@main def Cicadas(args: String*): Unit = {
   val xix = Cicada(2024, 13) // Brood XIX (most of the Southern USA)
   val xiv = Cicada(2025, 17) // Brood XIV (most of SE USA as far North as Massachusetts)
   val n = args.headOption.map(_.toInt).getOrElse(10)

@@ -1,6 +1,16 @@
 package edu.neu.coe.csye7200.prime
 
-object PrimeFun extends App {
+/**
+ * Entry point of the program that performs calculations based on prime numbers and given "magic numbers" from
+ * the command-line arguments. It computes the values of p^2 % n for primes p and a provided n, where n is a "magic number."
+ * This demonstrates patterns in modular arithmetic using prime squares.
+ *
+ * Unfortunately, I can't quite remember how this is supposed to work (or what the program args are supposed to be)
+ *
+ * @param args The command-line arguments, which are expected to be a sequence of "magic numbers" as strings.
+ * @return No direct return value. The results are printed to standard output.
+ */
+@main def PrimeFun(args: String*): Unit = {
 
   // NOTE: This exercise concerns the values of p^2 % n where p is a prime number and n is a "magic number."
   // You can get a lazy list of primes from edu.neu.coe.csye7200.prime.Prime.primes
@@ -14,9 +24,9 @@ object PrimeFun extends App {
   // TODO using the one magic number that gives you the pattern, get a list of the first 100,000 numbers (again excluding the first two).
   // Try to find the first number that doesn't match the pattern (there may be none).
 
-  private val numbers: Array[Int] = args map (_.toInt)
+  val numbers: Seq[Int] = args map (_.toInt)
 
-  private def show(magicNumber: Int): String = {
+  def show(magicNumber: Int): String = {
     // TO BE IMPLEMENTED 
   ???
     // END

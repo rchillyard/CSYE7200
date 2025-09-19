@@ -2,7 +2,8 @@ package edu.neu.coe.csye7200.assthw
 
 import scala.util.Random
 
-object Fall2024Quiz1 extends App {
+@main def doFall2024Quiz1(): Unit = {
+
   val random = new Random(0L)
 
   // TODO (A: 7) build a lazy list (indexedRandom) of random numbers each in the range 0-1 together with an index which starts at 0
@@ -67,5 +68,4 @@ object Fall2024Quiz1 extends App {
   println(???)
 
   // NOTE: See video at https://www.youtube.com/shorts/UJfTBQRY2Cs
-
 }

@@ -2,7 +2,7 @@ name := "WebCrawler"
 
 version := "1.0"
 
-Compile / doc / scalacOptions ++= Seq("-Vimplicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
+Compile / doc / scalacOptions ++= Seq("-implicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
 scalacOptions ++= Seq("-encoding", "UTF-8")
 
 libraryDependencies ++= Seq(

@@ -1,14 +1,14 @@
 package edu.neu.coe.csye7200.asstwc
 
-import edu.neu.coe.csye7200.asstwc.WebCrawler.{isParseableURL, createURL, fetchAndParseLinks}
-import edu.neu.coe.csye7200.asstwc.fp.FP._
+import edu.neu.coe.csye7200.asstwc.WebCrawler.{createURL, fetchAndParseLinks, isParseableURL}
+import edu.neu.coe.csye7200.asstwc.fp.FP.*
 import edu.neu.coe.csye7200.asstwc.fp.{Crawler, Timer}
 import java.net.{MalformedURLException, URL}
-import scala.concurrent._
-import scala.concurrent.duration._
+import scala.concurrent.*
+import scala.concurrent.duration.*
 import scala.io.{BufferedSource, Source}
 import scala.language.postfixOps
-import scala.util._
+import scala.util.*
 import scala.util.control.NonFatal
 import scala.util.matching.Regex
 import scala.xml.Node
@@ -23,7 +23,8 @@ import scala.xml.Node
  * @param maxHops     the maximum number of hops (depth) that the crawler will follow from the initial URL.
  * @param parallelism the level of concurrency for crawling operations, defaults to 8.
  */
-case class WebCrawler(maxHops: Int, parallelism: Int = 8) extends Crawler[URL](maxHops, parallelism)((x: URL, y: URL) => x.getPath.compare(y.getPath)) {
+case class WebCrawler(maxHops: Int, parallelism: Int = 8) extends
+        Crawler[URL](maxHops, parallelism)((x: URL, y: URL) => x.getPath.compare(y.getPath)) {
 
   /**
    * Executes the main operation of the web crawler by processing a sequence of input strings representing URLs
@@ -69,7 +70,7 @@ object WebCrawler {
    * @return a Future containing the content of the URL as a String, or a failed Future
    *         if an error occurs during the fetch or reading of the content.
    */
-  def fetchURLContent(u: URL)(implicit ec: ExecutionContext): Future[String] =
+  def fetchURLContent(u: URL)(using ec: ExecutionContext): Future[String] =
     for {
       s <- asFuture(SourceFromURL(u))
       w <- asFuture(sourceToString(s, s"Cannot read from source at $u"))
@@ -87,11 +88,15 @@ object WebCrawler {
    * @param u the URL to be validated.
    * @return a `Try[URL]` containing the valid URL if successful, or a `Failure` with an appropriate exception.
    */
-  def validateURL(u: URL): Try[URL] = (validProtocol(u.getProtocol), canReadURL(u)) match {
-    case (true, true) => Success(u)
-    case (true, _) => Failure(WebCrawlerFileTypeException(u.getFile))
-    case _ => Failure(WebCrawlerProtocolException(u.getProtocol))
-  }
+  def validateURL(u: URL): Try[URL] =
+    (validProtocol(u.getProtocol), canReadURL(u)) match {
+      case (true, true) =>
+        Success(u)
+      case (true, _) =>
+        Failure(WebCrawlerFileTypeException(u.getFile))
+      case _ =>
+        Failure(WebCrawlerProtocolException(u.getProtocol))
+    }
 
   /**
    * Determines whether a given URL can be parsed based on its file extension or other conditions.
@@ -117,13 +122,13 @@ object WebCrawler {
    * @param ec  the implicit execution context to be used for asynchronous operations.
    * @return a Future containing a sequence of resolved and valid URLs extracted from the content of the input URL.
    */
-  def fetchAndParseLinks(url: URL)(implicit ec: ExecutionContext): Future[Seq[URL]] =
+  def fetchAndParseLinks(url: URL)(using ec: ExecutionContext): Future[Seq[URL]] =
     // Hint: write as a for-comprehension, using fetchURLContent (above) and getLinks (below).
     // You will also need FP.asFuture
     // 9 points.
     // TO BE IMPLEMENTED 
     ???
-    // END SOLUTION
+  // END SOLUTION
 
   /**
    * Extracts and validates a list of URLs from the given HTML content string and a base URL.
@@ -193,12 +198,17 @@ object WebCrawler {
    * @return true if the file extension is valid or null; false otherwise.
    */
   private def isValidExtension(wy: Try[String]): Boolean = wy match {
-    case Success(fileNameExtensionR(_, _, _, null)) => true
-    case Success(fileNameExtensionR(_, _, _, ext)) => ext match {
-      case "html" | "htm" => true
-      case _ => false
-    }
-    case _ => true
+    case Success(fileNameExtensionR(_, _, _, null)) =>
+      true
+    case Success(fileNameExtensionR(_, _, _, ext)) =>
+      ext match {
+        case "html" | "htm" =>
+          true
+        case _ =>
+          false
+      }
+    case _ =>
+      true
   }
 
   /**
@@ -209,9 +219,11 @@ object WebCrawler {
    */
   private def canReadURL(url: URL): Boolean =
     notNull[URL, String](_.getPath)(url) match {
-      case Success(decomposePath(_, ext)) if invalidExt(ext) => false
-      case _ => true
-  }
+      case Success(decomposePath(_, ext)) if invalidExt(ext) =>
+        false
+      case _ =>
+        true
+    }
 
   /**
    * Creates a new URL by combining an optional base URL with a resource path, or handles errors if the URL is malformed.
@@ -226,8 +238,10 @@ object WebCrawler {
    */
   private def createRelURL(context: Option[URL], resource: String): Try[URL] =
     Try(new URL(context.orNull, resource)) recoverWith {
-      case e: MalformedURLException => Failure(WebCrawlerURLException(context.map(_.toString).getOrElse("") + s"$resource", e))
-      case NonFatal(e) => Failure(WebCrawlerException(context.map(_.toString).getOrElse("") + s"$resource", e))
+      case e: MalformedURLException =>
+        Failure(WebCrawlerURLException(context.map(_.toString).getOrElse("") + s"$resource", e))
+      case NonFatal(e) =>
+        Failure(WebCrawlerException(context.map(_.toString).getOrElse("") + s"$resource", e))
     }
 
   /**
@@ -251,9 +265,12 @@ object WebCrawler {
    * should not interrupt the workflow or process execution.
    */
   private lazy val exceptionForgivenessFunction: Throwable => Boolean = {
-    case _: WebCrawlerProtocolException => true;
-    case _: WebCrawlerFileTypeException => true;
-    case _ => false
+    case _: WebCrawlerProtocolException =>
+      true;
+    case _: WebCrawlerFileTypeException =>
+      true;
+    case _ =>
+      false
   }
   /**
    * A value representing a recovery function to handle parse-related exceptions.
@@ -266,7 +283,8 @@ object WebCrawler {
    *         and mapping it to a `Failure` of type `Try[Node]`.
    */
   private lazy val parseRecoveryFunction: Any => PartialFunction[Throwable, Try[Node]] = x => {
-    case f => Failure(new RuntimeException(s"parse problem with $x: $f"))
+    case f =>
+      Failure(new RuntimeException(s"parse problem with $x: $f"))
   }
 
   /**
@@ -294,7 +312,8 @@ object WebCrawler {
   private def SourceFromURL(resource: URL): Try[BufferedSource] = Try(Source.fromURL(resource))
 
   private def urlException[X](w: String): PartialFunction[Throwable, Try[X]] = {
-    case NonFatal(e) => Failure(WebCrawlerURLException(w, e))
+    case NonFatal(e) =>
+      Failure(WebCrawlerURLException(w, e))
   }
 
   private lazy val fileNameExtensionR: Regex = """^([\/\-_~\w]*\/)?([-_\w]*)?(\.(\w*))?$""".r
@@ -307,15 +326,17 @@ object WebCrawler {
  * This object leverages concurrency to crawl multiple URLs simultaneously. It includes functionality
  * to validate, fetch, and parse web page contents, extracting all reachable and parsable links in the process.
  */
-object WebCrawlerMain extends App {
+@main def runWebCrawler(args: String*): Unit = {
 
   /**
    * A private instance of `Timer` created using its companion object's `apply` method.
    * This timer is likely used internally for scheduled tasks or timing operations within the enclosing class or object.
    */
-  private val timer: Timer = Timer.apply
+  val timer: Timer = Timer.apply
 
-  val result = WebCrawler(20).doMain(args toList)
+  // Ensure that there's at least one URL to crawl...
+  val urls = (args toList).padTo(1, "http://www1.coe.neu.edu/~rhillyard/index.html")
+  val result = WebCrawler(5).doMain(urls)
   println(s"WebCrawler: total URLs retrieved: ${result.size}")
   result foreach println
 
@@ -329,7 +350,8 @@ object WebCrawlerMain extends App {
  * @param url   the URL that caused the exception.
  * @param cause the underlying throwable that caused the exception.
  */
-case class WebCrawlerURLException(url: String, cause: Throwable) extends Exception(s"Web Crawler could not decode URL: $url", cause)
+case class WebCrawlerURLException(url: String, cause: Throwable) extends
+        Exception(s"Web Crawler could not decode URL: $url", cause)
 
 /**
  * Exception class representing an unsupported protocol encountered during web crawling.
@@ -339,7 +361,8 @@ case class WebCrawlerURLException(url: String, cause: Throwable) extends Excepti
  *
  * @param w the unsupported protocol.
  */
-case class WebCrawlerProtocolException(w: String) extends Exception(s"Web Crawler does not support protocol: $w")
+case class WebCrawlerProtocolException(w: String) extends
+        Exception(s"Web Crawler does not support protocol: $w")
 
 /**
  * A custom exception class for handling unsupported file types in a web crawler.
@@ -350,7 +373,8 @@ case class WebCrawlerProtocolException(w: String) extends Exception(s"Web Crawle
  *
  * @param w the unsupported file extension that caused this exception.
  */
-case class WebCrawlerFileTypeException(w: String) extends Exception(s"Web Crawler does not support extension: $w")
+case class WebCrawlerFileTypeException(w: String) extends
+        Exception(s"Web Crawler does not support extension: $w")
 
 /**
  * A custom exception class used specifically for errors occurring within the web crawler application.
@@ -358,7 +382,8 @@ case class WebCrawlerFileTypeException(w: String) extends Exception(s"Web Crawle
  * @param msg   the error message describing the cause of the exception.
  * @param cause the underlying throwable that caused this exception (optional).
  */
-case class WebCrawlerException(msg: String, cause: Throwable) extends Exception(msg, cause)
+case class WebCrawlerException(msg: String, cause: Throwable) extends
+        Exception(msg, cause)
 
 /**
  * An object that provides utilities for creating instances of the WebCrawlerException class.
@@ -401,7 +426,8 @@ case class Unstring(n: Int) extends CharSequence {
    * @return the character at the specified index of this sequence.
    * @throws UnstringException if the index is invalid or the operation is not supported.
    */
-  def charAt(index: Int): Char = throw UnstringException(s"charAt: $index")
+  def charAt(index: Int): Char =
+    throw UnstringException(s"charAt: $index")
 
   /**
    * Returns a subsequence of this character sequence, starting at the specified start index and ending at the specified end index.
@@ -412,7 +438,8 @@ case class Unstring(n: Int) extends CharSequence {
    * @return this method never successfully returns; it always throws an `UnstringException`.
    * @throws UnstringException always thrown when this method is invoked.
    */
-  def subSequence(start: Int, end: Int): CharSequence = throw UnstringException(s"subSequence: $start, $end")
+  def subSequence(start: Int, end: Int): CharSequence =
+    throw UnstringException(s"subSequence: $start, $end")
 }
 
 /**
@@ -425,10 +452,12 @@ case class Unstring(n: Int) extends CharSequence {
  */
 case class UnstringException(str: String) extends Exception(str)
 
-object Junk extends App {
+@main def junk(): Unit = {
+
   import scala.concurrent.ExecutionContext.Implicits.global
+
   val f1 = Future(1)
-  val f12= Future(2)
-  val f = f1.zip(f12)
-  Future.sequence(Seq(f1,f12))
+  val f2 = Future(2)
+  val result: Future[Seq[Int]] = Future.sequence(Seq(f1, f2))
+  Await.result(result, Duration.Inf).foreach(println)
 }

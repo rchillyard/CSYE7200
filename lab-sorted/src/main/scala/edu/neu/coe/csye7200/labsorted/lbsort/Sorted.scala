@@ -54,7 +54,7 @@ object Sorted {
 
 }
 
-object Test extends App {
+@main def doTest(): Unit = {
 
   case class Composite(i: Int, d: Double)
 

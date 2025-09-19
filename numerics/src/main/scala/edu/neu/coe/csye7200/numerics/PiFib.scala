@@ -25,7 +25,7 @@ object FibonacciPi {
   }
 }
 
-object PiFib extends App {
+@main def PiFib(): Unit = {
   println(s"pi by Fibonacci: ${FibonacciPi.piBy4(20000) * 4}")
   println(s"pi to 30 places: 3.141592653589793238462643383280")
 }

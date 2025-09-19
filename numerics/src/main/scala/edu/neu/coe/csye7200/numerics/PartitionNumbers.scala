@@ -6,7 +6,7 @@ package edu.neu.coe.csye7200.numerics
  *
  * See also https://youtu.be/iJ8pnCO0nTY
  */
-object PartitionNumbers extends App {
+@main def PartitionNumbers(): Unit = {
 
   implicit class LazyListOps[X](xs: LazyList[X]) {
     def alternatingWith(ys: LazyList[X]): LazyList[X] = (xs zip ys) flatMap { case (a, b) => LazyList(a, b) }

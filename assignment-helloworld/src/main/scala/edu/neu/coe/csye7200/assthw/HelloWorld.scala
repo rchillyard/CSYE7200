@@ -1,5 +1,7 @@
 package edu.neu.coe.csye7200.assthw
 
+import edu.neu.coe.csye7200.assthw.HelloWorld.greeting
+
 /**
   * Created by scalaprof on 8/25/16.
   *
@@ -9,8 +11,10 @@ package edu.neu.coe.csye7200.assthw
   * Your submission should be the screenshot of
   * running HelloWorldSpec and pass the test.
   */
-object HelloWorld extends App {
-  def greeting = "Hello World!"
-
+@main def greetHelloWorld(): Unit = {
   println(greeting)
+}
+
+object HelloWorld {
+  val greeting = "Hello World!"
 }

@@ -21,7 +21,7 @@ class Ingest[T: Ingestible] extends (Source => Iterator[T]) {
 
 case class Movie(properties: Seq[String])
 
-object Ingest extends App {
+@main def ingestMovies(args: String*): Unit = {
 
   trait IngestibleMovie extends Ingestible[Movie] {
     def fromStrings(ws: Seq[String]): Movie = Movie.apply(ws)

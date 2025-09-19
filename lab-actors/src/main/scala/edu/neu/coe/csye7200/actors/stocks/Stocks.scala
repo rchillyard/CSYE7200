@@ -5,11 +5,20 @@ import akka.actor.typed.{ActorRef, ActorSystem, Behavior}
 import akka.util.Timeout
 import edu.neu.coe.csye7200.actors.stocks.Bank.{CreatePortfolio, PortfolioCreated}
 import edu.neu.coe.csye7200.actors.stocks.PortfolioActor.{Buy, PortfolioCommand}
+import edu.neu.coe.csye7200.actors.stocks.Stocks.Start
 import java.util.UUID
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.util.{Failure, Success}
 
-object Stocks extends App {
+@main def showStocks(): Unit = {
+
+  val system: ActorSystem[Stocks.Start] = ActorSystem(Stocks(), "Stocks")
+  system ! Start("Alice")
+  system ! Start("Bob")
+  Behaviors.same
+}
+
+object Stocks {
 
   final case class Start(clientName: String)
 
@@ -26,11 +35,6 @@ object Stocks extends App {
         Behaviors.same
       }
     }
-
-    val system: ActorSystem[Stocks.Start] = ActorSystem(Stocks(), "Stocks")
-    system ! Start("Alice")
-    system ! Start("Bob")
-    Behaviors.same
 }
 
 object BankClientUsingTheAskPattern {

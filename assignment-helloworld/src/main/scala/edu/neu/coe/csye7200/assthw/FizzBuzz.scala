@@ -1,11 +1,24 @@
 package edu.neu.coe.csye7200.assthw
 
+import edu.neu.coe.csye7200.assthw.FizzBuzz.fizzBuzz
+
+/**
+ * Executes the FizzBuzz logic for integers from 1 to 100, printing the results to standard output.
+ * Numbers divisible by 3 are substituted with "Fizz", divisible by 5 with "Buzz", and divisible by both with "FizzBuzz".
+ *
+ * @return Unit as the primary purpose of this method is to produce output.
+ */
+@main def fizzBuzzMain(): Unit = {
+  val strings = for (x <- 1 to 100) yield fizzBuzz(x)
+  println(strings mkString("", "\n", ""))
+}
+
 /**
  * An implementation of FizzBuzz that uses pattern-matching rather than (redundant) if clauses.
  *
  * This method uses a rather advance pattern-matching trick: declaring our own unapply method for Factor.
  */
-object FizzBuzz extends App:
+object FizzBuzz:
   /**
    * Implements the FizzBuzz logic for a given integer, returning "Fizz" if divisible by 3,
    * "Buzz" if divisible by 5, "FizzBuzz" if divisible by both, or the number as a string otherwise.
@@ -24,9 +37,6 @@ object FizzBuzz extends App:
       case dividesBy5(_) => "Buzz"
       case _ => x.toString
     }
-
-  private val strings = for (x <- 1 to 100) yield fizzBuzz(x)
-  println(strings mkString("", "\n", ""))
 
 /**
  * Case class to model the concept of factors.

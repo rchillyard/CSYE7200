@@ -1,5 +1,6 @@
 package edu.neu.coe.csye7200.assthw
 
+import edu.neu.coe.csye7200.assthw.MergeSort.doMain
 import scala.annotation.tailrec
 
 /**
@@ -13,13 +14,16 @@ import scala.annotation.tailrec
 class MergeSortLazy[X: Ordering] {
 
     def sort(xs: List[X]): List[X] = xs match {
-        case Nil | _ :: Nil => xs
+        case Nil | _ :: Nil =>
+          xs
         case _ =>
             @tailrec
             def merge(result: List[X], l: List[X], r: List[X]): List[X] =
                 (l, r) match {
-                    case (Nil, _) => result.reverse ++ r // NOTE: necessary to reverse result.
-                    case (_, Nil) => result.reverse ++ l // NOTE: necessary to reverse result.
+                    case (Nil, _) =>
+                      result.reverse ++ r // NOTE: necessary to reverse result.
+                    case (_, Nil) =>
+                      result.reverse ++ l // NOTE: necessary to reverse result.
                     case (h1 :: t1, h2 :: t2) =>
                         if (implicitly[Ordering[X]].compare(h1, h2) <= 0)
                             merge(h1 :: result, t1, r) // NOTE: fast but result will be backwards
@@ -33,13 +37,17 @@ class MergeSortLazy[X: Ordering] {
     }
 }
 
-object MergeSortLazy extends App {
+object MergeSortLazy {
 
-    def doMain(n: Int): Seq[Int] = {
-        val sorter = new MergeSortLazy[Int]
-        val list = (1 to n).toList.reverse
-        sorter.sort(list)
-    }
+  def doMain(n: Int): Seq[Int] = {
+    val sorter = new MergeSortLazy[Int]
+    val list = (1 to n).toList.reverse
+    sorter.sort(list)
+  }
 
-//    println(doMain(100000))
+}
+
+@main def lazyMergeSort(): Unit = {
+
+  println(doMain(100000))
 }

@@ -1,9 +1,6 @@
 package edu.neu.coe.csye7200.labactors.ticketagency
 
-import akka.actor.typed.ActorRef
-import akka.actor.typed.ActorSystem
-import akka.actor.typed.Behavior
-import akka.actor.typed.scaladsl.AskPattern.Askable
+import akka.actor.typed.{ActorRef, Behavior}
 import akka.actor.typed.scaladsl.Behaviors
 
 case class Clients(id: Long, card: CreditCard)
@@ -89,7 +86,7 @@ object TicketAgency {
 //#greeter-main
 
 //#main-class
-//object MainProgram extends App {
+//object MainProgram {
 //  //#actor-system
 //  val agency: ActorSystem[TicketAgency.Release] = ActorSystem(TicketAgency(), "TicketAgency")
 //  //#actor-system

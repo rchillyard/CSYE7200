@@ -100,23 +100,22 @@ object Movie extends App {
 
   //Hint: You may refer to the slides discussed in class for how to serialize object to json
   object MoviesProtocol extends DefaultJsonProtocol {
-    // 20 points
-    // TO BE IMPLEMENTED 
-    // END SOLUTION
+    // TO BE IMPLEMENTED  (for 20 points)
+        ???
   }
 
   implicit object IngestibleMovie extends IngestibleMovie
 
   val ingester = new Ingest[Movie]()
-  if (args.length > 0) {
     implicit val codec: Codec = Codec.UTF8
-    val source = Source.fromFile(args.head)
-    val by = for (ms <- getMoviesFromCountry("New Zealand", ingester(source))) yield testSerializationAndDeserialization(ms)
+  val by = for {
+    source <- Try(Source.fromFile("assignment-functional-composition/src/main/resources/edu/neu/coe/csye7200/asstfc/movie_metadata.csv"))
+    movies <- getMoviesFromCountry("New Zealand", ingester(source))
+    _ = source.close()
+  } yield testSerializationAndDeserialization(movies)
     by match {
       case Success(true) => println("round trip works OK!")
       case _ => println("failure")
-    }
-    source.close()
   }
 
   //Hint: Serialize the input to Json format and deserialize back to Object, check the result is still equal to original input.

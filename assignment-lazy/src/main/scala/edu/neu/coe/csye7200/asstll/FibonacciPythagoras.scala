@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200.asstll
 
-import edu.neu.coe.csye7200.asstll.FibonacciPythagoras._
+import edu.neu.coe.csye7200.asstll.FibonacciPythagoras.*
 import edu.neu.coe.csye7200.asstll.LazyListUtils.{iterateBFS, render}
 
 /**
@@ -24,11 +24,10 @@ object FibonacciPythagoras {
 
 }
 
-trait Renderable {
+trait Renderable:
   def render: String
-}
 
-case class FibSquare(u: BigInt, v: BigInt) extends Renderable {
+case class FibSquare(u: BigInt, v: BigInt) extends Renderable: 
 
   require(v.compare(u) > 0 && v.gcd(u) == BigOne && u.compare(BigZero) > 0 && u.mod(BigTwo) != v.mod(BigTwo), s"Invalid u, v: $u, $v")
 
@@ -54,24 +53,20 @@ case class FibSquare(u: BigInt, v: BigInt) extends Renderable {
   lazy val pythagorasList: LazyList[FibSquare] = LazyList.iterate(this)(_.pythagoras)
 
   def render: String = s"[$pre,$u,$v,$post]"
-}
 
-object FibSquare {
+
+object FibSquare:
   def apply(x: Int, y: Int): FibSquare = new FibSquare(BigInt(x), BigInt(y))
-}
 
-case class PyTriple(x: BigInt, y: BigInt, z: BigInt) extends Renderable {
-
+case class PyTriple(x: BigInt, y: BigInt, z: BigInt) extends Renderable:
   require(square(x) + square(y) == square(z), s"Not a Pythagorean triple: $x, $y, $z")
 
   def render: String = s"{$x,$y,$z}"
-}
 
-case class RationalPair(p: Rational, q: Rational) extends Renderable {
+case class RationalPair(p: Rational, q: Rational) extends Renderable:
   def render: String = s"($p, $q)"
-}
 
-case class Rational(n: BigInt, d: BigInt) {
+case class Rational(n: BigInt, d: BigInt):
   def +(r: Rational): Rational = Rational.apply(n * r.d + r.n * d, d * r.d)
 
   def *(r: Rational): Rational = Rational.apply(n * r.n, d * r.d)
@@ -80,36 +75,29 @@ case class Rational(n: BigInt, d: BigInt) {
     case BigOne => n.toString
     case _ => s"$n/$d"
   }
-}
 
-object Rational {
-
+object Rational:
   def apply(n: BigInt): Rational = apply(n, BigOne)
 
-  def apply(n: BigInt, d: BigInt): Rational = {
+  def apply(n: BigInt, d: BigInt): Rational =
     val f = n.gcd(d)
     new Rational(n / f, d / f)
-  }
-}
 
-object LazyListUtils {
-
+object LazyListUtils:
   def render[X <: Renderable](xs: LazyList[X], n: Int): Seq[String] = xs take n to List map (_.render)
 
-  def iterateDFS[X](start: X)(f: X => LazyList[X]): LazyList[X] = {
-    val head: X = start
-    head #:: (for {x <- f(head); y <- iterateDFS(x)(f)} yield y)
-  }
+  def iterateDFS[A](root: A)(children: A => LazyList[A]): LazyList[A] =
+    root #:: children(root).flatMap(iterateDFS(_)(children))
 
+  // ... existing code ...
   def iterateBFS[X](start: LazyList[X])(f: X => LazyList[X]): LazyList[X] = {
     val xs: LazyList[X] = start flatMap f
 
     start #::: iterateBFS(xs)(f)
   }
-}
 
-object ShowTrees extends App {
-  private def makeString(xs: Seq[String]): String = xs mkString ", "
+@main def showTrees(): Unit = {
+  def makeString(xs: Seq[String]): String = xs mkString ", "
 
   val length = 40
 

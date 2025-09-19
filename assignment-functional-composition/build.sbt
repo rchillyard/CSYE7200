@@ -2,7 +2,9 @@ name := "FunctionalComposition"
 
 version := "1.0"
 
-Compile / doc / scalacOptions ++= Seq("-Vimplicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
+// Using scalaVersion "2.13" (if you want to change it, go to build.sbt at the root of the project)
+
+Compile / doc / scalacOptions ++= Seq("-implicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test"
 

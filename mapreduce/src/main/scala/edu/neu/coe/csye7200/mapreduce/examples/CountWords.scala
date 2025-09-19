@@ -4,19 +4,21 @@ import akka.actor.{ActorSystem, Props}
 import akka.pattern.ask
 import akka.util.Timeout
 import com.typesafe.config.ConfigFactory
-import edu.neu.coe.csye7200.mapreduce._
-
+import edu.neu.coe.csye7200.mapreduce.*
+import edu.neu.coe.csye7200.mapreduce.examples.CountWords.getMockContent
 import java.net.URI
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.language.postfixOps
-import scala.util._
+import scala.util.*
 
 /**
-  * @author scalaprof
+ * NOTE this is not currently working.
+ *
+ * @author scalaprof
   */
-object CountWords extends App {
+@main def doCountWords(args: String*): Unit = {
   val config = ConfigFactory.load()
-  private implicit val system: ActorSystem = ActorSystem("CountWords")
+  implicit val system: ActorSystem = ActorSystem("CountWords")
   implicit val timeout: Timeout = Timeout(10 seconds)
 
   import system.dispatcher
@@ -37,7 +39,7 @@ object CountWords extends App {
   val master1 = system.actorOf(props1, s"WC-1-mstr")
   val props2 = Props.create(classOf[Master[URI, Seq[String], URI, Int, Int]], config, mapper2 _, adder _)
   val master2 = system.actorOf(props2, s"WC-2-mstr")
-  val ws = if (args.length > 0) args.toSeq else Seq("http://www.bbc.com/doc1", "http://www.cnn.com/doc2", "http://default/doc3", "http://www.bbc.com/doc2", "http://www.bbc.com/doc3")
+  val ws = if (args.nonEmpty) args.toSeq else Seq("http://www.bbc.com/doc1", "http://www.cnn.com/doc2", "http://default/doc3", "http://www.bbc.com/doc2", "http://www.bbc.com/doc3")
   val wsUrf = master1.ask(ws).mapTo[Response[URI, Seq[String]]]
   val iUrf = for (wsUr <- wsUrf; iUr <- master2.ask(wsUr.right).mapTo[Response[URI, Int]]) yield iUr
   iUrf.onComplete {
@@ -49,6 +51,11 @@ object CountWords extends App {
       system.terminate()
     case Failure(x) => Console.err.println(s"Map/reduce error: ${x.getLocalizedMessage}"); system.terminate()
   }
+
+}
+
+object CountWords {
+
   // there are 556 words in total between the three extracts
   val bbcText =
     """The US military has delivered more than 45 tonnes of ammunition to rebels fighting the jihadist group Islamic State (IS) in north-eastern Syria.
@@ -74,7 +81,7 @@ The Russian intervention in the four-year Syrian war has caught U.S. President B
 DANGEROUS CONSEQUENCES
 Russian President Vladimir Putin was rebuffed in his bid to gain support for his country's bombing campaign, with Saudi sources saying they had warned the Kremlin leader of dangerous consequences and Europe issuing its strongest criticism yet."""
 
-  def getMockContent(u: URI) = {
+  def getMockContent(u: URI): String = {
     u.getHost match {
       case "www.bbc.com" => bbcText
       case "www.cnn.com" => cnnText
@@ -86,7 +93,7 @@ Russian President Vladimir Putin was rebuffed in his bid to gain support for his
 case class MockURI(url: String) {
   def get: URI = new URI(url)
 
-  def content: String = CountWords.getMockContent(get)
+  def content: String = getMockContent(get)
 
   def getServer: URI = new URI(get.getHost)
 }

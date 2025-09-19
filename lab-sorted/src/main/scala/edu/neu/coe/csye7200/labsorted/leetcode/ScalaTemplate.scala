@@ -1,5 +1,6 @@
 package edu.neu.coe.csye7200.labsorted.leetcode
 
+import edu.neu.coe.csye7200.labsorted.leetcode.ScalaTemplate.shouldBe
 import edu.neu.coe.csye7200.labsorted.leetcode.Solution.solve
 
 /**
@@ -35,7 +36,7 @@ object Solution {
 
     // The following are (optional) assertions that the solver wants to assert before returning the result.
 //    import edu.neu.coe.csye7200.labsorted.leetcode.ScalaTemplate.TestableInt
-    import edu.neu.coe.csye7200.labsorted.leetcode.ScalaTemplate.*
+        import edu.neu.coe.csye7200.labsorted.leetcode.ScalaTemplate.*
     noMeetings.totalRooms shouldBe 0
     justLunchMeeting.totalRooms shouldBe 1
     scumeAndLunch.totalRooms shouldBe 2
@@ -49,6 +50,24 @@ object Solution {
     // This is where the solver returns the result that will be checked by the ScalaTemplate.
     List(leetCodeMeetings1.totalRooms.toString, leetCodeMeetings2.totalRooms.toString)
   }
+}
+
+@main def run(): Unit = {
+
+// NOTE the code here should basically remain unchanged.
+// The only thing here is that we have hardcode the input instead of getting it from args.
+// The real ScalaTemplate will get the input from args.
+  println("Hello, world!")
+
+  // NOTE: normally, we would just read the input strings from the command line (and those show up as an array of Strings called args, exactly like in Java).
+//  val input: Seq[String] = args to List
+// NOTE: Instead, we will just hard-code the list of Strings for illustration purposes.
+  val input: List[String] = List("05:00 - 08:00", "06:00 - 08:00", "09:00 - 10:00", "04:00 - 09:00", "04:00 - 17:00")
+  val actual: List[String] = solve(input)
+// NOTE: this line is also obviously problem-specific
+  actual shouldBe List("2", "2")
+
+  println("Test completed")
 }
 
 /**
@@ -67,26 +86,11 @@ object Solution {
  *
  * The focus is on validating the logic present in the `solve` function, which computes the required results based on meeting schedules.
  */
-object ScalaTemplate extends App {
+object ScalaTemplate {
 
-  // NOTE the code here should basically remain unchanged.
-  // The only thing here is that we have hardcode the input instead of getting it from args.
-  // The real ScalaTemplate will get the input from args.
-  println("Hello, world!")
-
-  // NOTE: normally, we would just read the input strings from the command line (and those show up as an array of Strings called args, exactly like in Java).
-//  val input: Seq[String] = args to List
-  // NOTE: Instead, we will just hard-code the list of Strings for illustration purposes.
-  val input: List[String] = List("05:00 - 08:00", "06:00 - 08:00", "09:00 - 10:00", "04:00 - 09:00", "04:00 - 17:00")
-  val actual: List[String] = solve(input)
-  // NOTE: this line is also obviously problem-specific
-  actual shouldBe List("2", "2")
-  
-  println("Test completed")
-
-  extension (actual: Int)
+  extension (actual: Int) 
     def shouldBe(expected: Int): Unit = if (actual != expected) System.err.println(s"$actual should be $expected")
-
+  
   extension (actual: String) {
     def shouldBe(expected: String): Unit = if (actual != expected) System.err.println(s"$actual should be $expected")
   }

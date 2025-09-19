@@ -122,13 +122,4 @@ object Number {
     // TODO sort out the info message here...
     ys.reverse.toList
   }
-
-}
-
-
-/**
-  * This problem is one of LeetCode's Algorithm problems (Medium): https://leetcode.com/problems/add-two-numbers/
-  */
-object AddTwoNumbers extends App {
-
 }

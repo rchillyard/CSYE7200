@@ -149,7 +149,7 @@ object Element {
   }
 }
 
-object BenchmarkBubbleSort extends App {
+@main def doBenchmarkBubbleSort(): Unit = {
 
   val random = new Random()
 
@@ -158,8 +158,8 @@ object BenchmarkBubbleSort extends App {
 
 
     val result: Seq[Int] = BubbleSort.sort(xs)
-//    println(result)
+    println(result)
   }
 
-  doSort(100000)
+  doSort(100)
 }

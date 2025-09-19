@@ -134,6 +134,6 @@ object Prime {
   private def mersenneNumber(p: Prime): BigInt = BigInt(2).pow(p.x.toInt) - 1
 }
 
-object Eratosthenes extends App {
+@main def Eratosthenes(): Unit = {
   println(primes take 100 to List)
 }

@@ -14,8 +14,7 @@ lazy val asstfc = (project in file("assignment-functional-composition")).setting
 
 lazy val assthw = project in file("assignment-helloworld")
 
-lazy val assthw2 = (project in file("assignment-helloworld-2")).settings(
-  scalaVersion := scalaVersion2_12)
+lazy val assthw2 = project in file("assignment-helloworld-2")
 
 lazy val asstll = project in file("assignment-lazy")
 

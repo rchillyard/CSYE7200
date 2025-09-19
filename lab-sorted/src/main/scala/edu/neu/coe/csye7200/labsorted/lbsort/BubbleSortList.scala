@@ -34,7 +34,7 @@ object BubbleSortList {
 }
 
 
-object BenchmarkBubbleSortList extends App {
+@main def doBenchmarkBubbleSortList(): Unit = {
 
   val random = new Random()
 
@@ -43,7 +43,7 @@ object BenchmarkBubbleSortList extends App {
 
 
     val result: List[Int] = BubbleSortList.sort(xs)
-//    println(result)
+    println(result)
   }
 
   doSort(1000) // We can easily do 100000 here but it uses up a lot of space in the output

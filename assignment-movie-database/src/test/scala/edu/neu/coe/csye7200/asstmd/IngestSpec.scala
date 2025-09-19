@@ -3,7 +3,7 @@ package edu.neu.coe.csye7200.asstmd
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import scala.io.{Codec, Source}
-import scala.util._
+import scala.util.*
 
 /**
   * Created by scalaprof on 9/13/16.
@@ -13,10 +13,10 @@ class IngestSpec extends AnyFlatSpec with Matchers {
   behavior of "ingest"
 
   it should "work for Int" in {
-    trait ParsableInt$ extends Parsable[Int] {
+    given Parsable[Int] with {
       def parse(w: String): Try[Int] = Try(w.toInt)
     }
-    implicit object ParsableInt$ extends ParsableInt$
+
     val source = Source.fromChars(Array('x', '\n', '4', '2'))
     val ingester = new Ingest[Int]()
     val xys = ingester(source).toSeq
@@ -26,7 +26,7 @@ class IngestSpec extends AnyFlatSpec with Matchers {
   }
 
   it should "work for movie database" in {
-    implicit val codec: Codec = Codec("UTF-8")
+    given codec: Codec = Codec("UTF-8")
     // NOTE that you expect to see a number of exceptions thrown. That's OK. We expect that some lines will not parse correctly.
     val msy = Using(Source.fromResource("movie_metadata.csv")){
       source =>

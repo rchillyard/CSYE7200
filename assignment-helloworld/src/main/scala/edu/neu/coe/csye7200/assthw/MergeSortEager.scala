@@ -26,7 +26,7 @@ class MergeSortEager[X: Ordering] {
     }
 }
 
-object MergeSortEager extends App {
+@main def doMergeSortEager(): Unit = {
 
     def doMain(n: Int): Seq[Int] = {
         val sorter = new MergeSortEager[Int]

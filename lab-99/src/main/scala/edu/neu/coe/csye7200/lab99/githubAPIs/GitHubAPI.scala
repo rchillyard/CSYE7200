@@ -1,5 +1,6 @@
 package edu.neu.coe.csye7200.lab99.githubAPIs
 
+import edu.neu.coe.csye7200.lab99.githubAPIs.GitHubAPI.{invokeAPI, showException}
 import edu.neu.coe.csye7200.lab99.githubAPIs.Tries.{tryEquals, tryNotEquals}
 import requests.Response
 import scala.annotation.unused
@@ -7,12 +8,29 @@ import scala.collection.mutable
 import scala.util.{Failure, Success, Try}
 import ujson.Value
 
-object GitHubAPI extends App {
+/**
+ * Main method to execute the GitHub API flow.
+ * Reads a GitHub access token from a local file named `github_token.txt` located in the user's home directory
+ * and invokes the API or handles any exceptions encountered during the token retrieval process.
+ *
+ * NOTE this currently gives no output. I'm not sure if that's correct or not.
+ *
+ * @return Unit as the method is used for its side effects, such as reading the token, invoking the GitHub API, and printing results or exceptions.
+ */
+@main def runGitHubAPI(): Unit = {
 
   // reading the github token stored in a file called github_token.txt in the user's home directory
   Try(os.read(os.home / "github_token.txt")).transform(token => invokeAPI(token.trim), ex => showException(ex))
+}
 
-  private def invokeAPI(token: String) = {
+/**
+ * A utility object for interacting with the GitHub API. Provides methods for
+ * managing issues, fetching paginated data, and parsing responses from the
+ * GitHub API.
+ */
+object GitHubAPI {
+
+  def invokeAPI(token: String): Success[Unit] = {
     // Just a test to see lihaoyi's first issue
     val resp1: Response = postIssue(token)
     print(resp1)
@@ -119,7 +137,7 @@ object GitHubAPI extends App {
     headers = Map("Authorization" -> s"token $token")
   )
 
-  private def showException(ex: Throwable) = {
+  def showException(ex: Throwable) = {
     println(ex)
     Success(())
   }
