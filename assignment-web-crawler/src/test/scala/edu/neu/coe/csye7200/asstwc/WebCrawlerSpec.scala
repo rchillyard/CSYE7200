@@ -51,7 +51,7 @@ class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with 
 
     behavior of "acquireAll(Seq[URL])"
     it should s"succeed for $goodURL, https://www.google.com/" taggedAs Slow in {
-        implicit val URLordering: Ordering[URL] = (x: URL, y: URL) => x.getPath.compare(y.getPath)
+        given URLordering: Ordering[URL] = (x: URL, y: URL) => x.getPath.compare(y.getPath)
         val ws = List(goodURL, "https://www.google.com/")
         val uys = for (w <- ws) yield Try(new URL(w))
         val usesfy: Try[Future[Seq[URL]]] = for {us <- FP.sequence(uys)} yield Crawler.acquireAll(us)(WebCrawler.fetchAndParseLinks) {
@@ -65,7 +65,7 @@ class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with 
     }
 
     it should s"succeed for $goodURL" taggedAs Slow in {
-        implicit val URLordering: Ordering[URL] = (x: URL, y: URL) => x.getPath.compare(y.getPath)
+        given URLordering: Ordering[URL] = (x: URL, y: URL) => x.getPath.compare(y.getPath)
         val ws = List(goodURL)
         val uys = for (w <- ws) yield Try(new URL(w))
         val usesfy: Try[Future[Seq[URL]]] = for {us <- FP.sequence(uys)} yield Crawler.acquireAll(us)(WebCrawler.fetchAndParseLinks)(logException)
@@ -82,7 +82,7 @@ class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with 
 
     behavior of "filterAndFlatten"
     it should "work" taggedAs Slow in {
-        implicit val URLordering: Ordering[URL] = (x: URL, y: URL) => x.getPath.compare(y.getPath)
+        given URLordering: Ordering[URL] = (x: URL, y: URL) => x.getPath.compare(y.getPath)
         val ws = List(goodURL)
         val uys = for (w <- ws) yield Try(new URL(w))
         FP.sequence(uys) match {

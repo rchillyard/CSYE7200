@@ -1,8 +1,7 @@
-name := "LabParser"
+name := s"""LabParser (Scala ${scalaVersion.value})"""
+// Using scalaVersion "2.12" (if you want to change it, go to build.sbt at the root of the project)
 
 version := "1.0"
-
-// Using scalaVersion "2.12" (if you want to change it, go to build.sbt at the root of the project)
 
 Compile / doc / scalacOptions ++= Seq("-Vimplicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
 

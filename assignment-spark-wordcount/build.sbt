@@ -1,7 +1,7 @@
-name := "assignment-spark-wordcount"
-version := "1.0"
-
+name := s"""Spark Word Count (Scala ${scalaVersion.value})"""
 // Using scalaVersion "2.12" (if you want to change it, go to build.sbt at the root of the project)
+
+version := "1.0"
 
 // Spark 3.5.x pairs well with Scala 2.12.x and JDK 17
 scalaVersion := "2.12.18"

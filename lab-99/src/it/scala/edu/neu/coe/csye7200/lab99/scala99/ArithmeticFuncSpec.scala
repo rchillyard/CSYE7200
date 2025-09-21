@@ -4,12 +4,13 @@
 
 package edu.neu.coe.csye7200.lab99.scala99
 
+import edu.neu.coe.csye7200.lab99.scala99.Arithmetic.{gcd, listPrimesInRange}
 import org.scalatest.flatspec
 import org.scalatest.matchers.should
 
 class ArithmeticFuncSpec extends flatspec.AnyFlatSpec with should.Matchers {
 
-  import Arithmetic._
+  import Arithmetic.given 
 
   behavior of "P31"
   it should "get true for 7" in {

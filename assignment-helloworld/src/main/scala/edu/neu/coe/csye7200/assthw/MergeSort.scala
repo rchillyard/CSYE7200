@@ -5,7 +5,8 @@ import scala.annotation.tailrec
 import scala.collection.mutable.Queue
 import scala.util.{Failure, Success, Try}
 
-@main def runMergeSort(): Unit = println(MergeSort.doMain(100000))
+@main 
+def runMergeSort(): Unit = println(MergeSort.doMain(100000))
 
 /**
  * This is the most elegant version of MergeSort.
@@ -76,8 +77,10 @@ object MergeSort {
     val sorter = new MergeSort[Int]
     val list = (1 to n).toList.reverse
     sorter.sort(list) match {
-      case Success(result) => result
-      case Failure(e) => throw e
+      case Success(result) => 
+        result
+      case Failure(e) => 
+        throw e
     }
   }
 }
@@ -94,7 +97,7 @@ object MergeSort {
  *                 This class is primarily used to compare elements of two lists and provides
  *                 structural equality for easy manipulation and comparison of lists.
  */
-case class CompareLists[X](left: List[X], right: List[X])(implicit val ordering: Ordering[X])
+case class CompareLists[X](left: List[X], right: List[X])(using val ordering: Ordering[X])
 
 /**
  * Companion object for the `CompareLists` case class. Provides a custom extractor pattern
@@ -146,8 +149,11 @@ object OneList {
    *         or `None` if both lists are non-empty
    */
   def unapply[X](cl: OneList[X]): Option[List[X]] = (cl.left,cl.right) match {
-    case (_, Nil) => Some(cl.left)
-    case (Nil, _) => Some(cl.right)
-    case _ => None
+    case (_, Nil) => 
+      Some(cl.left)
+    case (Nil, _) => 
+      Some(cl.right)
+    case _ => 
+      None
   }
 }

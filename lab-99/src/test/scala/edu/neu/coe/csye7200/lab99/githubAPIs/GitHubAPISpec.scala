@@ -7,9 +7,9 @@ import scala.util.{Success, Try}
 
 class GitHubAPISpec extends AnyFlatSpec with should.Matchers {
 
-  implicit val UserRW: upickle.default.ReadWriter[User] = upickle.default.macroRW[User]
-  implicit val PullRequestRW: upickle.default.ReadWriter[PullRequest] = upickle.default.macroRW[PullRequest]
-  implicit val IssueDataRW: upickle.default.ReadWriter[IssueData] = upickle.default.macroRW[IssueData]
+  given UserRW: upickle.default.ReadWriter[User] = upickle.default.macroRW[User]
+  given PullRequestRW: upickle.default.ReadWriter[PullRequest] = upickle.default.macroRW[PullRequest]
+  given IssueDataRW: upickle.default.ReadWriter[IssueData] = upickle.default.macroRW[IssueData]
 
   behavior of "GitHubAPI"
 

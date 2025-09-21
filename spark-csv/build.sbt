@@ -1,8 +1,7 @@
-name := """SparkCsv"""
+name := s"""SparkCsv (Scala ${scalaVersion.value})"""
+// Using scalaVersion "2.13" (if you want to change it, go to build.sbt at the root of the project)
 
 version := "1.0"
-
-// Using scalaVersion "2.13" (if you want to change it, go to build.sbt at the root of the project)
 
 Compile / doc / scalacOptions ++= Seq("-groups", "-implicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused" )
 

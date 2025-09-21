@@ -1,13 +1,13 @@
 package edu.neu.coe.csye7200.asstwc.fp
 
-import edu.neu.coe.csye7200.asstwc.fp.QueueOps.RichQueue
+import edu.neu.coe.csye7200.asstwc.fp.QueueOps.dequeueN
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 import scala.collection.immutable.Queue
 
 class QueueOpsSpec extends AnyFlatSpec with should.Matchers {
 
-    behavior of "RichQueue"
+    behavior of "QueueOps"
 
     it should "dequeueN(1) empty" in {
         val queue = Queue()

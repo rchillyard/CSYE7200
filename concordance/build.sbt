@@ -1,8 +1,7 @@
-name := """Concordance"""
+name := s"""Concordance (Scala ${scalaVersion.value})"""
+// Using scalaVersion "2.13" (if you want to change it, go to build.sbt at the root of the project)
 
 version := "1.0"
-
-// Using scalaVersion "2.13" (if you want to change it, go to build.sbt at the root of the project)
 
 resolvers += "Typesafe Repository" at "https://repo.typesafe.com/typesafe/releases/"
 

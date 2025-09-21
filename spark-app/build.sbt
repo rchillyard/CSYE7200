@@ -1,8 +1,7 @@
-name := """SparkApp"""
+name := s"""SparkApp (Scala ${scalaVersion.value})"""
+// Using scalaVersion "2.12" (if you want to change it, go to build.sbt at the root of the project)
 
 version := "1.0"
-
-// Using scalaVersion "2.12" (if you want to change it, go to build.sbt at the root of the project)
 
 Compile / doc / scalacOptions ++= Seq("-implicits", "-deprecation")
 

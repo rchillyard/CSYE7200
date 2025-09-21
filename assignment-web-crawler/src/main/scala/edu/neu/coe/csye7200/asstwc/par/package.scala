@@ -2,6 +2,7 @@ package edu.neu.coe.csye7200.asstwc
 
 package object par {
 
+  // NOTE need to rewrite this as an extension method
   implicit class Rep(n: Int) {
     /**
      * Method which can be invoked, provided that Benchmark._ has been imported.

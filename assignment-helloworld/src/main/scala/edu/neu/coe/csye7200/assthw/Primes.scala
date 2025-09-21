@@ -2,78 +2,113 @@ package edu.neu.coe.csye7200.assthw
 
 import scala.language.implicitConversions
 
+/**
+ * Provides functionality related to prime numbers and their associated operations,
+ * including utilities for checking primality, generating primes, and arithmetic on `BigInt`.
+ */
 object Primes {
+
   /**
-   * Implicit class to allow easy BigInt operations on a Long.
-   *
-   * @param x a Long.
+   * Extension methods for the BigInt type to provide various utility functions related to primes and factors.
    */
-  implicit class MaybePrime(x: Long) {
-    private val bx = BigInt(x)
+  extension (x: BigInt) {
 
     /**
-     * Method to yield bx modulo that.
+     * Determines if the BigInt `that` is a factor of the current BigInt `x`.
      *
-     * @param that a BigInt.
-     * @return bx % that.
+     * @param that the potential factor to check, represented as a BigInt.
+     * @return true if `that` is a factor of `x`, otherwise false.
      */
-    def %(that: BigInt): BigInt = bx % that
+    def hasFactor(that: BigInt): Boolean =
+    // TO BE IMPLEMENTED 
+        ???
 
     /**
-     * Method to yield bx gcd that, i.e. get the greatest common divisor of bx and that.
+     * Determines if the given `BigInt` `that` divides the current `BigInt` `x` without a remainder.
      *
-     * @param that a BigInt.
-     * @return bx gcd that.
+     * @param that the divisor to check, represented as a `BigInt`.
+     * @return true if `that` divides `x` without a remainder, otherwise false.
      */
-    def gcd(that: BigInt): BigInt = bx gcd that
+    def divides(that: BigInt): Boolean = that hasFactor x
 
     /**
-     * Method to determine if bx has that as a factor.
+     * Identical to `divides`.
      *
-     * @param that a BigInt.
-     * @return true if that divides exactly into bx.
+     * @param other the potential other to check, represented as a `BigInt`.
+     * @return true if the given `BigInt` other is a other of the current `BigInt`, otherwise false.
      */
-    def hasFactor(that: BigInt): Boolean = {
-// TO BE IMPLEMENTED 
-???
-    }
+    def |:(other: BigInt): Boolean = divides(other)
 
     /**
-     * Method to determine if bx is coprime with (relatively prime to) that.
+     * Determines if the current `BigInt` and another `BigInt` are coprime.
+     * Two numbers are considered coprime if their greatest common divisor (GCD) is 1.
      *
-     * @param that a BigInt.
-     * @return true if bx and that are coprime.
+     * @param that the `BigInt` to check coprimality with the current `BigInt`.
+     * @return true if the two `BigInt` values are coprime, otherwise false.
      */
-    def coprime(that: BigInt): Boolean = {
-// TO BE IMPLEMENTED 
-            ???
-    }
-
-    def modPow(exp: BigInt, m: BigInt): BigInt = bx modPow(exp, m)
+    def coprime(that: BigInt): Boolean =
+    // TO BE IMPLEMENTED 
+        ???
 
     /**
-     * method to test if bx is a probable prime with confidence dependent on the certainty parameter.
+     * Checks whether `x`, the current `BigInt`, is congruent to `that`, another `BigInt`, modulo a specified modulus (`mod`).
+     * Two numbers `x` and `that` are congruent modulo `mod` if `(x - that) % mod == 0`.
      *
-     * @param certainty a certainty of n will yield a probability of error of approx 1 in 2 to the power of n.
-     * @return true if bx is probably prime.
+     * @param that the `BigInt` to check the congruence with.
+     * @param mod  the modulus for checking congruence, represented as a `BigInt`.
+     * @return true if the current `BigInt` is congruent to `that` modulo `mod`, otherwise false.
      */
-    def isProbablePrime(certainty: Int): Boolean = bx isProbablePrime certainty
+    def isCongruent(that: BigInt)(mod: BigInt): Boolean =
+      (x - that) hasFactor mod
 
     /**
-     * Method to determine if x is actually prime.
-     * Test whether isProbablePrime is true first (with a certainty of 20) and then check that no prime numbers
-     * smaller than sqrt(x) are factors.
-     * For the supply of primes to test, you should use primes.
+     * Identical to `isCongruent`.
      *
-     * @return true if x passes both tests.
+     * @param that the `BigInt` to check the congruence with.
+     * @param mod  the modulus for checking congruence, represented as a `BigInt`.
+     * @return true if the current `BigInt` is congruent to `that` modulo `mod`, otherwise false.
      */
-    lazy val isPrime: Boolean =
-// TO BE IMPLEMENTED 
-???
+    def ≡(that: BigInt)(mod: BigInt): Boolean =
+      isCongruent(that)(mod)
 
-    // NOTE: we leave this here for unit testing
-    lazy val hasNoFactorsSmallerThanRoot: Boolean = (primes takeWhile (x => x * x <= bx)).toList forall (y => !hasFactor(y))
-    /*END*/
+    /**
+     * Computes the modular exponentiation of a `BigInt`.
+     * Calculates `(x^exp) mod m`, where `x` is the current `BigInt` instance.
+     *
+     * @param exp the exponent to which `x` is raised, represented as a `BigInt`.
+     * @param m   the modulus under which the calculation is performed, represented as a `BigInt`.
+     * @return the result of `(x^exp) mod m`, as a `BigInt`.
+     */
+    def modPow(exp: BigInt, m: BigInt): BigInt = x modPow(exp, m)
+
+    /**
+     * Determines if the current `BigInt` is an even number.
+     *
+     * @return true if the `BigInt` is even, false otherwise.
+     */
+    def isEven: Boolean = x % 2 == 0
+
+    /**
+     * Method to determine if `x` is actually prime.
+     * First, we test if `x` is 2. If it is, then it is prime.
+     * Otherwise, we test that `x` is not even. If it is even, then it is not prime.
+     * Otherwise, we test whether `isProbablePrime` is true (with a certainty of 20). If it is not, then it is not prime.
+     * Otherwise, we check that no prime numbers smaller than sqrt(x) are factors.
+     *
+     * @return true if x is indeed prime, false otherwise.
+     */
+    def isPrime: Boolean =
+    // TO BE IMPLEMENTED 
+        ???
+
+    /**
+     * Determines if there are no prime factors of `x` smaller than or equal to the square root of `x`.
+     * It filters the list of primes up to the square root of `x`, then checks whether `x` has any of these as factors.
+     *
+     * @return true if there are no factors of `x` among primes smaller than or equal to the square root of `x`, otherwise false.
+     */
+    def hasNoFactorsSmallerThanSquareRootX: Boolean =
+      (primes takeWhile (y => y * y <= x)).toList forall (y => !x.hasFactor(y))
   }
 
   import LazyList.from
@@ -87,16 +122,16 @@ object Primes {
    * @return Some(prime) otherwise None.
    */
   def EulerPrime(n: Int): Option[BigInt] =
-// TO BE IMPLEMENTED 
+  // TO BE IMPLEMENTED 
     ???
 
   /**
-   * Create an infinitely long lazy list of Longs, that are prime numbers.
+   * Create an infinitely long lazy list of BigInts, that are prime numbers.
    * All primes are odd, except for the very first prime number (2).
    */
-  val primes: LazyList[Long] =
-// TO BE IMPLEMENTED 
-???
+  val primes: LazyList[BigInt] =
+  // TO BE IMPLEMENTED 
+    ???
 
   /**
    * Create a finite list of Option[BigInt], such that each element is the (successful) result of invoking EulerPrime
@@ -105,6 +140,6 @@ object Primes {
    * Do not include any results that are empty.
    */
   lazy val eulerPrimes: List[Option[BigInt]] =
-// TO BE IMPLEMENTED 
-???
+  // TO BE IMPLEMENTED 
+    ???
 }

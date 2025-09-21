@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200.asstwc.fp
 
-import edu.neu.coe.csye7200.asstwc.fp.QueueOps.RichQueue
+import edu.neu.coe.csye7200.asstwc.fp.QueueOps.{dequeueN, given}
 import scala.collection.immutable.{Queue, TreeSet}
 
 /**

@@ -18,8 +18,8 @@ import scala.util.*
   */
 @main def doCountWords(args: String*): Unit = {
   val config = ConfigFactory.load()
-  implicit val system: ActorSystem = ActorSystem("CountWords")
-  implicit val timeout: Timeout = Timeout(10 seconds)
+  given system: ActorSystem = ActorSystem("CountWords")
+  given timeout: Timeout = Timeout(10 seconds)
 
   import system.dispatcher
 

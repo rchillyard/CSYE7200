@@ -22,7 +22,7 @@ object FP {
    * @tparam X the underlying type.
    * @return a Future[X].
    */
-  def flatten[X](xyf: Future[Try[X]])(implicit ec: ExecutionContext): Future[X] = for (xy <- xyf; x <- asFuture(xy)) yield x
+  def flatten[X](xyf: Future[Try[X]])(using ec: ExecutionContext): Future[X] = for (xy <- xyf; x <- asFuture(xy)) yield x
 
   /**
    * Method to convert a Try of Future[X] into a Future[X].
@@ -46,7 +46,7 @@ object FP {
    * @tparam X the underlying type.
    * @return a Future of Seq[X].
    */
-  def flatten[X](xsfs: Seq[Future[Seq[X]]])(implicit ec: ExecutionContext): Future[Seq[X]] = Future.sequence(xsfs) map (_ flatten)
+  def flatten[X](xsfs: Seq[Future[Seq[X]]])(using ec: ExecutionContext): Future[Seq[X]] = Future.sequence(xsfs) map (_ flatten)
 
   /**
    * TESTME
@@ -160,7 +160,7 @@ object FP {
    * @tparam X the underlying type of the input.
    * @return a Future of Seq[Try of X]
    */
-  def sequenceImpatient[X](xfs: Seq[Future[X]])(millisecs: Double)(implicit ec: ExecutionContext): Future[Seq[Try[X]]] = {
+  def sequenceImpatient[X](xfs: Seq[Future[X]])(millisecs: Double)(using ec: ExecutionContext): Future[Seq[Try[X]]] = {
     val m: Long = millisecs.toLong
     val n: Int = (millisecs * 1000000 - m * 1000000).toInt
     Thread.sleep(m, n)
@@ -294,7 +294,7 @@ object FP {
    * @tparam B the underlying type of bf.
    * @return a Future[(A, B)].
    */
-  def zip[A, B](af: Future[A], bf: Future[B])(implicit ec: ExecutionContext): Future[(A, B)] = for (a <- af; b <- bf) yield a -> b
+  def zip[A, B](af: Future[A], bf: Future[B])(using ec: ExecutionContext): Future[(A, B)] = for (a <- af; b <- bf) yield a -> b
 
   /**
    * Method to convert an Option[X] into a Try[X] where None will result in Failure(t).
@@ -367,7 +367,7 @@ object FP {
    * @tparam U the underlying type of the output.
    * @return a Future[T] => Future[U].
    */
-  def liftFuture[T, U](f: T => U)(implicit ec: ExecutionContext): Future[T] => Future[U] = _ map f
+  def liftFuture[T, U](f: T => U)(using ec: ExecutionContext): Future[T] => Future[U] = _ map f
 
   /**
    * Ensures that the result of applying a function to a given input is not null.

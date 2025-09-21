@@ -25,8 +25,8 @@ case class MockURL(url: String) {
 
 //noinspection ScalaUnusedSymbol
 class MapReduceSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutures with Inside {
-  implicit val system: ActorSystem = ActorSystem("MapReduceSpec")
-  implicit val timeout: Timeout = Timeout(5 seconds)
+  given system: ActorSystem = ActorSystem("MapReduceSpec")
+  given timeout: Timeout = Timeout(5 seconds)
 
   import system.dispatcher
 

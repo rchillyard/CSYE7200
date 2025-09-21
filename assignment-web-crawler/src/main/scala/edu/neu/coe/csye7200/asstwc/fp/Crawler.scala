@@ -34,7 +34,7 @@ class Crawler[U: Ordering](maxHops: Int, parallelism: Int = 8) {
    * @param ec        the implicit ExecutionContext used to handle asynchronous operations.
    * @return a Future containing the final sequence of elements that satisfy the given predicate after processing.
    */
-  def crawl(us: Seq[U])(acquire: U => Future[Seq[U]], predicate: U => Boolean)(implicit ec: ExecutionContext): Future[Seq[U]] = {
+  def crawl(us: Seq[U])(acquire: U => Future[Seq[U]], predicate: U => Boolean)(using ec: ExecutionContext): Future[Seq[U]] = {
     println(s"Crawl: starting with $us")
 
     /**
@@ -100,7 +100,7 @@ class Crawler[U: Ordering](maxHops: Int, parallelism: Int = 8) {
    * @tparam T the type of input elements in the initial sequence.
    * @return a Future containing the final sequence of processed elements that meet the defined criteria.
    */
-  def doCrawl[T](ts: Seq[T])(f: T => Try[U])(acquire: U => Future[Seq[U]], predicate: U => Boolean)(implicit executionContext: ExecutionContext): Future[Seq[U]] =
+  def doCrawl[T](ts: Seq[T])(f: T => Try[U])(acquire: U => Future[Seq[U]], predicate: U => Boolean)(using executionContext: ExecutionContext): Future[Seq[U]] =
     for {
       us0 <- asFuture(sequence[U](ts map f))
       us1 <- crawl(us0)(acquire, predicate)
@@ -132,7 +132,7 @@ object Crawler {
    * @tparam U the type of elements in the sequence, which is required to have an implicit Ordering.
    * @return a Future containing the flattened sequence of successfully acquired elements from all inputs.
    */
-  def acquireAll[U: Ordering](us: Seq[U])(acquire: U => Future[Seq[U]])(f: Throwable => Unit)(implicit ec: ExecutionContext): Future[Seq[U]] = {
+  def acquireAll[U: Ordering](us: Seq[U])(acquire: U => Future[Seq[U]])(f: Throwable => Unit)(using ec: ExecutionContext): Future[Seq[U]] = {
     // XXX: First, define the forgiveness function
     val forgivenessFunction: PartialFunction[Throwable, Try[Option[Seq[U]]]] = {
       case NonFatal(x) => f(x); Success(None)

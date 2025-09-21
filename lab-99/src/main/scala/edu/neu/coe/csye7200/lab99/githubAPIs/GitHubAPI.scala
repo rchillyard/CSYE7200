@@ -77,9 +77,9 @@ object GitHubAPI {
 
   case class PullRequest(url: String, html_url: String, diff_url: String, patch_url: String)
 
-  implicit val UserRW: upickle.default.ReadWriter[User] = upickle.default.macroRW[User]
-  implicit val PullRequestRW: upickle.default.ReadWriter[PullRequest] = upickle.default.macroRW[PullRequest]
-  implicit val IssueDataRW: upickle.default.ReadWriter[IssueData] = upickle.default.macroRW[IssueData]
+  given UserRW: upickle.default.ReadWriter[User] = upickle.default.macroRW[User]
+  given PullRequestRW: upickle.default.ReadWriter[PullRequest] = upickle.default.macroRW[PullRequest]
+  given IssueDataRW: upickle.default.ReadWriter[IssueData] = upickle.default.macroRW[IssueData]
 
   def getIssues(token: String): Try[Seq[IssueData]] =
     for {json <- getIssuesJson(token)

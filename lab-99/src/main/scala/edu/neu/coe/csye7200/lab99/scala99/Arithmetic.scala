@@ -4,6 +4,7 @@
 
 package edu.neu.coe.csye7200.lab99.scala99
 
+import edu.neu.coe.csye7200.lab99.scala99.Arithmetic.int2Arithmetic
 import scala.language.implicitConversions
 
 class Arithmetic(val start: Int) {
@@ -51,7 +52,8 @@ class Arithmetic(val start: Int) {
 }
 
 object Arithmetic {
-  implicit def int2S99Int(i: Int): Arithmetic = new Arithmetic(i)
+  given int2Arithmetic: Conversion[Int, Arithmetic] with
+    def apply(i: Int): Arithmetic = new Arithmetic(i)
 
   // P31
   lazy val primes: LazyList[Int] = 2 #:: LazyList.from(3, 2).filter(_.isPrime)

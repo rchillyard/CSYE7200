@@ -22,7 +22,7 @@ class CrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with Sca
 
   behavior of "doCrawl"
   it should "work" in {
-    implicit val URLordering: Ordering[URL] = (x: URL, y: URL) => x.getPath.compare(y.getPath)
+    given URLordering: Ordering[URL] = (x: URL, y: URL) => x.getPath.compare(y.getPath)
     val args = List(goodURL)
     val crawler = new Crawler[URL](1)
     import scala.concurrent.ExecutionContext.Implicits.global
@@ -35,7 +35,7 @@ class CrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with Sca
   behavior of "crawl(Seq[URL])"
   it should s"succeed for $goodURL, maxHops 2" taggedAs Slow in {
     import scala.concurrent.ExecutionContext.Implicits.global
-    implicit val URLordering: Ordering[URL] = (x: URL, y: URL) => x.getPath.compare(y.getPath)
+    given URLordering: Ordering[URL] = (x: URL, y: URL) => x.getPath.compare(y.getPath)
     val max = 2
     val expected = 9
     val args = List(s"$goodURL")

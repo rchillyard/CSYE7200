@@ -40,7 +40,7 @@ object Stocks {
 object BankClientUsingTheAskPattern {
   def apply(bank: ActorRef[CreatePortfolio]): Behavior[Unit] =
     Behaviors.setup { context =>
-      implicit val timeout: Timeout = 3.seconds
+      given timeout: Timeout = 3.seconds
       context.ask(bank, CreatePortfolio.apply) {
         case Success(message) =>
           context.log.info("Portfolio received")

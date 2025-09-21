@@ -1,4 +1,4 @@
-name := "lab-akka-streams"
+name := "lab-akka-streams (Scala 2.11)"
 organization    := "com.phasmidsoftware"
 scalaVersion    := "2.11.12"
 version :="0.1.0-SNAPSHOT"
