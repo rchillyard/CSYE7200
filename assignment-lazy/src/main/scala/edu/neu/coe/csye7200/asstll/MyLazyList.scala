@@ -23,7 +23,8 @@ case class MyLazyList[X](x: X, lazyTail: () => ListLike[X]) extends LazyListLike
     * @tparam Y the underlying type of ys and the result.
     * @return a <code>ListLike[Y]<code> which contains all the elements of this followed by all the elements of ys.
     */
-  def ++[Y >: X](ys: ListLike[Y]): ListLike[Y] = MyLazyList[Y](x, () => lazyTail() ++ ys)
+  def ++[Y >: X](ys: ListLike[Y]): ListLike[Y] =
+    MyLazyList[Y](x, () => lazyTail() ++ ys)
 
   def head: X = x
 

@@ -21,10 +21,14 @@ case class ShuntingYard(valueStack: Stack[Int], operatorStack: Stack[Operator], 
     * @return (usually) a new ShuntingYard.
     */
   override def apply(t: ShuntingYardParser#Token): ShuntingYard = t match {
-    case Right(Left(o)) => ShuntingYard(valueStack, operatorStack.push(o), depth)
-    case Right(Right(x)) => ShuntingYard(valueStack.push(x), operatorStack, depth)
-    case Left(Parenthesis(true)) => ShuntingYard(valueStack, operatorStack, depth + 1) // for now, we ignore left parenthesis
-    case Left(Parenthesis(false)) => evaluate(depth - 1)
+    case Right(Left(o)) =>
+      ShuntingYard(valueStack, operatorStack.push(o), depth)
+    case Right(Right(x)) =>
+      ShuntingYard(valueStack.push(x), operatorStack, depth)
+    case Left(Parenthesis(true)) =>
+      ShuntingYard(valueStack, operatorStack, depth + 1) // for now, we ignore left parenthesis
+    case Left(Parenthesis(false)) =>
+      evaluate(depth - 1)
   }
 
   /**
@@ -36,12 +40,15 @@ case class ShuntingYard(valueStack: Stack[Int], operatorStack: Stack[Operator], 
   def apply: Option[Int] = self match {
     // Terminating condition: If this ShuntingYard has depth of 0 and exactly one value and no operators,
     //    then we return that value wrapped in Some; otherwise we return None.
-    case ShuntingYard(ListStack(x :: Nil), EmptyStack, 0) => Some(x)
+    case ShuntingYard(ListStack(x :: Nil), EmptyStack, 0) =>
+      Some(x)
     // Recursive case: If this ShuntingYard has depth of 0 and at least two values and one operator,
     //    then we recursively call apply to the evaluated version of this.
-    case ShuntingYard(ListStack(_ :: _ :: _), ListStack(_ :: _), 0) => evaluate(0).apply
+    case ShuntingYard(ListStack(_ :: _ :: _), ListStack(_ :: _), 0) =>
+      evaluate(0).apply
     // Otherwise, we must return None.
-    case _ => None
+    case _ =>
+      None
   }
 
   private def evaluate(d: Int): ShuntingYard = {
@@ -61,12 +68,39 @@ case class ShuntingYard(valueStack: Stack[Int], operatorStack: Stack[Operator], 
   * Companion object to ShuntingYard.
   */
 object ShuntingYard {
+  /**
+   * Constructs a new instance of the ShuntingYard class with an empty value stack,
+   * an empty operator stack, and an initial depth of 0.
+   *
+   * @return a new ShuntingYard instance initialized with default stacks and depth.
+   */
   def apply: ShuntingYard = new ShuntingYard(Stack[Int], Stack[Operator], 0)
 
+  /**
+   * Converts an instance of `ShuntingYard` to an `Option[Int]` by evaluating the given ShuntingYard instance.
+   *
+   * @param s the ShuntingYard instance to be evaluated.
+   * @return an optional integer value resulting from the evaluation of the ShuntingYard instance.
+   */
   implicit def toOptionInt(s: ShuntingYard): Option[Int] = s.apply
 
+  /**
+   * Evaluates a mathematical expression given as a string in infix notation.
+   * The method uses the Shunting Yard algorithm for parsing and evaluating the expression.
+   *
+   * @param s the mathematical expression in infix notation represented as a string
+   * @return an Option containing the evaluated result as an integer, or None if the evaluation fails
+   */
   def evaluate(s: String): Option[Int] =
     new ShuntingYardParser().parseTokens(s).foldLeft(ShuntingYard.apply)((s, x) => s(x))
 }
 
+/**
+ * A custom exception class to handle errors specific to the Shunting Yard algorithm.
+ *
+ * This exception is meant to be thrown when invalid input or an error condition occurs
+ * during the execution of the Shunting Yard algorithm.
+ *
+ * @param str the error message describing the nature of the exception.
+ */
 case class ShuntingYardException(str: String) extends Exception(str)
