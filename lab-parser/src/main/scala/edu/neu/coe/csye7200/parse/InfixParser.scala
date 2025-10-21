@@ -3,8 +3,8 @@ package edu.neu.coe.csye7200.parse
 import scala.util.parsing.combinator.JavaTokenParsers
 
 /**
- * A parser implementation based on the Shunting Yard algorithm designed to parse mathematical infix expressions
- * into a list of tokens that can represent parentheses, operators, or integers.
+ * A parser implementation designed to parse mathematical infix expressions
+ * into a list of tokens that can represent brackets (parentheses), + and * operators, or integers.
  * The class extends `JavaTokenParsers` to leverage its base functionality for parsing.
  *
  * You find JavaTokenParsers in "org.scala-lang.modules" %% "scala-parser-combinators" % "2.4.0".
@@ -16,25 +16,26 @@ class InfixParser extends JavaTokenParsers {
   /**
    * Parses a given infix mathematical expression string and transforms it into a list of tokens.
    * Tokens can represent parentheses, operators, or integers, which are defined by the type alias `Token`.
-   * The parsing process uses the Shunting Yard algorithm to tokenize the input string.
    *
    * @param w the input string containing an infix mathematical expression to be parsed
    * @return a list of tokens representing the parsed input expression
    * @throws ParserException if the parsing process fails due to an invalid input format
    */
   def parseTokens(w: String): List[Token] = {
-    // TO BE IMPLEMENTED : parse a string of numbers, operators, and parentheses into a list of tokens
+    // TO BE IMPLEMENTED : parse a string of numbers, operators, and round brackets (parentheses) into a list of tokens.
+    // These tokens will be separated in the input by white space)
         ???
   }
 
   /**
    * Parses a sequence of tokens representing an infix mathematical expression.
-   * The tokens are expected to follow the defined grammar for parentheses, operators, and integer values.
+   * The tokens are expected to follow the defined grammar for brackets (parentheses), operators, and integer values.
    *
    * @return a parser that produces a list of tokens representing the parsed expression.
    */
   def infix: Parser[List[Token]] = {
-    // TO BE IMPLEMENTED : parse a sequence of tokens into a list (note that white space is already ignored and so you don't need a delimiter for this repetition)
+    // TO BE IMPLEMENTED : parse a sequence of tokens into a list.
+    // NOTE that white space is already ignored and so you don't need a delimiter for this repetition)
         ???
   }
 
@@ -57,7 +58,8 @@ class InfixParser extends JavaTokenParsers {
    *         in the form of `Left(Bracket)`.
    */
   def bracket: Parser[Token] = {
-    // TO BE IMPLEMENTED : parse a single bracket character (in the form of a String) and wrap it in a Bracket token (use the brackets parser below)
+    // TO BE IMPLEMENTED : parse a single bracket character (in the form of a String) and wrap it in a Bracket token.
+    // Use the brackets parser below.
         ???
   }
 
@@ -83,7 +85,8 @@ class InfixParser extends JavaTokenParsers {
    *         `Right(Left(AddOrMultiply))` upon a successful match.
    */
   def operator: Parser[Token] = {
-    // TO BE IMPLEMENTED : parse an operator token (in the form of a String) and return it as a Right(Left(AddOrMultiply)) token (use the operators parser below)
+    // TO BE IMPLEMENTED : parse an operator token (in the form of a String) and return it as a Right(Left(AddOrMultiply)) token
+    // Use the operators parser below.
         ???
   }
 
@@ -105,7 +108,7 @@ class InfixParser extends JavaTokenParsers {
 
 
 /**
- * Trait representing a (round) bracket, aka bracket, which can either be open or closed.
+ * Trait representing a (round) bracket, aka parenthesis, which can either be open or closed.
  */
 trait Bracket
 
