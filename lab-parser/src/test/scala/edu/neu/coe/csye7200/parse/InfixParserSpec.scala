@@ -1,0 +1,58 @@
+package edu.neu.coe.csye7200.parse
+
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
+
+class InfixParserSpec extends AnyFlatSpec with Matchers {
+
+  behavior of "InfixParser"
+
+  it should "parse bracket" in {
+    val p = new InfixParser
+    p.parseAll(p.bracket, "(").successful shouldBe true
+    p.parseAll(p.bracket, ")").successful shouldBe true
+    p.parseAll(p.bracket, "-").successful shouldBe false
+  }
+
+  it should "parse operator" in {
+    val p = new InfixParser
+    p.parseAll(p.operator, "*").successful shouldBe true
+    p.parseAll(p.operator, "+").successful shouldBe true
+    p.parseAll(p.operator, "-").successful shouldBe false
+  }
+
+  it should "parse integer" in {
+    val p = new InfixParser
+    p.parseAll(p.integer, "1").successful shouldBe true
+    p.parseAll(p.integer, "-1").successful shouldBe true
+    p.parseAll(p.integer, "1234567890").successful shouldBe true
+    p.parseAll(p.integer, "").successful shouldBe false
+  }
+
+  it should "parse token" in {
+    val p = new InfixParser
+    p.parseAll(p.token, "1").successful shouldBe true
+    p.parseAll(p.token, "*").successful shouldBe true
+    p.parseAll(p.token, "(").successful shouldBe true
+    p.parseAll(p.token, "").successful shouldBe false
+  }
+
+  it should "parse infix" in {
+    val p = new InfixParser
+    p.parseAll(p.infix, "1").get shouldBe List(Right(Right(1)))
+    p.parseAll(p.infix, "-1").get shouldBe List(Right(Right(-1)))
+    p.parseAll(p.infix, "(1)").get shouldBe List(Left(Open), Right(Right(1)), Left(Close))
+    p.parseAll(p.infix, "(1 + 2)").get shouldBe List(Left(Open), Right(Right(1)), Right(Left(Plus)), Right(Right(2)), Left(Close))
+    p.parseAll(p.infix, "(1 + -2)").get shouldBe List(Left(Open), Right(Right(1)), Right(Left(Plus)), Right(Right(-2)), Left(Close))
+    p.parseAll(p.infix, "").get shouldBe List()
+  }
+
+  it should "parseTokens" in {
+    val p = new InfixParser
+    p.parseTokens("1") shouldBe List(Right(Right(1)))
+    p.parseTokens("(1)") shouldBe List(Left(Open), Right(Right(1)), Left(Close))
+    p.parseTokens("(1 + 2)") shouldBe List(Left(Open), Right(Right(1)), Right(Left(Plus)), Right(Right(2)), Left(Close))
+    p.parseTokens("") shouldBe List()
+  }
+
+}
