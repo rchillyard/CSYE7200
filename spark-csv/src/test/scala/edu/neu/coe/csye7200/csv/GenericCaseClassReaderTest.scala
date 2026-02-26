@@ -1,7 +1,5 @@
 package edu.neu.coe.csye7200.csv
 
-import com.phasmidsoftware.parse.{RowParser, StringTableParser}
-import com.phasmidsoftware.table.{Header, Table}
 import edu.neu.coe.csye7200.csv.tableParser.TableDatasetParser
 import org.apache.spark.sql.{Dataset, SparkSession}
 import org.scalatest.flatspec.AnyFlatSpec
@@ -13,18 +11,18 @@ class GenericCaseClassReaderTest extends AnyFlatSpec with Matchers {
   behavior of "TableParser"
 
   // FIXME: generic stuff not ready yet
-  ignore should "parse generic.csv" in {
-    new StringTableParser[Table[Generic]] {
-
-      type Row = this.type
-      protected val maybeFixedHeader: Option[Header] = ???
-
-      protected def builder(rows: Iterable[this.type], header: Header): Table[Generic] = ???
-
-      protected val rowParser: RowParser[this.type, String] = ???
-      val headerRowsToRead: Int = 1
-    }
-  }
+//  ignore should "parse generic.csv" in {
+//    new StringTableParser[Table[Generic]] {
+//
+//      type Row = this.type
+//      protected val maybeFixedHeader: Option[Header] = ???
+//
+//      protected def builder(rows: Iterable[this.type], header: Header): Table[Generic] = ???
+//
+//      protected val rowParser: RowParser[this.type, String] = ???
+//      override val headerRowsToRead: Int = 1
+//    }
+//  }
 
   behavior of "TableDatasetParser"
 

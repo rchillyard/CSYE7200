@@ -22,7 +22,7 @@ class PetsSpec extends AnyFlatSpec with Matchers {
     // Dog is a subtype of Mammal: all of the required properties of Mammal are specified by any instance of Dog
     val _: Mammal = asDog(bentley)
     val ps: Seq[Dog] = pets.sounders(Woof)
-    ps.size shouldBe 3
+    ps should have size 3
     ps.head shouldBe bentley
   }
 

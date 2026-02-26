@@ -25,10 +25,10 @@ class PrimeSpec extends AnyFlatSpec with should.Matchers {
   }
 
   it should "primes 2" in {
-    Prime.primes.takeWhile(_.x < 524288).size shouldBe 43390
+    Prime.primes.takeWhile(_.x < 524288)  should have size 43390
   }
   it should "primes 3" in {
-    Prime.primes.takeWhile(_.x < 524288).size shouldBe 43390
+    Prime.primes.takeWhile(_.x < 524288)  should have size 43390
   }
 
   it should "create Mersenne primes 1" in {
@@ -67,7 +67,7 @@ class PrimeSpec extends AnyFlatSpec with should.Matchers {
   }
   it should "probablePrimes 2" in {
     Prime.probablePrimes take 3 shouldBe List(Prime(2), Prime(3), Prime(5))
-    Prime.probablePrimes.takeWhile(_.x < 524288).size shouldBe 43390
+    Prime.probablePrimes.takeWhile(_.x < 524288)  should have size 43390
   }
 
 }

@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200
 
-import com.phasmidsoftware.parse.CellParser
+import com.phasmidsoftware.tableparser.core.parse.CellParser
 
 package object csv {
 

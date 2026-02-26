@@ -3,8 +3,10 @@ package edu.neu.coe.csye7200.labsorted.lbsort
 import scala.language.{implicitConversions, postfixOps}
 
 /**
-  * This trait represents the difference between two objects.
-  */
+ * Trait representing a Comparison, which can evaluate to an optional Boolean.
+ * It supports Kleenean logic operations such as AND, OR, and negation, with both
+ * eager and lazy evaluation mechanisms.
+ */
 trait Comparison extends (() => Option[Boolean]) {
 
   /**
@@ -65,16 +67,57 @@ trait Comparison extends (() => Option[Boolean]) {
   def flip: Comparison
 }
 
+/**
+ * Represents a `Comparison` that is not equivalence, but depends on the value of the member `less`.
+ * This class is a case class and a concrete implementation of the abstract `Comparison` trait.
+ *
+ * @param less a Boolean indicating whether the comparison condition is "less".
+ */
 case class Different(less: Boolean) extends Comparison {
+  /**
+   * Invokes the operation and determines the result of a specific condition.
+   *
+   * @return An Option containing a Boolean value. Returns Some(true) if `less` is  true,
+   *         Some(false) if `less` is false.
+   */
   def apply(): Option[Boolean] = Some(less)
 
+  /**
+   * Applies a logical AND operation with short-circuiting behavior.
+   * If this Comparison is less, it returns this instance;
+   * otherwise, it evaluates and returns the provided Comparison.
+   *
+   * @param c the other Comparison to evaluate (lazily evaluated)
+   * @return a Comparison that represents the result of the logical AND operation
+   */
   def &&(c: => Comparison): Comparison = if (less) this else c
 
+  /**
+   * Performs a logical OR operation with short-circuit evaluation on this `Comparison` instance.
+   * If this `Comparison` evaluates to `less = false`, the provided `Comparison` `c` will be evaluated
+   * and returned instead. Otherwise, this `Comparison` instance is returned.
+   *
+   * @param c the other `Comparison` instance to evaluate when this `Comparison` evaluates to `less = false` (lazily evaluated).
+   * @return the result of the logical OR operation, determined according to Kleenean logic.
+   */
   def ||(c: => Comparison): Comparison = if (less) c else this
 
+  /**
+   * Flips the current Comparison, negating the `less` property.
+   *
+   * @return a new Comparison instance where the logical state is inverted. For example,
+   *         if the current Comparison is `Different(true)`, it will return `Different(false)`.
+   */
   def flip: Comparison = Different(!less)
 
-  override def toInt: Int = if (less) -1 else 1
+  /**
+   * Converts the comparison result to an integer value.
+   * If the comparison evaluates to "less", the result is -1.
+   * Otherwise, the result is 1.
+   *
+   * @return an integer representation of the comparison result
+   */
+  def toInt: Int = if (less) -1 else 1
 }
 
 case object Same extends Comparison {
@@ -86,7 +129,7 @@ case object Same extends Comparison {
 
   def flip: Comparison = this
 
-  override def toInt: Int = 0
+  def toInt: Int = 0
 }
 
 object Comparison {

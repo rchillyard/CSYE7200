@@ -62,7 +62,8 @@ object Arithmetic {
   @scala.annotation.tailrec
   def gcd(m: Int, n: Int): Int =
   // TO BE IMPLEMENTED 
-    ???
+   gcd(m, n)
+  // END
 
   // P39
   def listPrimesInRange(r: Range): Seq[Int] =

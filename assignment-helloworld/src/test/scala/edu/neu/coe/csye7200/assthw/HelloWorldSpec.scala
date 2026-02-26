@@ -21,7 +21,7 @@ class HelloWorldSpec extends AnyFlatSpec with Matchers {
 
     val ingester = new Ingest[Movie]()
     val source = Source.fromResource("movie_metadata_5000.csv")
-    (for (m <- ingester(source); if m.properties.head == " Black and White") yield m).size shouldBe 209
+    (for (m <- ingester(source); if m.properties.head == " Black and White") yield m)  should have size 209
     source.close()
   }
 

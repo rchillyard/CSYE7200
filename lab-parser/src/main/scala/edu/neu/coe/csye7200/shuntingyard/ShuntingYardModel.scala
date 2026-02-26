@@ -5,7 +5,21 @@ package edu.neu.coe.csye7200.shuntingyard
  *
  * @param open A boolean indicating whether the parenthesis is open (true) or closed (false).
  */
-case class Parenthesis(open: Boolean)
+trait Parenthesis
+
+/**
+ * Represents an open parenthesis.
+ */
+case object Open extends Parenthesis {
+  override def toString: String = "("
+}
+
+/**
+ * Represents a closing parenthesis.
+ */
+case object Close extends Parenthesis {
+  override def toString: String = ")"
+}
 
 /**
  * Companion object for the Parenthesis case class.
@@ -21,8 +35,8 @@ object Parenthesis {
    * @throws MatchError if the input string is not "(" or ")".
    */
   def apply(w: String): Parenthesis = w match {
-    case "(" => Parenthesis(true)
-    case ")" => Parenthesis(false)
+    case "(" => Open
+    case ")" => Close
   }
 }
 

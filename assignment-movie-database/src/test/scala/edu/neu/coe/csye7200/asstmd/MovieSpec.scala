@@ -156,7 +156,7 @@ class MovieSpec extends AnyFlatSpec with Matchers {
     val optionalMovies: Seq[Option[Movie]] = triedMovies to List map (_.toOption)
     val kiwiMovies: Option[Seq[Movie]] = sequenceOptimistic(optionalMovies)
     source.close()
-    kiwiMovies.getOrElse(Nil).size shouldBe 4
+    kiwiMovies.getOrElse(Nil)   should have size 4
   }
   it should "do sequenceOptimistic 2" in {
     lazy val ingester = new Ingest[Movie]()
@@ -187,6 +187,6 @@ class MovieSpec extends AnyFlatSpec with Matchers {
     val maybeMovies: Option[Seq[Movie]] = sequencePessimistic(optionalMovies)
     source.close()
     maybeMovies should matchPattern { case Some(xs) => }
-    maybeMovies.get.size shouldBe 1480
+    maybeMovies.get   should have size 1480
   }
 }

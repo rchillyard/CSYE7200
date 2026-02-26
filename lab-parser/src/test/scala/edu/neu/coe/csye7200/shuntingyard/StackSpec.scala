@@ -24,17 +24,42 @@ class StackSpec extends AnyFlatSpec with Matchers {
     xs.isEmpty shouldBe true
     xo shouldBe Some(1)
   }
+  it should "iterator0" in {
+    val target: Stack[Int] = Stack()
+    val xs = target.iterator
+    xs.hasNext shouldBe false
+  }
   it should "iterator1" in {
     val target: Stack[Int] = Stack(1)
     val xs = target.iterator
     xs.hasNext shouldBe true
     xs.next() shouldBe 1
     xs.hasNext shouldBe false
-    target.size shouldBe 1
+    target should have size 1
   }
-  it should "iterator2" in {
-    val target: Stack[Int] = Stack()
+  it should "iterator10" in {
+    val target: Stack[Int] = Stack(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
     val xs = target.iterator
+    xs.hasNext shouldBe true
+    xs.next() shouldBe 1
+    xs.hasNext shouldBe true
+    xs.next() shouldBe 2
+    xs.hasNext shouldBe true
+    xs.next() shouldBe 3
+    xs.hasNext shouldBe true
+    xs.next() shouldBe 4
+    xs.hasNext shouldBe true
+    xs.next() shouldBe 5
+    xs.hasNext shouldBe true
+    xs.next() shouldBe 6
+    xs.hasNext shouldBe true
+    xs.next() shouldBe 7
+    xs.hasNext shouldBe true
+    xs.next() shouldBe 8
+    xs.hasNext shouldBe true
+    xs.next() shouldBe 9
+    xs.hasNext shouldBe true
+    xs.next() shouldBe 10
     xs.hasNext shouldBe false
   }
   it should "isEmpty1" in {
@@ -51,7 +76,7 @@ class StackSpec extends AnyFlatSpec with Matchers {
   it should "construct a ListStack" in {
     val target = new ListStack[Int](List(1, 2, 3))
     target.nonEmpty shouldBe true
-    target.size shouldBe 3
+    target should have size 3
   }
 
   it should "throw exception for new ListStack(Nil)" in {

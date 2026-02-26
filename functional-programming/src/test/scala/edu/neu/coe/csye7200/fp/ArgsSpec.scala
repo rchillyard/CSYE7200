@@ -80,7 +80,7 @@ class ArgsSpec extends AnyFlatSpec with Matchers {
 
   it should "work" in {
     val target = Args.create(Arg(sX, s1))
-    target.size shouldBe 1
+    target should have size 1
     target.head.name shouldBe Some(sX)
     target.head.value shouldBe Some(s1)
   }
@@ -277,7 +277,7 @@ class ArgsSpec extends AnyFlatSpec with Matchers {
     val p = PosixArgParser
     val pp: p.ParseResult[Seq[PosixArg]] = p.parseAll(p.posixOptionSet, "-xf;argFilename;")
     pp should matchPattern { case p.Success(_, _) => }
-    pp.get.size shouldBe 2
+    pp.get should have size 2
     pp.get.head shouldBe PosixOptions("xf")
     pp.get.last shouldBe PosixOptionValue("argFilename")
   }
@@ -285,7 +285,7 @@ class ArgsSpec extends AnyFlatSpec with Matchers {
   it should """parseCommandLine "-xf argFilename 3.1415927"""" in {
     val p = PosixArgParser
     val as: Seq[PosixArg] = p.parseCommandLine(Seq("-xf", "argFilename", "3.1415927"))
-    as.size shouldBe 3
+    as should have size 3
     as.head shouldBe PosixOptions("xf")
     as.tail.head shouldBe PosixOptionValue("argFilename")
     as.last shouldBe PosixOperand("3.1415927")

@@ -13,7 +13,7 @@ class QueueOpsSpec extends AnyFlatSpec with should.Matchers {
         val queue = Queue()
         val (x, z) = queue.dequeueN(1)
 
-        x.size shouldBe 0
+        x should have size 0
         z.isEmpty shouldBe true
     }
 
@@ -22,7 +22,7 @@ class QueueOpsSpec extends AnyFlatSpec with should.Matchers {
         val (w, y) = queue.dequeue
         val (x, z) = queue.dequeueN(1)
 
-        x.size shouldBe 1
+        x should have size 1
         x.head shouldBe w
         z shouldBe y
     }

@@ -4,16 +4,22 @@ name := s"""SparkCsv (Scala ${scalaVersion.value})"""
 version := "1.0"
 
 Compile / doc / scalacOptions ++= Seq("-groups", "-implicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused" )
+ThisBuild / scalacOptions ++= Seq("-java-output-version", "17")
+ThisBuild / javacOptions ++= Seq("-source", "17", "-target", "17")
+
 
 unmanagedBase := baseDirectory.value / "spark-csv/lib"
 
 Test / parallelExecution := false
 
-val sparkVersion = "3.3.0"
+val TableParserVersion = "1.2.5"
+val sparkVersion = "4.0.1"
+
+ThisBuild / evictionErrorLevel := Level.Warn
 
 libraryDependencies ++= Seq(
-  "com.phasmidsoftware" %% "tableparser" % "1.1.1",
-  "com.github.nscala-time" %% "nscala-time" % "2.32.0",
+  "com.phasmidsoftware" %% "tableparser-spark" % TableParserVersion,
+  "com.github.nscala-time" %% "nscala-time" % "3.0.0",
   "org.scalatest" %% "scalatest" % "3.2.19" % "test",
   "org.apache.spark" %% "spark-core" % sparkVersion,
   "org.apache.spark" %% "spark-sql" % sparkVersion,

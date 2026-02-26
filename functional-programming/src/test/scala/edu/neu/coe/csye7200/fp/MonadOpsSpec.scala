@@ -111,7 +111,7 @@ class MonadOpsSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutu
   it should "succeed for option map" in {
     val map: Map[String, Option[String]] = Map("a" -> Some("A"), "b" -> None)
     val flat: Map[String, String] = flatten(map)
-    flat.size shouldBe 1
+    flat should have size 1
   }
 
   "sequence" should "succeed for http://www.google.com, www.microsoft.com" in {

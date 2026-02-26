@@ -56,24 +56,65 @@ case class ListStack[+X](xs: List[X]) extends Stack[X] {
 
   require(xs.nonEmpty)
 
-  def push[Y >: X](y: Y): Stack[Y] = ListStack(y :: xs)
+  /**
+   * Pushes an element onto the stack and returns a new stack with the element added.
+   *
+   * @param y the element to be pushed onto the stack. It can be of type Y, which is a super-type of the existing element type X.
+   * @return a new stack containing the existing elements with the new element added at the top.
+   */
+  def push[Y >: X](y: Y): Stack[Y] =
+    ListStack(y :: xs)
 
+  /**
+   * Removes the top element from the stack if it is not empty.
+   *
+   * @return a tuple where the first element is the new stack (excluding the popped element),
+   *         and the second element is an Option containing the value of the popped element.
+   *         If the stack is empty, returns the original empty stack and None.
+   */
   def pop: (Stack[X], Option[X]) = xs match {
-    case Nil => EmptyStack -> None
-    case x :: tail => Stack(tail: _*) -> Some(x)
+    case x :: tail =>
+      Stack(tail: _*) -> Some(x)
+    case Nil => // logic error (this should never happen)
+      EmptyStack -> None
   }
 
-  override def isEmpty: Boolean = xs.isEmpty
+  /**
+   * Checks if the stack is empty.
+   *
+   * @return true if the stack contains no elements, false otherwise.
+   */
+  override def isEmpty: Boolean =
+    xs.isEmpty
 }
 
 /**
  * An empty stack.
  */
 case object EmptyStack extends Stack[Nothing] {
-  def push[Y >: Nothing](y: Y): Stack[Y] = ListStack(y :: Nil)
+  /**
+   * Pushes a value onto the stack and returns a new stack.
+   *
+   * @param y the value to be pushed onto the stack.
+   * @tparam Y the type of the value to be pushed, which must be a supertype of Nothing.
+   * @return a new stack with the given value as the top element.
+   */
+  def push[Y >: Nothing](y: Y): Stack[Y] =
+    ListStack(y :: Nil)
 
-  def pop: (Stack[Nothing], Option[Nothing]) = (this, None)
+  /**
+   * Removes the top element from this stack.
+   *
+   * @return a tuple consisting of the current stack (since it is already empty) and None as there is no element to pop.
+   */
+  def pop: (Stack[Nothing], Option[Nothing]) =
+    (this, None)
 
+  /**
+   * Determines if this stack is empty.
+   *
+   * @return true if the stack is empty, false otherwise.
+   */
   override def isEmpty: Boolean = true
 }
 
@@ -87,7 +128,7 @@ object Stack {
    * @tparam X the underlying type of the result.
    * @return an empty Stack[X].
    */
-  def apply[X]: Stack[X] = EmptyStack
+  def empty[X]: Stack[X] = EmptyStack
 
   /**
    * Create a new Stack of type X pre-populated with some number of elements≥

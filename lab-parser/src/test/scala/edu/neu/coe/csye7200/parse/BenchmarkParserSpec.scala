@@ -26,8 +26,8 @@ class BenchmarkParserSpec extends AnyFlatSpec with Matchers {
 
   it should "getLogEntries" in {
     val (q1, q2) = p.getLogEntries(logStrings.iterator)
-    q1.size shouldBe 1
-    q2.size shouldBe 1
+    q1 should have size 1
+    q2 should have size 1
   }
 
   it should "logEntry" in {

@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200.shuntingyard
 
-import edu.neu.coe.csye7200.parse.ParserException
+import edu.neu.coe.csye7200.parse.{ParserException, Token}
 import scala.util.parsing.combinator.JavaTokenParsers
 
 /**
@@ -8,18 +8,9 @@ import scala.util.parsing.combinator.JavaTokenParsers
  * into a list of tokens that can represent parentheses, operators, or integers.
  * The class extends `JavaTokenParsers` to leverage its base functionality for parsing.
  *
- * You find JavaTokenParsers in "org.scala-lang.modules" %% "scala-parser-combinators" % "2.4.0",
+ * You find JavaTokenParsers in "org.scala-lang.modules" %% "scala-parser-combinators" % "2.4.0".
  */
 class ShuntingYardParser extends JavaTokenParsers {
-
-  /**
-   * A type alias representing a token used in the Shunting Yard algorithm.
-   * A token can be one of three possible types:
-   * - `Parenthesis` represented by `Left(Parenthesis)`
-   * - `Operator` represented by `Right(Left(Operator))`
-   * - `Int` values represented by `Right(Right(Int))`
-   */
-  type Token = Either[Parenthesis, Either[Operator, Int]]
 
   /**
    * Parses a given infix mathematical expression string and transforms it into a list of tokens.
@@ -30,11 +21,10 @@ class ShuntingYardParser extends JavaTokenParsers {
    * @return a list of tokens representing the parsed input expression
    * @throws ParserException if the parsing process fails due to an invalid input format
    */
-  def parseTokens(w: String): List[Token] =
-    parseAll(infix, w) match {
-      case Success(xs, _) => xs
-      case _ => throw ParserException("parse error")
-    }
+  def parseTokens(w: String): List[Token] = {
+    // TO BE IMPLEMENTED : parse a string of numbers, operators, and parentheses into a list of tokens
+        ???
+  }
 
   /**
    * Parses a sequence of tokens representing an infix mathematical expression.
@@ -42,8 +32,10 @@ class ShuntingYardParser extends JavaTokenParsers {
    *
    * @return a parser that produces a list of tokens representing the parsed expression.
    */
-  def infix: Parser[List[Token]] =
-    rep(token)
+  def infix: Parser[List[Token]] = {
+    // TO BE IMPLEMENTED : parse a sequence of tokens into a list (note that white space is already ignored and so you don't need a delimiter for this repetition)
+        ???
+  }
 
   /**
    * Parses a single token from the input string. A token can represent a parenthesis,
@@ -63,8 +55,10 @@ class ShuntingYardParser extends JavaTokenParsers {
    * @return a parser that parses a parenthesis character and produces a `Token`
    *         in the form of `Left(Parenthesis)`.
    */
-  def parenthesis: Parser[Token] =
-    parens ^^ { x => Left(Parenthesis(x)) }
+  def parenthesis: Parser[Token] = {
+    // TO BE IMPLEMENTED : parse a single parenthesis character (in the form of a String) and wrap it in a Parenthesis token
+        ???
+  }
 
   /**
    * Parses a numeric value from the input, represented as a token of type `Int`.
@@ -74,8 +68,10 @@ class ShuntingYardParser extends JavaTokenParsers {
    *
    * @return a parser that processes numeric strings and outputs a token representing an integer value.
    */
-  def value: Parser[Token] =
-    digits ^^ { x => Right(Right(x.toInt)) }
+  def value: Parser[Token] = {
+    // TO BE IMPLEMENTED : parse a single integer value (in the form of a String) and return it as a Right(Right(Int)) token
+        ???
+  }
 
   /**
    * Parses an operator token from the input string. The operator token can be either `*` or `+`.
@@ -85,8 +81,10 @@ class ShuntingYardParser extends JavaTokenParsers {
    * @return a `Parser` that recognizes operator tokens (`*` or `+`) and produces a `Token` of type
    *         `Right(Left(Operator))` upon a successful match.
    */
-  def operator: Parser[Token] =
-    operators ^^ { x => Right(Left(Operator(x))) }
+  def operator: Parser[Token] = {
+    // TO BE IMPLEMENTED : parse an operator token (in the form of a String) and return it as a Right(Left(Operator)) token
+        ???
+  }
 
   /**
    * A parser that matches a single left or right parenthesis character, `(` or `)`.
@@ -94,14 +92,6 @@ class ShuntingYardParser extends JavaTokenParsers {
    * @return a `Parser[String]` that recognizes and parses either `(` or `)` as a string.
    */
   private def parens: Parser[String] = """[()]""".r
-
-  /**
-   * A parser that matches one or more numeric digits (0-9) in the input string.
-   * This parser uses a regular expression to identify sequences of digits.
-   *
-   * @return a `Parser[String]` that recognizes and parses numeric strings consisting of one or more digits.
-   */
-  private def digits: Parser[String] = """\d+""".r
 
   /**
    * A parser that matches operator characters `*` or `+`.

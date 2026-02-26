@@ -1,16 +1,18 @@
 package edu.neu.coe.csye7200.shuntingyard
 
+import edu.neu.coe.csye7200.parse.Token
 import scala.language.implicitConversions
 
 /**
-  * Case class which supports the Shunting Yard algorithm of Dijkstra.
+ * Case class which supports the Shunting Yard algorithm of Dijkstra.
  *
  * See [[https://en.wikipedia.org/wiki/Shunting_yard_algorithm]]
-  *
-  * @param valueStack    a Stack[Int].
-  * @param operatorStack a Stack[Operator].
-  */
-case class ShuntingYard(valueStack: Stack[Int], operatorStack: Stack[Operator], depth: Int) extends (ShuntingYardParser#Token => ShuntingYard) {
+ *
+ * @param valueStack    a Stack[Int].
+ * @param operatorStack a Stack[Operator].
+ * @param depth         the current depth of nested parentheses.
+ */
+case class ShuntingYard(valueStack: Stack[Int], operatorStack: Stack[Operator], depth: Int) extends (Token => ShuntingYard) {
 
   self =>
 
@@ -20,14 +22,14 @@ case class ShuntingYard(valueStack: Stack[Int], operatorStack: Stack[Operator], 
     * @param t a ShuntingYardParse#Token.
     * @return (usually) a new ShuntingYard.
     */
-  override def apply(t: ShuntingYardParser#Token): ShuntingYard = t match {
-    case Right(Left(o)) =>
-      ShuntingYard(valueStack, operatorStack.push(o), depth)
-    case Right(Right(x)) =>
-      ShuntingYard(valueStack.push(x), operatorStack, depth)
-    case Left(Parenthesis(true)) =>
-      ShuntingYard(valueStack, operatorStack, depth + 1) // for now, we ignore left parenthesis
-    case Left(Parenthesis(false)) =>
+  def apply(t: Token): ShuntingYard = t match {
+    case Right(Left(operator)) =>
+      copy(operatorStack = operatorStack.push(operator))
+    case Right(Right(value)) =>
+      copy(valueStack = valueStack.push(value))
+    case Left(Open) =>
+      copy(depth = depth + 1) // for now, we ignore left parenthesis
+    case Left(Close) =>
       evaluate(depth - 1)
   }
 
@@ -38,14 +40,15 @@ case class ShuntingYard(valueStack: Stack[Int], operatorStack: Stack[Operator], 
     * @return an optional Int value.
     */
   def apply: Option[Int] = self match {
-    // Terminating condition: If this ShuntingYard has depth of 0 and exactly one value and no operators,
+    // XXX Terminating condition: If this ShuntingYard has depth of 0 and exactly one value and no operators,
     //    then we return that value wrapped in Some; otherwise we return None.
     case ShuntingYard(ListStack(x :: Nil), EmptyStack, 0) =>
       Some(x)
-    // Recursive case: If this ShuntingYard has depth of 0 and at least two values and one operator,
+    // XXX Recursive case: If this ShuntingYard has at least two values and one operator,
     //    then we recursively call apply to the evaluated version of this.
-    case ShuntingYard(ListStack(_ :: _ :: _), ListStack(_ :: _), 0) =>
-      evaluate(0).apply
+    //    Normally, d is zero but occasionally it will be non-zero and we need to keep track of it.
+    case ShuntingYard(ListStack(_ :: _ :: _), ListStack(_ :: _), d) =>
+      evaluate(d).apply
     // Otherwise, we must return None.
     case _ =>
       None
@@ -55,7 +58,6 @@ case class ShuntingYard(valueStack: Stack[Int], operatorStack: Stack[Operator], 
     // When we evaluate this ShuntingYard,
     // we pop the top operator and the two top values from their respective stacks,
     // apply the operator and push the resulting value onto the value stack.
-    //      ???
 
     // TO BE IMPLEMENTED 
         ???
@@ -74,7 +76,7 @@ object ShuntingYard {
    *
    * @return a new ShuntingYard instance initialized with default stacks and depth.
    */
-  def apply: ShuntingYard = new ShuntingYard(Stack[Int], Stack[Operator], 0)
+  def empty: ShuntingYard = new ShuntingYard(Stack.empty[Int], Stack.empty[Operator], 0)
 
   /**
    * Converts an instance of `ShuntingYard` to an `Option[Int]` by evaluating the given ShuntingYard instance.
@@ -92,7 +94,7 @@ object ShuntingYard {
    * @return an Option containing the evaluated result as an integer, or None if the evaluation fails
    */
   def evaluate(s: String): Option[Int] =
-    new ShuntingYardParser().parseTokens(s).foldLeft(ShuntingYard.apply)((s, x) => s(x))
+    new ShuntingYardParser().parseTokens(s).foldLeft(ShuntingYard.empty)((s, x) => s(x))
 }
 
 /**

@@ -54,7 +54,7 @@ class PrimesSpec extends AnyFlatSpec with should.Matchers {
     6L.hasNoFactorsSmallerThanSquareRootX shouldBe false
     11L.hasNoFactorsSmallerThanSquareRootX shouldBe true
     12L.hasNoFactorsSmallerThanSquareRootX shouldBe false
-    // This is the first Carmichael Number (see https://en.wikipedia.org/wiki/Carmichael_number)
+    // This is the first Carmichael Count (see https://en.wikipedia.org/wiki/Carmichael_number)
     561L.hasNoFactorsSmallerThanSquareRootX shouldBe false
     2147483647L.hasNoFactorsSmallerThanSquareRootX shouldBe true
   }

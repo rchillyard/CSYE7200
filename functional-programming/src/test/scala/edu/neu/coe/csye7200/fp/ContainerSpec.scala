@@ -12,7 +12,7 @@ class ContainerSpec extends AnyFlatSpec with Matchers {
 //
 //  "Container(is)" should "have size 1" in {
 //    val container = Container(is)
-//    container.size shouldBe 8
+//    container should have size 8
 //  }
 //  it should "have size 2 even numbers" in {
 //    val container = Container(is)

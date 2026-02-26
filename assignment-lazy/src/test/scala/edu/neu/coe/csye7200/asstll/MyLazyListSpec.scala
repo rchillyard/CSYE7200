@@ -20,7 +20,7 @@ class MyLazyListSpec extends flatspec.AnyFlatSpec with should.Matchers {
   it should "produce a stream of xs using Cons directly" in {
     lazy val x: ListLike[String] = MyLazyList("x", () => x)
     val y = x.take(3).toSeq
-    y.size shouldBe 3
+    y should have size 3
     y.head shouldBe "x"
     y shouldBe Seq("x", "x", "x")
   }
@@ -39,7 +39,7 @@ class MyLazyListSpec extends flatspec.AnyFlatSpec with should.Matchers {
   it should "produce a stream of 1s" in {
     val x: ListLike[Int] = MyLazyList.ones
     val y = x.take(3).toSeq
-    y.size shouldBe 3
+    y should have size 3
     y.head shouldBe 1
     y shouldBe Seq(1, 1, 1)
   }
@@ -109,7 +109,7 @@ class MyLazyListSpec extends flatspec.AnyFlatSpec with should.Matchers {
     val ones = MyLazyList.continually(1)
     val y = ones.++(empty)
     val z = y.take(3).toSeq
-    z.size shouldBe 3
+    z should have size 3
     z shouldBe Seq(1, 1, 1)
   }
   it should "join an Empty stream with a stream" in {

@@ -39,3 +39,7 @@ lab-parser/src/main/scala/edu/neu/coe/csye7200/yaml/NamedProduct.scala
 lab-parser/src/test/scala/edu/neu/coe/csye7200/quiz/
 
 lab-parser/src/test/scala/edu/neu/coe/csye7200/util/CleanSpec.scala
+
+badOutput.txt
+
+output.txt

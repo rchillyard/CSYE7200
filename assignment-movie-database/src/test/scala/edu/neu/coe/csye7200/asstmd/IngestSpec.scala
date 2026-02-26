@@ -41,7 +41,7 @@ class IngestSpec extends AnyFlatSpec with Matchers {
     }
     msy match {
       case Success(ms) =>
-        ms.size shouldBe 4
+        ms should have size 4
         ms foreach println
       case Failure(x) =>
         fail(x)

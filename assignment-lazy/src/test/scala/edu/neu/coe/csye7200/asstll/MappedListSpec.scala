@@ -56,7 +56,7 @@ class MappedListSpec extends AnyFlatSpec with Matchers {
     val ones = MyLazyList.continually(1)
     val y = ones.++(empty)
     val z = y.take(3).toSeq
-    z.size shouldBe 3
+    z should have size 3
     z shouldBe Seq(1, 1, 1)
   }
   it should "join an Empty stream with a stream" in {

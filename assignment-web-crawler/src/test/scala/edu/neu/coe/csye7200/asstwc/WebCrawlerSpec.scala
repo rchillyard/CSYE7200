@@ -51,7 +51,8 @@ class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with 
 
     behavior of "acquireAll(Seq[URL])"
     it should s"succeed for $goodURL, https://www.google.com/" taggedAs Slow in {
-        given URLordering: Ordering[URL] = (x: URL, y: URL) => x.getPath.compare(y.getPath)
+        given URLordering: Ordering[URL] =
+          (x: URL, y: URL) => x.getPath.compare(y.getPath)
         val ws = List(goodURL, "https://www.google.com/")
         val uys = for (w <- ws) yield Try(new URL(w))
         val usesfy: Try[Future[Seq[URL]]] = for {us <- FP.sequence(uys)} yield Crawler.acquireAll(us)(WebCrawler.fetchAndParseLinks) {
@@ -77,7 +78,7 @@ class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with 
 
     behavior of "doMain"
     it should "work" in {
-        new WebCrawler(1).doMain(List(goodURL)).size shouldBe 1
+        new WebCrawler(1).doMain(List(goodURL))  should have size 1
     }
 
     behavior of "filterAndFlatten"
@@ -92,7 +93,7 @@ class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with 
                 whenReady(usf, timeout(Span(12, Seconds))) {
                     us2 =>
                       us2.size shouldBe 27 +- 1
-                        exceptions.size shouldBe 0
+                        exceptions should have size 0
                 }
             case f@_ => fail(f.toString)
         }

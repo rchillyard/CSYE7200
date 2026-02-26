@@ -49,6 +49,6 @@ class ConcordanceSpec extends AnyFlatSpec with Matchers with Inside {
 
   it should "doMain" in {
     val concordance = ConcordanceParser.doMain(Array("../README.md"))
-    concordance.size shouldBe 1
+    concordance should have size 1
   }
 }

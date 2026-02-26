@@ -1,7 +1,7 @@
 package edu.neu.coe.csye7200.csv.tableParser
 
-import com.phasmidsoftware.parse.TableParser
-import com.phasmidsoftware.table.Table
+import com.phasmidsoftware.tableparser.core.parse.TableParser
+import com.phasmidsoftware.tableparser.core.table.Table
 import org.apache.spark.sql.{Dataset, Encoder, SparkSession}
 import scala.io.Codec
 import scala.util.Try

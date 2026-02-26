@@ -18,13 +18,13 @@ class NodeSpec extends flatspec.AnyFlatSpec with should.Matchers {
   behavior of "children"
   it should "work for TwoNode" in {
     val target = TwoNode[String, String]("K", None, None)
-    target.children.size shouldBe 2
-    target.children.flatMap(_.toSeq).size shouldBe 0
+    target.children should have size 2
+    target.children.flatMap(_.toSeq)  should have size 0
   }
   it should "work for ThreeNode" in {
     val target = ThreeNode[String, String]("K", "M", None, None, None)
-    target.children.size shouldBe 3
-    target.children.flatMap(_.toSeq).size shouldBe 0
+    target.children should have size 3
+    target.children.flatMap(_.toSeq)  should have size 0
   }
 
 

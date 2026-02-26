@@ -38,7 +38,7 @@ class TreeSpec extends AnyFlatSpec with Matchers {
     import BinaryTree._
     val x = BinaryTree[String]("A", "C", "D")
     val y = x :+ Leaf("B")
-    y.size shouldBe 4
+    y should have size 4
     y.depth shouldBe 3
     y.render shouldBe "A{{B}C{D}}"
   }
@@ -77,13 +77,13 @@ class TreeSpec extends AnyFlatSpec with Matchers {
       def tree[A](node: Node[A]): TreeLike[A] = UnsortedTree(node.get.get).asInstanceOf[TreeLike[A]]
     }
     val tree = UnsortedTree(1, Seq(Leaf(2), Leaf(3)))
-    tree.size shouldBe 3
+    tree should have size 3
   }
   it should "work for BinaryTree" in {
     val tree: Node[Int] = BinaryTree(1, 2, 3)
-    tree.size shouldBe 3
+    tree should have size 3
     val tree2 = tree.asInstanceOf[BinaryTree[Int]] :+ BinaryTree(1)
-    tree2.asInstanceOf[BinaryTree[Int]].size shouldBe 4
+    tree2.asInstanceOf[BinaryTree[Int]]  should have size 4
   }
 
   behavior of "includes"

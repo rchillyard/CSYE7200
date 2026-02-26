@@ -61,7 +61,7 @@
 //    import Submissions1._
 //    val qty: Try[Table[Submission]] = Table.parse(rows)
 //    qty should matchPattern { case Success(_) => }
-//    qty.get.size shouldBe 1
+//    qty.get should have size 1
 //  }
 //
 //	object Submissions3 extends CellParsers {
@@ -102,7 +102,7 @@
 //		implicit val codec: Codec = Codec("UTF-16")
 //		val qty: Try[Table[Submission]] = Table.parseResource("/sample.csv")
 //		qty should matchPattern { case Success(_) => }
-//		qty.get.size shouldBe 1
+//		qty.get should have size 1
 //		qty.get.foreach(println)
 //	}
 //
@@ -198,7 +198,7 @@
 //    import Submissions2._
 //    val qty: Try[Table[Submission]] = Table.parseSequence(rows)
 //    qty should matchPattern { case Success(_) => }
-//    qty.get.size shouldBe 1
+//    qty.get should have size 1
 //  }
 //
 //  object QuestionsParser extends CellParsers {
@@ -236,7 +236,7 @@
 //    import QuestionsParser._
 //    val qty: Try[Table[Question]] = Table.parseSequence(rows)
 //    qty should matchPattern { case Success(_) => }
-//    qty.get.size shouldBe 1
+//    qty.get should have size 1
 //  }
 //
 //}

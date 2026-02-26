@@ -137,7 +137,7 @@ class MovieSpec extends AnyFlatSpec with Matchers {
     val source = Source.fromResource("movie_metadata.csv")
     val msy = Movie.getMoviesFromCountry("New Zealand", ingester(source))
     msy should matchPattern { case Success(_) => }
-    msy.get.size shouldBe 4
+    msy.get should have size 4
     source.close()
   }
 

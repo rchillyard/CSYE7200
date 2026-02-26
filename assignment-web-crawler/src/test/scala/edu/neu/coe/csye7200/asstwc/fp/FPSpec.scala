@@ -38,7 +38,7 @@ class FPSpec extends flatspec.AnyFlatSpec with should.Matchers with Futures with
     val xys: Seq[Try[Int]] = Seq(Try(1), Success(2), Failure(WebCrawlerException("dummy")))
     val xsy: Try[Seq[Int]] = sequenceLaxWithLogging(xys)(e => sb.append(e.getLocalizedMessage))
     xsy should matchPattern { case Success(_) => }
-    xsy.get.size shouldBe 2
+    xsy.get should have size 2
     sb.toString shouldBe "dummy"
   }
 
@@ -56,7 +56,7 @@ class FPSpec extends flatspec.AnyFlatSpec with should.Matchers with Futures with
     val xys: Seq[Try[Int]] = Seq(Try(1), Success(2), Failure(WebCrawlerException("dummy")))
     val xsy: Try[Seq[Int]] = sequenceLax(xys)
     xsy should matchPattern { case Success(_) => }
-    xsy.get.size shouldBe 2
+    xsy.get should have size 2
   }
 
   behavior of "SequenceForgiving"
@@ -64,7 +64,7 @@ class FPSpec extends flatspec.AnyFlatSpec with should.Matchers with Futures with
       val xys: Seq[Try[Int]] = Seq(Try(1), Success(2), Failure(WebCrawlerException("dummy")))
       val xsy: Try[Seq[Int]] = sequenceForgiveSubsequent(xys) { case _: WebCrawlerException => true; case _ => false }
       xsy should matchPattern { case Success(_) => }
-      xsy.get.size shouldBe 2
+      xsy.get should have size 2
   }
 
   behavior of "LiftTry"
@@ -132,7 +132,7 @@ class FPSpec extends flatspec.AnyFlatSpec with should.Matchers with Futures with
         val xys: LazyList[Success[Int]] = LazyList.continually(Success(1)).take(3)
         val xsy: Try[LazyList[Int]] = sequence(xys)
         xsy should matchPattern { case Success(_) => }
-        xsy.get.size shouldBe 3
+        xsy.get should have size 3
     }
 
     it should "work5" in {
