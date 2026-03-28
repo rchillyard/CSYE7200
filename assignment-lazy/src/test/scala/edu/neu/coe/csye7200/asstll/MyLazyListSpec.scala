@@ -268,4 +268,16 @@ class MyLazyListSpec extends flatspec.AnyFlatSpec with should.Matchers {
     i.next() shouldBe 1
     i.hasNext shouldBe false
   }
+
+  behavior of "Fibonacci"
+
+  it should "get the first 100 Fibonacci numbers" in {
+    val from0 = MyLazyList.from(0)
+    val from1 = MyLazyList.from(1)
+    val combined = from0 zip from1
+    val seq: Seq[(Int, Int)] = combined.take(100).toSeq
+    println(seq)
+    val fibonacci = combined.scanLeft(0) { case (x, y) => x + y }
+    println(fibonacci.take(100).toSeq)
+  }
 }

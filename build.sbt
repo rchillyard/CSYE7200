@@ -58,6 +58,10 @@ lazy val sparkcsv = (project in file("spark-csv")).settings(
   scalaVersion := scalaVersion2_13
 )
 
+lazy val sparkparquet = (project in file("spark-parquet")).settings(
+  scalaVersion := scalaVersion2_13
+)
+
 lazy val zio = project in file("zio")
 
 lazy val root = (project in file(".")).aggregate(assthw, assthw2, asstmd, asstrs, asstfc, asstwc, asstsw, fp, num,  mapred, concor, labsort, labparser, labactors, lab99, asstch, sparkapp, sparkcsv, zio)

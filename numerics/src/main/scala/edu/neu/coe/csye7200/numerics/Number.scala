@@ -690,12 +690,12 @@ object Number {
     maybeNumber.getOrElse(Number()).specialize
   }
 
-  // NOTE: This may throw an exception
-  private val rationalSignum: Rational => Rational =
-    (x: Rational) => Rational(signum(Number(x)))
   private def signum(x: Number): Int =
-    x.composeMonadic(identity, _.signum, rationalSignum, Math.signum).flatMap(_.toInt).get
-
+    x.toInt.map(_.signum)
+      .orElse(x.toBigInt.map(_.signum))
+      .orElse(x.toRational.map(_.signum))
+      .orElse(x.toDouble.map(d => Math.signum(d).toInt))
+      .getOrElse(throw new NoSuchElementException("signum: invalid Number"))
 }
 
 /**

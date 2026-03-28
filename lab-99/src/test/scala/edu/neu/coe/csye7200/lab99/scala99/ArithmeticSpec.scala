@@ -43,7 +43,7 @@ class ArithmeticSpec extends flatspec.AnyFlatSpec with should.Matchers {
   }
 
   behavior of "P37"
-  it should "get " in {
+  it should "get gcd(36,63)" in {
 //  gcd(36,63) shouldBe 9
   }
 

@@ -67,9 +67,9 @@ class SetGame(size: Int = 12, random: Random = new Random) {
   def sets(cards: Seq[Card]): Seq[Set] =
     (for {
       i <- cards.indices
-      j <- Range(???, ???)
-      k <- Range(???, ???)
-    } yield Set(Seq(cards(i), cards(j), cards(k)))).filter(???)
+      j <- Range(i + 1, cards.size)
+      k <- Range(j + 1, cards.size)
+    } yield Set(Seq(cards(i), cards(j), cards(k)))).filter(_.isSet)
 }
 
 /**
@@ -86,10 +86,10 @@ case class Set(cards: Seq[Card]) {
   require(cards.distinct.size == 3)
 
   // Lens functions:
-  val count: Card => Int = ???
-  val shape: Card => Int = ???
-  val color: Card => Int = ???
-  val shading: Card => Int = ???
+  val count: Card => Int = _.count.toInt
+  val shape: Card => Int = _.shape.toInt
+  val color: Card => Int = _.color.toInt
+  val shading: Card => Int = _.shading.toInt
 
   /**
    * Checks if the three cards in the set form a valid `Set`.
@@ -111,7 +111,8 @@ case class Set(cards: Seq[Card]) {
    *         are either all identical or all unique, otherwise `false`.
    */
   def attributesMatch(f: Card => Int): Boolean = {
-    ??? // Hint: use `distinct.size == 1` to check for uniqueness
+    val styles = cards.map(f).distinct.size
+    styles == 1 || styles == 3
   }
 
   override def toString: String = s"{${cards.mkString(", ")}}"
@@ -149,7 +150,7 @@ object Set {
    */
   def apply(w: String): Set = w match {
     case setRegex(s) =>
-      val Array(a, b, c) = ???
+      val Array(a, b, c) = s.split(",\\s*")
       Set(Card(a), Card(b), Card(c))
     case _ =>
       throw new IllegalArgumentException(s"Invalid set: $w")
@@ -204,7 +205,7 @@ object Card {
    * @return A Card instance if parsing and construction succeed, or null if an error occurs.
    */
   def apply(w: String): Card = {
-    val Array(count, shape, color, shading) = ???
+    val Array(count, shape, color, shading) = w.split(':')
     fromStrings(count, shape, color, shading) match {
       case Success(card) => card
       case Failure(exception) =>

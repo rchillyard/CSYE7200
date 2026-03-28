@@ -25,16 +25,19 @@ object Stocks {
   def apply(): Behavior[Start] =
     Behaviors.setup { context =>
       context.log.info("Creation of the bank")
-      val actorBank = context.spawn(Bank(), s"Bank")
+      val actorBank = context.spawn(Bank(), "Bank")
 
-      Behaviors.receiveMessage {
-        message =>
-        val name = message.asInstanceOf[Start].clientName
+      Behaviors.receiveMessage[Start] { message =>
+        val name = message.clientName
         context.log.info(s"Start a new client: $name")
         context.spawn(BankClientUsingTheTellPattern(actorBank), name)
         Behaviors.same
       }
     }
+
+  val system: ActorSystem[Stocks.Start] = ActorSystem(Stocks(), "Stocks")
+  system ! Start("Alice")
+  system ! Start("Bob")
 }
 
 object BankClientUsingTheAskPattern {

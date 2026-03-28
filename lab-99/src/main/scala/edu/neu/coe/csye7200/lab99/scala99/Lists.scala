@@ -8,7 +8,7 @@ import scala.annotation.tailrec
 
 object P00 {
   def flatten[X](xss: List[List[X]]): List[X] = {
-    @tailrec
+    @scala.annotation.tailrec
     def inner(r: List[X], wss: List[List[X]]): List[X] = wss match {
       case Nil => r
       case h :: t => inner(r ++ h, t)

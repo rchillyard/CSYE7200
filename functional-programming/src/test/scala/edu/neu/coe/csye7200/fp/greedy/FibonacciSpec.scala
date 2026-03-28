@@ -40,5 +40,6 @@ class FibonacciSpec extends AnyFlatSpec with Matchers {
     val target = Fibonacci
     target.getLargest(10) shouldBe 8L
     target.getLargest(13) shouldBe 13L
+    target.getLargest(100) shouldBe 89L
   }
 }

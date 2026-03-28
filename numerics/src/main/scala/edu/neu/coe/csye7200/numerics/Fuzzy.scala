@@ -84,6 +84,7 @@ sealed trait Fuzzy {
           case Success(p) => if (p > threshold) 0 else x.get.compare(y.get)
           case Failure(z) => System.err.println(s"exception thrown in prob method: $z"); 0
         }
+      case _ => throw new Exception("Logic error: compare")
     }
   }
 }
@@ -137,6 +138,7 @@ abstract class FuzzyBase(nominal: Double, delta: Double, distribution: AbstractR
   //Members declared in scala.math.Fractional
   def div(x: Fuzzy, y: Fuzzy): Fuzzy = x match {
     case f: FuzzyBase => f / y
+    case _ => throw new Exception("Logic error")
   }
 
   // Type definition for Fuzzy
@@ -343,8 +345,7 @@ object Fuzzy {
 
     def parseString(str: String): Option[Fuzzy] = Fuzzy.parse(str).toOption
 
-    val myZero: Fuzzy = Numeric.IntIsIntegral.zero
-    def rem(x: Fuzzy, y: Fuzzy): Fuzzy = myZero
+    def rem(x: Fuzzy, y: Fuzzy): Fuzzy = Exact(0)
 
     def toInt(g: Fuzzy): Int = toLong(g).toInt
 
@@ -356,7 +357,7 @@ object Fuzzy {
     def toFloat(g: Fuzzy): Float = toDouble(g).toFloat
 
     def toDouble(g: Fuzzy): Double = g match {
-      case Exact(x) => x
+      case Exact(x) => x.toDouble
       case _ => throw new UnsupportedOperationException(s"toDouble: $g (not exact)")
     }
   }
