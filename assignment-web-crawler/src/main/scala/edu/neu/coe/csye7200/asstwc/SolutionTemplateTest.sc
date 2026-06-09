@@ -1,4 +1,4 @@
-import edu.neu.coe.csye7200.asstwc._
+import edu.neu.coe.csye7200.asstwc.*
 import edu.neu.coe.csye7200.asstwc.fp.FP
 import java.net.{MalformedURLException, URL}
 import scala.concurrent.{ExecutionContext, Future}
@@ -71,7 +71,7 @@ def wget(url: URL)(using ec: ExecutionContext): Future[Seq[URL]] = {
   // 9 points.
 
   val z =
-  // TO BE IMPLEMENTED 
+    // TO BE IMPLEMENTED 
     ???
   z
 }

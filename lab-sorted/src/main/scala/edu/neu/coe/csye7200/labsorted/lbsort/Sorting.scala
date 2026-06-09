@@ -7,17 +7,17 @@ package edu.neu.coe.csye7200.labsorted.lbsort
 import scala.reflect.ClassTag
 
 /**
-  * Interface for a sorting strategy object.
-  */
+ * Interface for a sorting strategy object.
+ */
 trait Sort extends Any {
   def sort[A: Ordering : ClassTag](data: Array[A]): Unit
 }
 
 /**
-  * Simple implementation of insertion sort.
-  *
-  * Works for small arrays but due to O(n*n) complexity is not generally good.
-  */
+ * Simple implementation of insertion sort.
+ *
+ * Works for small arrays but due to O(n*n) complexity is not generally good.
+ */
 object InsertionSort extends Sort {
   final def sort[A: Ordering : ClassTag](data: Array[A]): Unit =
     sort(data, 0, data.length)
@@ -39,11 +39,11 @@ object InsertionSort extends Sort {
 }
 
 /**
-  * In-place merge sort implementation. This sort is stable but does mutate
-  * the given array. It is an in-place sort but it does allocate a temporary
-  * array of the same size as the input. It uses InsertionSort for sorting very
-  * small arrays.
-  */
+ * In-place merge sort implementation. This sort is stable but does mutate
+ * the given array. It is an in-place sort but it does allocate a temporary
+ * array of the same size as the input. It uses InsertionSort for sorting very
+ * small arrays.
+ */
 object MergeSort extends Sort {
   @inline final def startWidth: Int = 8
 
@@ -61,7 +61,8 @@ object MergeSort extends Sort {
     var i = 0
     var limit = len - startWidth
     while (i < limit) {
-      InsertionSort.sort(data, i, i + startWidth); i += startWidth
+      InsertionSort.sort(data, i, i + startWidth);
+      i += startWidth
     }
     if (i < len) InsertionSort.sort(data, i, len)
     var width = startWidth
@@ -89,11 +90,11 @@ object MergeSort extends Sort {
   }
 
   /**
-    * Helper method for mergeSort, used to do a single "merge" between two
-    * sections of the input array. The start, mid and end parameters denote the
-    * left and right ranges of the input to merge, as well as the area of the
-    * output to write to.
-    */
+   * Helper method for mergeSort, used to do a single "merge" between two
+   * sections of the input array. The start, mid and end parameters denote the
+   * left and right ranges of the input to merge, as well as the area of the
+   * output to write to.
+   */
   @inline final def merge[A: Ordering : ClassTag](in: Array[A], out: Array[A], start: Int, mid: Int, end: Int): Unit = {
     val o = implicitly[Ordering[A]]
     var ii = start
@@ -113,10 +114,10 @@ object MergeSort extends Sort {
 }
 
 /**
-  * In-place quicksort implementation. It is not stable, but does not allocate
-  * extra space (other than stack). Like MergeSort, it uses InsertionSort for
-  * sorting very small arrays.
-  */
+ * In-place quicksort implementation. It is not stable, but does not allocate
+ * extra space (other than stack). Like MergeSort, it uses InsertionSort for
+ * sorting very small arrays.
+ */
 object QuickSort {
   @inline final def limit: Int = 16
 
@@ -163,13 +164,13 @@ object QuickSort {
 }
 
 /**
-  * Object providing in-place sorting capability for arrays.
-  *
-  * Sorting.sort() uses quickSort() by default (in-place, not stable, generally
-  * fastest but might hit bad cases where it's O(n*n)). Also provides
-  * mergeSort() (in-place, stable, uses extra memory, still pretty fast) and
-  * insertionSort(), which is slow except for small arrays.
-  */
+ * Object providing in-place sorting capability for arrays.
+ *
+ * Sorting.sort() uses quickSort() by default (in-place, not stable, generally
+ * fastest but might hit bad cases where it's O(n*n)). Also provides
+ * mergeSort() (in-place, stable, uses extra memory, still pretty fast) and
+ * insertionSort(), which is slow except for small arrays.
+ */
 object Sorting {
   final def sort[A: Ordering : ClassTag](data: Array[A]): Unit = QuickSort.sort(data)
 

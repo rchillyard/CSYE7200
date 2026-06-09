@@ -44,13 +44,17 @@ class ArchiveSpec extends AnyFlatSpec with should.Matchers {
 
   it should "flatWhen true" in {
     val sb = new StringBuilder()
-    flatWhen(condition = true) {sb.append("X"); Some(1)} shouldBe Some(1)
+    flatWhen(condition = true) {
+      sb.append("X"); Some(1)
+    } shouldBe Some(1)
     sb.toString() shouldBe "X"
   }
 
   it should "flatWhen false" in {
     val sb = new StringBuilder()
-    flatWhen(condition = false) {sb.append("X"); Some(1)} shouldBe None
+    flatWhen(condition = false) {
+      sb.append("X"); Some(1)
+    } shouldBe None
     sb.isEmpty shouldBe true
   }
 }

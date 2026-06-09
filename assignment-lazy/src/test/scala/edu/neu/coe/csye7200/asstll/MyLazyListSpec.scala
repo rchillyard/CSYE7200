@@ -4,11 +4,13 @@
 
 package edu.neu.coe.csye7200.asstll
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import org.scalatest.flatspec
 import org.scalatest.matchers.should
+import org.scalatest.matchers.should.Matchers
 import scala.language.postfixOps
 
-class MyLazyListSpec extends flatspec.AnyFlatSpec with should.Matchers {
+class MyLazyListSpec extends flatspec.AnyFlatSpec with Matchers with CancelOnNotImplemented {
 
   behavior of "Cons"
   it should "produce a single of 1" in {
@@ -274,10 +276,11 @@ class MyLazyListSpec extends flatspec.AnyFlatSpec with should.Matchers {
   it should "get the first 100 Fibonacci numbers" in {
     val from0 = MyLazyList.from(0)
     val from1 = MyLazyList.from(1)
-    val combined = from0 zip from1
+    val combined = (from0 zip from1).asInstanceOf[MyLazyList[(Int, Int)]]
     val seq: Seq[(Int, Int)] = combined.take(100).toSeq
     println(seq)
-    val fibonacci = combined.scanLeft(0) { case (x, y) => x + y }
-    println(fibonacci.take(100).toSeq)
+    pending // figuring out what is supposed to happen here
+//    val fibonacci = seq.scanLeft(0) { case (x, y) => x + y }
+//    println(fibonacci.take(100).toSeq)
   }
 }

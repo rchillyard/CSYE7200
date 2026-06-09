@@ -7,7 +7,7 @@ import scala.util.parsing.combinator.JavaTokenParsers
 object BenchmarkParser extends App {
 
   val p: BenchmarkParser = new BenchmarkParser()
-  private val inFilename = args.headOption.getOrElse("/Users/rhillyard/IdeaProjects/INFO6205/savedLogs/benchmark8a.txt")
+  private val inFilename = args.headOption.getOrElse("/Users/rhillyard/IdeaProjects/INFO6205/savedLogs/benchmarkClaudeInstr.txt")
   val source = Source.fromFile(inFilename)
   if (source != null) println(s"Opening $inFilename")
   else throw new RuntimeException(s"$inFilename does not exist")

@@ -2,7 +2,8 @@ name := "Lazy"
 
 version := "1.0"
 
-Compile / doc / scalacOptions ++= Seq("-Vimplicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
+// Scala 3 — inherits scalacOptions from root build.sbt
+// Note: scalactic is a transitive dependency of scalatest and does not need
+// to be listed separately.
 
-libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.19"
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % Versions.scalatest % Test

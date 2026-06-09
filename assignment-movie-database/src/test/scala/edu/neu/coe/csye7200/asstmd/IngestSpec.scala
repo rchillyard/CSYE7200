@@ -1,14 +1,15 @@
 package edu.neu.coe.csye7200.asstmd
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import scala.io.{Codec, Source}
 import scala.util.*
 
 /**
-  * Created by scalaprof on 9/13/16.
-  */
-class IngestSpec extends AnyFlatSpec with Matchers {
+ * Created by scalaprof on 9/13/16.
+ */
+class IngestSpec extends AnyFlatSpec with Matchers with CancelOnNotImplemented {
 
   behavior of "ingest"
 
@@ -27,8 +28,9 @@ class IngestSpec extends AnyFlatSpec with Matchers {
 
   it should "work for movie database" in {
     given codec: Codec = Codec("UTF-8")
+
     // NOTE that you expect to see a number of exceptions thrown. That's OK. We expect that some lines will not parse correctly.
-    val msy = Using(Source.fromResource("movie_metadata.csv")){
+    val msy = Using(Source.fromResource("movie_metadata.csv")) {
       source =>
         val ingester = new Ingest[Movie]()
         val mys = for (my <- ingester(source).toList) yield my.recoverWith {

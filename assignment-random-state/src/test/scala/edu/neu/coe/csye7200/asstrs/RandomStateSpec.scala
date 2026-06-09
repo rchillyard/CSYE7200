@@ -1,13 +1,14 @@
 package edu.neu.coe.csye7200.asstrs
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import scala.language.postfixOps
 
 /**
-  * @author scalaprof
-  */
-class RandomStateSpec extends AnyFlatSpec with Matchers {
+ * @author scalaprof
+ */
+class RandomStateSpec extends AnyFlatSpec with Matchers with CancelOnNotImplemented {
 
   //noinspection ScalaUnusedSymbol
   private def stdDev(xs: Seq[Double]): Double = math.sqrt(xs.reduceLeft((a, x) => a + x * x)) / xs.length

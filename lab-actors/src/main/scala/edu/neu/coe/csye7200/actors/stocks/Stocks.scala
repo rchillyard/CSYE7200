@@ -44,6 +44,7 @@ object BankClientUsingTheAskPattern {
   def apply(bank: ActorRef[CreatePortfolio]): Behavior[Unit] =
     Behaviors.setup { context =>
       given timeout: Timeout = 3.seconds
+
       context.ask(bank, CreatePortfolio.apply) {
         case Success(message) =>
           context.log.info("Portfolio received")

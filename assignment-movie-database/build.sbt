@@ -2,6 +2,6 @@ name := "MovieDatabase"
 
 version := "1.0"
 
-Compile / doc / scalacOptions ++= Seq("-Vimplicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
+// Scala 3 — inherits scalacOptions from root build.sbt
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % Versions.scalatest % Test
