@@ -1,5 +1,6 @@
 package edu.neu.coe.csye7200.asstwc.fp
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import edu.neu.coe.csye7200.asstwc.{WebCrawler, WebCrawlerException}
 import java.net.URL
 import java.util.concurrent.TimeoutException
@@ -15,7 +16,7 @@ import scala.util.{Failure, Success, Try}
 /**
  * TODO implement me properly
  */
-class FPSpec extends flatspec.AnyFlatSpec with should.Matchers with Futures with ScalaFutures {
+class FPSpec extends flatspec.AnyFlatSpec with should.Matchers with Futures with ScalaFutures with CancelOnNotImplemented {
 
   import edu.neu.coe.csye7200.asstwc.fp.FP.*
   import scala.concurrent.ExecutionContext.Implicits.global

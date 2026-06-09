@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class>
+    <name>Tang Dynasty Poetry</name>
+    <description language="en">This is just an example XML file</description>
+    <instructor>Robin Hillyard</instructor>
+    <poets>
+        <poet>
+            <name language="en">Wang Wei</name>
+            <name language="zh">王維</name>
+        </poet>
+        <poet>
+            <name language="en">Li Bai</name>
+            <name language="zh">李白</name>
+        </poet>
+    </poets>
+</class>

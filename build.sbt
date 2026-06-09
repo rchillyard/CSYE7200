@@ -16,10 +16,10 @@ ThisBuild / scalacOptions ++= Seq(
 )
 
 // ── JDK settings ─────────────────────────────────────────────────────────
-// Set environment variable JDK17_HOME to your JDK 17 installation, e.g.:
-//   export JDK17_HOME=/path/to/jdk-17
+// Set environment variable JDK25_HOME to your JDK 25 installation, e.g.:
+//   export JDK25_HOME=/path/to/jdk-25
 // Note: assignment-spark-word-count overrides javaHome to JDK 11 locally.
-ThisBuild / javaHome := sys.env.get("JDK17_HOME").map(file)
+ThisBuild / javaHome := sys.env.get("JDK25_HOME").map(file)
 
 ThisBuild / javacOptions ++= Seq("--release", "17")
 
@@ -52,7 +52,7 @@ lazy val exconc   = (project in file("ex-concordance")).settings(
 lazy val exfp      = (project in file("ex-functional-programming")).settings(
   scalaVersion := Versions.scala2_13
 )
-lazy val ex99      = project in file("lab-scala-99")
+lazy val ex99      = (project in file("lab-scala-99")).dependsOn(core % "compile->compile;test->test")
 lazy val labparser  = (project in file("lab-parser")).settings(
   // scala-parser-combinators has no artifact for 2.13+, so this remains on 2.12
   scalaVersion := Versions.scala2_12

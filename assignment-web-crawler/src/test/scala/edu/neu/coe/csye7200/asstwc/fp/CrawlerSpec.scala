@@ -31,7 +31,9 @@ class CrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with Sca
     val usf = crawler.doCrawl[String](args)(createURL)(fetchAndParseLinks, isParseableURL)
     // NOTE that we do not attempt to handle any (unhandled) exceptions here:
     // let them bubble up to the caller.
-    Await.result(usf, Duration("360 second")) should have size 1
+    futureOrCancelWith(usf, Duration("360 second")){
+      us => us should have size 1
+    }
   }
 
   behavior of "crawl(Seq[URL])"
@@ -45,10 +47,10 @@ class CrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with Sca
     val uys = for (arg <- args) yield Try(new URL(arg))
     val usft = for {us <- sequence(uys)} yield new Crawler(max).crawl(us)(fetchAndParseLinks, isParseableURL)
     val usf = flatten(usft)
-    whenReady(usf, timeout(Span(30, Seconds))) {
+    futureOrCancelWith(usf, Duration("30 second")) {
       us =>
-        us.length shouldBe expected +- 1
         println(us.map(_.toString).sorted)
+        us.length shouldBe expected +- 1
     }
   }
 }

@@ -1,5 +1,6 @@
 package edu.neu.coe.csye7200.asstwc
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import edu.neu.coe.csye7200.asstwc.WebCrawler.{fetchAndParseLinks, isParseableURL}
 import edu.neu.coe.csye7200.asstwc.fp.FP.flatten
 import edu.neu.coe.csye7200.asstwc.fp.{Crawler, FP}
@@ -12,13 +13,14 @@ import org.scalatest.tagobjects.Slow
 import org.scalatest.time.*
 import scala.collection.mutable
 import scala.concurrent.Future
+import scala.concurrent.duration.{Duration, DurationInt}
 import scala.util.*
 import scala.util.control.NonFatal
 
 /**
  * @author scalaprof
  */
-class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with ScalaFutures with TryValues with Inside {
+class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with ScalaFutures with TryValues with Inside with CancelOnNotImplemented {
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -35,13 +37,16 @@ class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with 
 
   "acquireAll(URL)" should s"succeed for $goodURL" taggedAs Slow in {
     val usfy = for {u <- Try(new URL(goodURL))} yield WebCrawler.fetchAndParseLinks(u)
-    whenReady(flatten(usfy), timeout(Span(6, Seconds))) { us => us.length shouldBe 28 }
+    futureOrCancelWith(flatten(usfy), 6.second) { us => us.length shouldBe 28 }
   }
 
   it should s"not succeed for $badURL" taggedAs Slow in {
     val usfy = for {u <- Try(new URL(badURL))} yield WebCrawler.fetchAndParseLinks(u)
     val usf = FP.flatten(usfy)
-    whenReady(usf.failed, timeout(Span(6, Seconds))) { e => e shouldBe a[java.io.FileNotFoundException] }
+    futureOrCancelWith(usf, 6.second) {
+      case e: java.util.concurrent.ExecutionException =>
+        e.getCause shouldBe a[java.io.FileNotFoundException]
+      case e => e shouldBe a[java.io.FileNotFoundException] }
   }
 
   it should s"not succeed for $goodURL" taggedAs Slow in {
@@ -81,7 +86,10 @@ class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with 
 
   behavior of "doMain"
   it should "work" in {
-    new WebCrawler(1).doMain(List(goodURL)) should have size 1
+    val usy = new WebCrawler(1).doMain(List(goodURL))
+    tryOrCancelWith(usy) {
+      us => us should have size 1
+    }
   }
 
   behavior of "filterAndFlatten"
