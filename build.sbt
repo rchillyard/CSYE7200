@@ -16,10 +16,12 @@ ThisBuild / scalacOptions ++= Seq(
 )
 
 // ── JDK settings ─────────────────────────────────────────────────────────
-// Set environment variable JDK25_HOME to your JDK 25 installation, e.g.:
-//   export JDK25_HOME=/path/to/jdk-25
+// JDK 21 (LTS) is the recommended JDK for this project.
+// Hadoop/Spark do not yet support JDK 23+ (Subject.getSubject() was removed).
+// Set environment variable JDK21_HOME to your JDK 21 installation, e.g.:
+//   export JDK21_HOME=/path/to/jdk-21
 // Note: assignment-spark-word-count overrides javaHome to JDK 11 locally.
-ThisBuild / javaHome := sys.env.get("JDK25_HOME").map(file)
+ThisBuild / javaHome := sys.env.get("JDK21_HOME").map(file)
 
 ThisBuild / javacOptions ++= Seq("--release", "17")
 

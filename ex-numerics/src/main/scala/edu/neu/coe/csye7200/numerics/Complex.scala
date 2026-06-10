@@ -27,10 +27,10 @@ case class Complex(real: Double, imag: Double) {
 }
 
 object Complex {
-  val i: Complex = Complex(0, 1)
-  val zero: Complex = apply(0)
-  val one: Complex = apply(1)
-  val minusOne: Complex = apply(-1)
+  lazy val i: Complex = Complex(0, 1)
+  lazy val zero: Complex = apply(0)
+  lazy val one: Complex = apply(1)
+  lazy val minusOne: Complex = apply(-1)
 
   /**
    * Construct a Complex which has real part x and imaginary part 0.

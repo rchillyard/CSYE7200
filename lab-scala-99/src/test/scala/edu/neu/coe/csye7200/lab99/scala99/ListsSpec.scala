@@ -8,6 +8,8 @@ import edu.neu.coe.csye7200.CancelOnNotImplemented
 import org.scalatest.flatspec
 import org.scalatest.matchers.should
 
+import scala.util.Try
+
 class ListsSpec extends flatspec.AnyFlatSpec with should.Matchers with CancelOnNotImplemented {
 
   private val fib0 = List(1)
@@ -18,9 +20,9 @@ class ListsSpec extends flatspec.AnyFlatSpec with should.Matchers with CancelOnN
   import edu.neu.coe.csye7200.lab99.scala99.P01.*
 
   it should "throw an exception for Nil" in {
-    a[NoSuchElementException] should be thrownBy last(Nil)
+    assertTryThrowsOrCancel[NoSuchElementException](Try(last(Nil)))
   }
-  
+
   // NOTE that if you see the following:
   // Expected exception java.util.NoSuchElementException to be thrown, but scala.NotImplementedError was thrown
   // Then just go over to Lists.scala and implement `last`.
@@ -43,7 +45,7 @@ class ListsSpec extends flatspec.AnyFlatSpec with should.Matchers with CancelOnN
   // Expected exception java.util.NoSuchElementException to be thrown, but scala.NotImplementedError was thrown
   // Then just go over to Lists.scala and implement `last`.
   it should "throw an exception for fib0" in {
-    a[NoSuchElementException] should be thrownBy penultimate(fib0)
+    assertTryThrowsOrCancel[NoSuchElementException](Try(penultimate(fib0)))
   }
   it should "get 5 for fib5" in {
     penultimate(fib5) shouldBe 5
@@ -57,13 +59,13 @@ class ListsSpec extends flatspec.AnyFlatSpec with should.Matchers with CancelOnN
   // Expected exception java.util.NoSuchElementException to be thrown, but scala.NotImplementedError was thrown
   // Then just go over to Lists.scala and implement `last`.
   it should "throw an exception for 0, Nil" in {
-    a[NoSuchElementException] should be thrownBy kth(0, Nil)
+    assertTryThrowsOrCancel[NoSuchElementException](Try(kth(0, Nil)))
   }
   it should "throw an exception for 1, fib0" in {
-    a[NoSuchElementException] should be thrownBy kth(1, fib0)
+    assertTryThrowsOrCancel[NoSuchElementException](Try(kth(1, fib0)))
   }
   it should "throw an exception for -1, fib0" in {
-    a[NoSuchElementException] should be thrownBy kth(-1, fib0)
+    assertTryThrowsOrCancel[NoSuchElementException](Try(kth(-1, fib0)))
   }
   it should "get 1 for 0, fib5" in {
     kth(0, fib5) shouldBe 1

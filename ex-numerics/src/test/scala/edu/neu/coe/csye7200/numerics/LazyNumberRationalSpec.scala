@@ -1,17 +1,18 @@
 package edu.neu.coe.csye7200.numerics
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import org.scalatest.flatspec
 import org.scalatest.matchers.should
 
 /**
  * @author scalaprof
  */
-class LazyNumberRationalSpec extends flatspec.AnyFlatSpec with should.Matchers {
+class LazyNumberRationalSpec extends flatspec.AnyFlatSpec with should.Matchers with CancelOnNotImplemented {
 
   val rat1: LazyRational = LazyRational(1)
   val rat2: LazyRational = LazyRational(Rational(2))
   val square: Named[Rational] = Named[Rational]("square", { x => x * x })
-  val rat4: LazyNumber[Rational] = rat2 map square
+  lazy val rat4: LazyNumber[Rational] = rat2 map square
 
   "rat1" should "be 1" in {
     rat1.get shouldBe Rational.one

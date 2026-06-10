@@ -69,9 +69,11 @@ class MovieSpec extends AnyFlatSpec with Matchers with CancelOnNotImplemented {
     }
   }
   it should "work for PG-13" in {
-    val x = Rating("PG-13")
-    x should matchPattern {
-      case Rating("PG", Some(13)) =>
+    assertOrCancelWith(Rating("PG-13")) {
+      r =>
+        r should matchPattern {
+          case Rating("PG", Some(13)) =>
+        }
     }
   }
   it should "work for R" in {

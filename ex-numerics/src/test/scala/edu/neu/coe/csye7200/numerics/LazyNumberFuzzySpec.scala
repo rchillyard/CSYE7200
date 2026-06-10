@@ -1,12 +1,13 @@
 package edu.neu.coe.csye7200.numerics
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import org.scalatest.flatspec
 import org.scalatest.matchers.should
 
 /**
  * @author scalaprof
  */
-class LazyNumberFuzzySpec extends flatspec.AnyFlatSpec with should.Matchers {
+class LazyNumberFuzzySpec extends flatspec.AnyFlatSpec with should.Matchers with CancelOnNotImplemented {
 
   import Fuzzy.*
 
@@ -20,7 +21,7 @@ class LazyNumberFuzzySpec extends flatspec.AnyFlatSpec with should.Matchers {
 
   private val fuzzSquare = Named[Fuzzy]("square", squ)
   //noinspection ScalaUnusedSymbol
-  private val fuzz4 = fuzz2 map fuzzSquare
+  private lazy val fuzz4 = fuzz2 map fuzzSquare
   private val fuzzy = Exact(1)
   //noinspection ScalaUnusedSymbol
   private val p = fuzzy * fuzzy

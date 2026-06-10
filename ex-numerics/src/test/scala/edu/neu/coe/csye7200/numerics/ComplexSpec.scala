@@ -1,9 +1,10 @@
 package edu.neu.coe.csye7200.numerics
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
-class ComplexSpec extends AnyFlatSpec with should.Matchers {
+class ComplexSpec extends AnyFlatSpec with should.Matchers with CancelOnNotImplemented {
 
   implicit val ok: Boolean = true
 

@@ -43,10 +43,7 @@ class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with 
   it should s"not succeed for $badURL" taggedAs Slow in {
     val usfy = for {u <- Try(new URL(badURL))} yield WebCrawler.fetchAndParseLinks(u)
     val usf = FP.flatten(usfy)
-    futureOrCancelWith(usf, 6.second) {
-      case e: java.util.concurrent.ExecutionException =>
-        e.getCause shouldBe a[java.io.FileNotFoundException]
-      case e => e shouldBe a[java.io.FileNotFoundException] }
+    assertFutureThrowsOrCancel[java.io.FileNotFoundException](usf, 6.seconds)
   }
 
   it should s"not succeed for $goodURL" taggedAs Slow in {
@@ -62,13 +59,18 @@ class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with 
 
     val ws = List(goodURL, "https://www.google.com/")
     val uys = for (w <- ws) yield Try(new URL(w))
-    val usesfy: Try[Future[Seq[URL]]] = for {us <- FP.sequence(uys)} yield Crawler.acquireAll(us)(WebCrawler.fetchAndParseLinks) {
-      case NonFatal(x) => System.err.println(s"ignored error: $x"); Success(None)
-      case x => Success(Some(x))
-    }
-    val usesf: Future[Seq[URL]] = FP.flatten(usesfy)
-    whenReady(usesf, timeout(Span(12, Seconds))) { us =>
-      us.size - 33 >= 0 shouldBe true
+    tryOrCancelWith(FP.sequence(uys)) {
+      us =>
+        val usf: Future[Seq[URL]] = Crawler.acquireAll(us)(WebCrawler.fetchAndParseLinks) {
+          case NonFatal(x) =>
+            System.err.println(s"ignored error: $x")
+          case x =>
+            ()
+        }
+        futureOrCancelWith(usf) {
+          us =>
+            us.size - 33 >= 0 shouldBe true
+        }
     }
   }
 
@@ -77,10 +79,12 @@ class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with 
 
     val ws = List(goodURL)
     val uys = for (w <- ws) yield Try(new URL(w))
-    val usesfy: Try[Future[Seq[URL]]] = for {us <- FP.sequence(uys)} yield Crawler.acquireAll(us)(WebCrawler.fetchAndParseLinks)(logException)
-    val usesf: Future[Seq[URL]] = FP.flatten(usesfy)
-    whenReady(usesf, timeout(Span(12, Seconds))) { uses =>
-      println(uses)
+    val usfy: Try[Future[Seq[URL]]] = for {us <- FP.sequence(uys)} yield Crawler.acquireAll(us)(WebCrawler.fetchAndParseLinks)(logException)
+    val usf: Future[Seq[URL]] = FP.flatten(usfy)
+    futureOrCancelWith(usf) {
+      us =>
+        println(us)
+        us should not be empty
     }
   }
 
@@ -120,10 +124,10 @@ class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with 
     val uys = for (arg <- args) yield Try(new URL(arg))
     val usft = for {us <- FP.sequence(uys)} yield WebCrawler(max).crawl(us)(WebCrawler.fetchAndParseLinks, isParseableURL)
     val usf = FP.flatten(usft)
-    whenReady(usf, timeout(Span(30, Seconds))) {
+    futureOrCancelWith(usf, 30.second) {
       us =>
-        us.length shouldBe expected +- 1
         println(us.map(_.toString).sorted)
+        us.length shouldBe expected +- 1
     }
   }
 

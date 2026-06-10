@@ -20,7 +20,7 @@ Test / parallelExecution := false
 ThisBuild / evictionErrorLevel := Level.Warn
 
 libraryDependencies ++= Seq(
-  "com.phasmidsoftware"    %% "tableparser-spark" % Versions.tableParser,
+  "com.phasmidsoftware"    %% "tableparser-spark" % Versions.tableParser2,
   "com.github.nscala-time" %% "nscala-time"       % Versions.nscalaTime,
   "org.scalatest"          %% "scalatest"          % Versions.scalatest % Test,
   "org.apache.spark"       %% "spark-core"         % Versions.spark4,

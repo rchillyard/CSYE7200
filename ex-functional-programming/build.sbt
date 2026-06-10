@@ -17,7 +17,7 @@ scalacOptions := Seq(
 lazy val scalaModules = "org.scala-lang.modules"
 
 libraryDependencies ++= Seq(
-  "com.phasmidsoftware"    %% "tableparser-core"         % Versions.tableParser,
+  "com.phasmidsoftware"    %% "tableparser-core"         % Versions.tableParser2,
   scalaModules             %% "scala-xml"                % Versions.xml,
   scalaModules             %% "scala-parser-combinators" % Versions.parserCombinators,
   "io.circe"               %% "circe-core"               % Versions.circe,

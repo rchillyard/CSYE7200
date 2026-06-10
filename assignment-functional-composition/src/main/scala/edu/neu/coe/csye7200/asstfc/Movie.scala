@@ -177,7 +177,7 @@ object Format {
 
   import Function.*
 
-  val fy: (Try[Int], Try[Double]) => Try[String => Boolean => Format] = lift2(uncurried2(invert4((apply _).curried)))
+  lazy val fy: (Try[Int], Try[Double]) => Try[String => Boolean => Format] = lift2(uncurried2(invert4((apply _).curried)))
 }
 
 object Production {
@@ -189,7 +189,7 @@ object Production {
 
   import Function.*
 
-  val fy: (Try[Int], Try[Int], Try[Int]) => Try[String => Production] = lift3(uncurried3(invert4((apply _).curried)))
+  lazy val fy: (Try[Int], Try[Int], Try[Int]) => Try[String => Production] = lift3(uncurried3(invert4((apply _).curried)))
 }
 
 object Reviews {

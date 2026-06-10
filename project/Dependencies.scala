@@ -34,7 +34,7 @@ object Versions {
   val zioHttp = "3.11.2"
 
   // TableParser (Phasmid Software)
-  val tableParser = "1.5.1"
+  val tableParser2 = "1.5.1"
 
   // Circe (JSON)
   val circe = "0.14.15"

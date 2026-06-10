@@ -1,5 +1,6 @@
 package edu.neu.coe.csye7200.asstmd
 
+import com.phasmidsoftware.tableparser.core.util.FP
 import edu.neu.coe.csye7200.CancelOnNotImplemented
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -33,20 +34,16 @@ class IngestSpec extends AnyFlatSpec with Matchers with CancelOnNotImplemented {
     val msy = Using(Source.fromResource("movie_metadata.csv")) {
       source =>
         val ingester = new Ingest[Movie]()
-        val mys = for (my <- ingester(source).toList) yield my.recoverWith {
-          case e: ParseException => System.err.println(e); my
+        val msy: Try[Seq[Movie]] = FP.sequenceForgivingWith(ingester(source).toList) {
+          case e: ParseException => System.err.println(e); Success(None)
+          case scala.util.control.NonFatal(e) => Failure(e)
         }
-        for {
-          my <- mys
-          m <- my.toOption if m.production.country == "New Zealand"
-        } yield m
-    }
-    msy match {
-      case Success(ms) =>
-        ms should have size 4
-        ms foreach println
-      case Failure(x) =>
-        fail(x)
+        tryOrCancelWith(msy) {
+          ms =>
+            val ww = ms filter { m => m.production.country == "New Zealand" }
+            ww foreach println
+            ww should have size 4
+        }
     }
   }
 }

@@ -327,13 +327,16 @@ object Rating {
    * @param s a String made up of a code, optionally followed by a dash and a number, e.g. "R" or "PG-13"
    * @return a Rating
    */
-  // Hint: This should be similar to the apply method in Object Name. The parameter of apply in case match should be same as case class Rating
+  // Hint: This should be similar to the apply method in Object Name. The parameter of apply in case match should be the same as case class Rating
+  // You will need to handle two cases based on rRating (not just one)
   // 13 points
   def apply(s: String): Rating = s match {
     case rRating("Unrated" | "Approved" | "Not Rated" | "" | "NULL" | null, _, _) =>
       throw ParseException(s"parse error in Rating: $s")
     // TO BE IMPLEMENTED 
-        ???
+     case rRating(_,_,_) =>
+    ???
+    // END
     case _ => throw ParseException(s"parse error in Rating: $s")
   }
 }
