@@ -133,6 +133,7 @@ class ComparerSpec extends AnyFlatSpec with Matchers with CancelOnNotImplemented
   }
   it should "sort List[String]" in {
     val list = List("b", "c", "a")
+    // NOTE this will not compile until you have defined Comparer[String] (see the TO BE IMPLEMENTED code)
     val sorted = Sorted(list)
     sorted() shouldBe List("a", "b", "c")
   }

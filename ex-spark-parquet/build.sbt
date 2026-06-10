@@ -19,11 +19,10 @@ unmanagedBase := baseDirectory.value / "lib"
 Test / parallelExecution := false
 ThisBuild / evictionErrorLevel := Level.Warn
 
-// JDK 17+ compatibility: Hadoop/Spark uses javax.security.auth.Subject.getSubject()
-// which throws UnsupportedOperationException on JDK 18+.
-Test / javaOptions ++= Seq(
-  "-Djava.security.manager=allow",
-  "-Djavax.security.auth.useSubjectCredsOnly=false"
+// Exclude log4j-slf4j2-impl from Spark to avoid multiple SLF4J provider warnings
+// (logback is used instead, via the root build)
+excludeDependencies ++= Seq(
+  ExclusionRule("org.apache.logging.log4j", "log4j-slf4j2-impl")
 )
 
 libraryDependencies ++= Seq(

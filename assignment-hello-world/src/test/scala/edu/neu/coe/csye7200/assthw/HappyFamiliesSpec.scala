@@ -1,12 +1,14 @@
 package edu.neu.coe.csye7200.assthw
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import edu.neu.coe.csye7200.assthw.Gender.{female, male}
 import edu.neu.coe.csye7200.assthw.HappyFamilies.maybeAge
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
+
 import scala.util.{Failure, Success}
 
-class HappyFamiliesSpec extends AnyFlatSpec with should.Matchers {
+class HappyFamiliesSpec extends AnyFlatSpec with should.Matchers with CancelOnNotImplemented {
   private val bentley = Person("Bentley", male, Some(13))
   private val gingerSnap = Person("GingerSnap", female, Some(12))
   private val xena = Person("Xena", Gender(None), Some(7))

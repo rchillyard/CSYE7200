@@ -1,9 +1,11 @@
 package edu.neu.coe.csye7200.assthw
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import edu.neu.coe.csye7200.assthw.Primes.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 import org.scalatest.matchers.should.Matchers.shouldBe
+
 import scala.math.BigInt.long2bigInt
 
 /**
@@ -26,7 +28,7 @@ import scala.math.BigInt.long2bigInt
  *
  * NOTE that there are implicit converters from Int/Long to BigInt
  */
-class PrimesSpec extends AnyFlatSpec with should.Matchers {
+class PrimesSpec extends AnyFlatSpec with should.Matchers with CancelOnNotImplemented {
 
   behavior of "Primes"
 

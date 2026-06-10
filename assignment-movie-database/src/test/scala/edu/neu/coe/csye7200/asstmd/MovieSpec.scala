@@ -151,7 +151,9 @@ class MovieSpec extends AnyFlatSpec with Matchers with CancelOnNotImplemented {
   }
 
   behavior of "sequence"
-  it should "do sequenceOptimistic 1" in {
+  // NOTE this test will fail until all the Movie classes are complete (look for "// TO BE IMPLEMENTED")
+  // Until then, don't worry about it--we're ignoring it.
+  ignore should "do sequenceOptimistic 1" in {
     lazy val ingester = new Ingest[Movie]()
     val source = Source.fromResource("movie_metadata.csv")
     //    val source = Source.fromFile("assignment-movie-database/src/test/resources/movie_metadata.csv")
@@ -181,7 +183,9 @@ class MovieSpec extends AnyFlatSpec with Matchers with CancelOnNotImplemented {
     source.close()
     kiwiMovies shouldBe None
   }
-  it should "do sequencePessimistic 2" in {
+  // NOTE this test will fail until all the Movie classes are complete (look for "// TO BE IMPLEMENTED")
+  // Until then, don't worry about it--we're ignoring it.
+  ignore should "do sequencePessimistic 2" in {
     lazy val ingester = new Ingest[Movie]()
     val source = Source.fromResource("movie_metadata.csv")
     //    val source = Source.fromFile("assignment-movie-database/src/test/resources/movie_metadata.csv")

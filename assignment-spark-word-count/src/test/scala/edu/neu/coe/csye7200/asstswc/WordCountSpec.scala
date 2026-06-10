@@ -1,15 +1,17 @@
 package edu.neu.coe.csye7200.asstswc
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import org.apache.spark.sql.SparkSession
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.tagobjects.Slow
 import org.scalatest.{BeforeAndAfter, flatspec}
+
 import scala.util.Try
 
 /**
  * @author Yanda Yuan
  */
-class WordCountSpec extends flatspec.AnyFlatSpec with Matchers with BeforeAndAfter {
+class WordCountSpec extends flatspec.AnyFlatSpec with Matchers with BeforeAndAfter with CancelOnNotImplemented {
 
   implicit var spark: SparkSession = _
 

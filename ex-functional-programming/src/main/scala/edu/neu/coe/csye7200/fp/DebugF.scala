@@ -124,7 +124,10 @@ object Writable {
     /* SOLUTION */
     var lastMessage: String = _
 
-    val sink: Sink = new BufferedWriter(new FileWriter("logFile", true))
+    private val logFile = new java.io.File("output/logFile")
+    logFile.getParentFile.mkdirs()
+    logFile.createNewFile() // no-op if already exists
+    val sink: Sink = new BufferedWriter(new FileWriter(logFile, true))
 
     override def write(w: String): Unit = {
       lastMessage = w
