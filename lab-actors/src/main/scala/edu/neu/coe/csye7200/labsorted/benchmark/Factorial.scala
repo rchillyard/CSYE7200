@@ -18,3 +18,4 @@ object Factorial {
 
 @main def showFactorial10(): Unit =
   println(factorial(10))
+

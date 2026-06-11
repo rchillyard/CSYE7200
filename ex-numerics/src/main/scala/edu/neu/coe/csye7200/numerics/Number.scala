@@ -859,3 +859,4 @@ object Factor {
  * @param str the detailed message explaining the nature of the exception
  */
 case class NumberException(str: String) extends Exception(str)
+

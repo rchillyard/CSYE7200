@@ -394,3 +394,4 @@ object CsvParser {
   private val truth = """(?i)^([ty]|true|yes)$""".r
   val untruth: Regex = """(?i)^([fn]|false|no)$""".r
 }
+

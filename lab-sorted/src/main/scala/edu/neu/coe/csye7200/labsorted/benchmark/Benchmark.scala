@@ -10,3 +10,4 @@ import scala.language.implicitConversions
 @main def doBenchmark(): Unit = {
   println(s"ave time for 40! is ${10000.times(Factorial.factorial(40))} nanosecs")
 }
+

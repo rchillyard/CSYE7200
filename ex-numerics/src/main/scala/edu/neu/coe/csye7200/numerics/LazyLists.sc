@@ -13,3 +13,4 @@ firstTwenty foreach println
 val g: LazyList[Long] = 0L #:: 1L #:: g.zip(g.tail).map(n => n._1 + n._2)
 val firstThirty = g take 30 to List
 
+

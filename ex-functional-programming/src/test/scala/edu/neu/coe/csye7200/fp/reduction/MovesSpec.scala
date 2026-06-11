@@ -164,3 +164,4 @@ class MovesSpec extends AnyFlatSpec with Matchers with CancelOnNotImplemented wi
   }
 
 }
+

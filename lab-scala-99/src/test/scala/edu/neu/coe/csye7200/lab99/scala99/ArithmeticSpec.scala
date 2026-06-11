@@ -68,3 +68,4 @@ class ArithmeticSpec extends flatspec.AnyFlatSpec with should.Matchers with Canc
 //  gcd(36,63) shouldBe 9
   }
 }
+

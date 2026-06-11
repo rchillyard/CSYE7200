@@ -59,3 +59,4 @@ case class Factor(f: Int):
    * @return Some(quotient) if x is a multiple of f; otherwise, None.
    */
   def unapply(x: Int): Option[Int] = if (isMultiple(x)) Some(x / f) else None
+

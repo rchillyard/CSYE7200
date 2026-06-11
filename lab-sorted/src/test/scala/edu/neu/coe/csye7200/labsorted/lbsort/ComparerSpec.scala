@@ -213,3 +213,4 @@ object Composite {
 object CompositeExtractor {
   def unapply(c: Composite): Option[(Int, String)] = Some((c.i, c.s))
 }
+

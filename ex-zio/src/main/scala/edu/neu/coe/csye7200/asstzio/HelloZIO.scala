@@ -10,3 +10,4 @@ object HelloZIO extends ZIOAppDefault:
       name <- Console.readLine
       _    <- Console.printLine(s"Hello $name!")
     } yield ()
+
