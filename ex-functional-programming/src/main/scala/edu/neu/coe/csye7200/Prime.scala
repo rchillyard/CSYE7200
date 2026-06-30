@@ -3,7 +3,7 @@ package edu.neu.coe.csye7200
 /**
  * @author scalaprof
  */
-object Prime extends App {
+object Prime extends App { // TODO upgrade to Scala 3
   // TESTME
   val start = System.currentTimeMillis()
 

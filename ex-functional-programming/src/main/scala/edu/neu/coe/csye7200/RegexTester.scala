@@ -14,7 +14,7 @@ case class RegexTester(pattern: Regex) {
 
 }
 
-object RegexTester extends App {
+object RegexTester extends App { // TODO upgrade to Scala 3
   val r1 = RegexTester(".*".r)
   println(r1.parse("hello"))
 }

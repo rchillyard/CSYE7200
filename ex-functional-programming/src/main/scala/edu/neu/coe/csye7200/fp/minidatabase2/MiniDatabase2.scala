@@ -6,7 +6,7 @@ import scala.util._
 /**
  * @author scalaprof
  */
-object MiniDatabase2 extends App {
+object MiniDatabase2 extends App { // TODO upgrade to Scala 3
 
   // Similar to the map2 you already know (4 points)
   def map3[A, B, C, D](a: Option[A], b: Option[B], c: Option[C])(f: (A, B, C) => D): Option[D] =

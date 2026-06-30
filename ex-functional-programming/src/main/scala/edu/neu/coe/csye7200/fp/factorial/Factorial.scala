@@ -7,7 +7,7 @@ class Factorial(val n: Int) extends (() => Long) {
   def apply(): Long = Factorial.factorial(n)
 }
 
-object Factorial extends App {
+object Factorial extends App { // TODO upgrade to Scala 3
   println(new Factorial(5)())
 
   def factorial(n: Int) = {

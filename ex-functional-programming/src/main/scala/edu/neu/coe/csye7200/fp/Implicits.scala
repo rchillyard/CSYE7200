@@ -5,7 +5,7 @@ import scala.language.implicitConversions
 /**
  * @author scalaprof
  */
-object Implicits extends App {
+object Implicits extends App { // TODO upgrade to Scala 3
   val x = "1" + 2
   println(x)
 

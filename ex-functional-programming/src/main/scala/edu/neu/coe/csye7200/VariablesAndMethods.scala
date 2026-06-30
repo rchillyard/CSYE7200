@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200
 
-object VariablesAndMethods extends App {
+object VariablesAndMethods extends App { // TODO upgrade to Scala 3
 
   val xs = List(1, 2, 3, 4)
 

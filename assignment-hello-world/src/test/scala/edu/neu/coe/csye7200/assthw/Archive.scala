@@ -64,7 +64,7 @@ object Archive {
    */
   def apply[P: Ordering](archive: Seq[P]): Archive[P] = {
     //implicit ordering
-    val sortedArchive = archive.sorted(implicitly[Ordering[P]])
+    val sortedArchive = archive.sorted(Ordering[P])
     //indexing the Seq and passing an Empty Journal
     Archive(sortedArchive.toIndexedSeq, Seq.empty[P])
   }
@@ -85,7 +85,7 @@ object Archive {
   private def binarySearch[P: Ordering](p: P, ps: IndexedSeq[P])(from: Int, to: Int): Option[Int] = flatWhen(from <= to) {
     //val bs: (Int, Int) => Option[Int] = ???// TODO implement me [5]
     val mid = (from + to) / 2
-    val po: Ordering[P] = implicitly[Ordering[P]] // TODO implement me [3]
+    val po: Ordering[P] = summon[Ordering[P]] // TODO implement me [3]
     po.compare(p, ps(mid)) match {
       case 0 => Some(mid)
       case x if x > 0 => binarySearch(p, ps)(mid + 1, to) // TODO implement me by using bs appropriately. [3]

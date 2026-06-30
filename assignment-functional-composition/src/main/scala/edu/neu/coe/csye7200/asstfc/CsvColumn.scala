@@ -5,7 +5,7 @@ import scala.util.{Failure, Success, Try}
 /**
   * Solution without using case class. Requires implementing sequence
   */
-object CsvColumn extends App {
+@main def cvsColumn(): Unit = {
 
   val xys: Seq[Try[Int]] = Seq("", "1", "2", "3").filter(_.nonEmpty).map(w => Try(w.toInt))
 
@@ -13,7 +13,6 @@ object CsvColumn extends App {
   val xsy: Try[Seq[Int]] = xys.foldLeft(Try(Seq[Int]())) {
     (_xsy, xy) => for (xs <- _xsy; x <- xy) yield x +: xs
   }
-
 
   xsy match {
     case Success(xs) => println(1.0 * xs.sum / xs.length)

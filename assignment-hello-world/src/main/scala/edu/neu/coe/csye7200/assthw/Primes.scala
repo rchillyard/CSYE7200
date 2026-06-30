@@ -86,7 +86,7 @@ object Primes {
      *
      * @return true if the `BigInt` is even, false otherwise.
      */
-    def isEven: Boolean = x % 2 == 0
+    def isEven: Boolean = !x.testBit(0)
 
     /**
      * Method to determine if `x` is actually prime.
@@ -108,7 +108,7 @@ object Primes {
      * @return true if there are no factors of `x` among primes smaller than or equal to the square root of `x`, otherwise false.
      */
     def hasNoFactorsSmallerThanSquareRootX: Boolean =
-      (primes takeWhile (y => y * y <= x)).toList forall (y => !x.hasFactor(y))
+      (primes takeWhile (y => y * y <= x)) forall (y => !x.hasFactor(y))
   }
 
   import LazyList.from

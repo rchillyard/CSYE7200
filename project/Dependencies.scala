@@ -5,7 +5,7 @@
 
 object Versions {
   // Scala
-  val scala3    = "3.3.6"
+  val scala3    = "3.3.8" // LTS version as of June 2026 for Spark/Hadoop compatibility
   val scala2_13 = "2.13.16"
   val scala2_12 = "2.12.20"
 
@@ -40,6 +40,7 @@ object Versions {
   val circe = "0.14.15"
 
   // Misc
+  val flog       = "1.0.15"
   val nscalaTime = "3.0.0"
   val jodaTime   = "2.14.2"
   val osLib      = "0.11.4"

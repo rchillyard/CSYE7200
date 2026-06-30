@@ -1,6 +1,8 @@
 package edu.neu.coe.csye7200.assthw
 
 import edu.neu.coe.csye7200.assthw.FizzBuzz.fizzBuzz
+import scala.collection.mutable
+import scala.collection.mutable.Queue
 
 /**
  * Executes the FizzBuzz logic for integers from 1 to 100, printing the results to standard output.
@@ -8,10 +10,39 @@ import edu.neu.coe.csye7200.assthw.FizzBuzz.fizzBuzz
  *
  * @return Unit as the primary purpose of this method is to produce output.
  */
-@main def fizzBuzzMain(): Unit = {
+@main def fizzBuzz0(): Unit =
+  def fizzBuzz(x: Int): Unit =
+    if x % 3 == 0 && x % 5 == 0 then println("FizzBuzz")
+    else if x % 3 == 0 then println("Fizz")
+    else if x % 5 == 0 then println("Buzz")
+    else println(x)
+  1 to 100 foreach fizzBuzz
+
+@main def fizzBuzz1(): Unit =
+  for (x <- 1 to 100) println(fizzBuzz(x))
+
+def fizzBuzz(x: Int): String =
+  (x % 3 == 0, x % 5 == 0) match {
+    case (true, true) => "FizzBuzz"
+    case (true, _) => "Fizz"
+    case (_, true) => "Buzz"
+    case _ => x.toString
+  }
+
+@main def fizzBuzz2(): Unit = {
   val strings = for (x <- 1 to 100) yield fizzBuzz(x)
   println(strings mkString("", "\n", ""))
 }
+
+/**
+ * Represents a factor and provides utilities for checking multiples and extracting quotient values.
+ *
+ * @param f the factor to be used for checking divisibility and computing quotients
+ */
+case class Factor(f: Int):
+  def isMultiple(x: Int): Boolean = x % f == 0
+  def unapply(x: Int): Option[Int] =
+    if isMultiple(x) then Some(x / f) else None
 
 /**
  * An implementation of FizzBuzz that uses pattern-matching rather than (redundant) if clauses.
@@ -19,44 +50,17 @@ import edu.neu.coe.csye7200.assthw.FizzBuzz.fizzBuzz
  * This method uses a rather advance pattern-matching trick: declaring our own unapply method for Factor.
  */
 object FizzBuzz:
-  /**
-   * Implements the FizzBuzz logic for a given integer, returning "Fizz" if divisible by 3,
-   * "Buzz" if divisible by 5, "FizzBuzz" if divisible by both, or the number as a string otherwise.
-   *
-   * @param x the integer to be evaluated
-   * @return a string representing the FizzBuzz result for the input integer
-   */
+  private val dividesBy3 = Factor(3)
+  private val dividesBy5 = Factor(5)
+  private val dividesBy3And5 = Factor(15)
+
   def fizzBuzz(x: Int): String =
-    lazy val dividesBy3 = Factor(3)
-    lazy val dividesBy5 = Factor(5)
-    lazy val dividesBy3And5 = Factor(3 * 5)
-    x match {
-      case _ if x <= 0 => throw new IllegalArgumentException("x must be positive")
+    require(x > 0, s"x must be positive but is $x")
+    x match
       case dividesBy3And5(_) => "FizzBuzz"
-      case dividesBy3(_) => "Fizz"
-      case dividesBy5(_) => "Buzz"
-      case _ => x.toString
-    }
+      case dividesBy3(_)     => "Fizz"
+      case dividesBy5(_)     => "Buzz"
+      case _                 => x.toString
 
-/**
- * Case class to model the concept of factors.
- *
- * @param f a factor.
- */
-case class Factor(f: Int):
-  /**
-   * Determine whether f is a factor of x.
-   *
-   * @param x a potential multiple of f.
-   * @return true if f is a factor of x.
-   */
-  def isMultiple(x: Int): Boolean = x % f == 0
-
-  /**
-   * Unapply method for this Factor.
-   *
-   * @param x a candidate multiple of f.
-   * @return Some(quotient) if x is a multiple of f; otherwise, None.
-   */
-  def unapply(x: Int): Option[Int] = if (isMultiple(x)) Some(x / f) else None
-
+@main def fizzBuzz3(): Unit =
+  println((1 to 100).map(FizzBuzz.fizzBuzz).mkString("\n"))

@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200
 
-object TestCode extends App {
+object TestCode extends App { // TODO upgrade to Scala 3
 
   import scala.language.implicitConversions
 

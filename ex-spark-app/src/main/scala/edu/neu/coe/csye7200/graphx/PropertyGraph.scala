@@ -4,7 +4,7 @@ import org.apache.spark._
 import org.apache.spark.graphx._
 import org.apache.spark.rdd.RDD
 
-object PropertyGraph extends App {
+object PropertyGraph extends App { // TODO upgrade to Scala 3
   val conf = new SparkConf().setAppName("spam").setMaster("local[*]")
   val sc = new SparkContext(conf)
 

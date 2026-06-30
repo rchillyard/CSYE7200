@@ -17,7 +17,7 @@ case class Relationship(which: String, tense: String)
 
 case class Triple(from: Long, to: Long, relationship: Relationship)
 
-object KnowledgeGraph extends App {
+object KnowledgeGraph extends App { // TODO upgrade to Scala 3
   implicit val time = java.time.LocalDate.now
   val conf = new SparkConf().setAppName("news").setMaster("local[*]")
   val sc = new SparkContext(conf)

@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200
 
-object Prime1 extends App {
+object Prime1 extends App { // TODO upgrade to Scala 3
   def buildPrime(k: Int): LazyList[Int] = k match {
     case i if i <= 0 => throw new NoSuchElementException(s"No such element for $k")
     case _ =>

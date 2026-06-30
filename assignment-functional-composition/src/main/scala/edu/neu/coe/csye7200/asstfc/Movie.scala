@@ -94,25 +94,27 @@ case class Rating(code: String, age: Option[Int]) {
   })
 }
 
-object Movie extends App {
+@main def ingestMovies(): Unit = {
+  val ingester = new Ingest[Movie]()
+  implicit val codec: Codec = Codec.UTF8
+  val by = for {
+    source <- Try(Source.fromFile("assignment-functional-composition/src/main/resources/edu/neu/coe/csye7200/asstfc/movie_metadata.csv"))
+    movies <- Movie.getMoviesFromCountry("New Zealand", ingester(source))
+    _ = source.close()
+  } yield Movie.testSerializationAndDeserialization(movies)
+  by match {
+    case Success(true) => println("round trip works OK!")
+    case _ => println("failure")
+  }
+}
+
+object Movie {
 
   trait IngestibleMovie extends Ingestible[Movie] {
     def fromString(w: String): Try[Movie] = Movie.parse(w.split(",").toSeq)
   }
 
   implicit object IngestibleMovie extends IngestibleMovie
-
-  val ingester = new Ingest[Movie]()
-  implicit val codec: Codec = Codec.UTF8
-  val by = for {
-    source <- Try(Source.fromFile("assignment-functional-composition/src/main/resources/edu/neu/coe/csye7200/asstfc/movie_metadata.csv"))
-    movies <- getMoviesFromCountry("New Zealand", ingester(source))
-    _ = source.close()
-  } yield testSerializationAndDeserialization(movies)
-  by match {
-    case Success(true) => println("round trip works OK!")
-    case _ => println("failure")
-  }
 
   //Hint: Serialize the input to Json format and deserialize back to Object, check the result is still equal to original input.
   def testSerializationAndDeserialization(ms: Seq[Movie]): Boolean = {

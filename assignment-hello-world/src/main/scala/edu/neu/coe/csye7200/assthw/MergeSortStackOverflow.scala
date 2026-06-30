@@ -29,7 +29,7 @@ class MergeSortStackOverflow[X: Ordering] {
                     case (_, Nil) => l
                     case (Nil, _) => r
                     case (h1 :: t1, h2 :: t2) =>
-                        if (implicitly[Ordering[X]].compare(h1, h2) <= 0)
+                        if (Ordering[X].compare(h1, h2) <= 0)
                             h1 :: merge(t1, r)
                         else
                             h2 :: merge(l, t2)

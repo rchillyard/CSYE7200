@@ -58,7 +58,7 @@ case class ParseCSVwithHTML(csvParser: CsvParser) {
  * The title of the HTML page produced is fixed as "Report"
  * The output filename is fixed as "output.html"
  */
-object ParseCSVwithHTML extends App {
+object ParseCSVwithHTML extends App { // TODO upgrade to Scala 3
   def map2[T1, T2, R](t1y: Try[T1], t2y: Try[T2])(f: (T1, T2) => R): Try[R] = for {t1 <- t1y; t2 <- t2y} yield f(t1, t2)
 
   def lift2Try[T1, T2, R](f: (T1, T2) => R): (Try[T1], Try[T2]) => Try[R] = map2(_, _)(f)

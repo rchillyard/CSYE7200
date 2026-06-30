@@ -32,7 +32,7 @@ def doWhatsTheTime(): Unit = {
     // show the result
     maybeTime foreach println
     // log any failures.
-    maybeTime.recoverWith { case x: Exception => System.err.println(s"Failure: ${x.getLocalizedMessage}"); Failure(x) }
+    maybeTime.recoverWith { case x: Exception => System.err.println(s"Failure: ${x.getLocalizedMessage}"); Failure(x) }: Unit
 }
 
 /**

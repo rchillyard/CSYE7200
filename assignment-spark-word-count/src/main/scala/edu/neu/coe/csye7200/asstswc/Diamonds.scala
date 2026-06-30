@@ -5,7 +5,7 @@ package edu.neu.coe.csye7200.asstswc
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-object Diamonds extends App {
+object Diamonds extends App { // TODO upgrade to Scala 3
   val spark: SparkSession = SparkSession
           .builder()
           .appName("WordCount")

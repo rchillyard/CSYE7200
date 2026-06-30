@@ -23,7 +23,7 @@ object SongPoet {
   def unapply(user: Poet): Option[String] = Some(user.name)
 }
 
-object Extractor extends App {
+object Extractor extends App { // TODO upgrade to Scala 3
   val poet: Poet = new TangPoet("Li Bai")
   val w1 = poet match {
     case TangPoet(name) => s"Tang poet: $name"

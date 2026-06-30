@@ -3,7 +3,7 @@ package edu.neu.coe.csye7200
 /**
  * @author scalaprof
  */
-object AvoidingVar extends App {
+object AvoidingVar extends App { // TODO upgrade to Scala 3
 
   val data = List(0.1, 0.4, 0.2, 0.7, -0.1, 1.1, 0.5)
 

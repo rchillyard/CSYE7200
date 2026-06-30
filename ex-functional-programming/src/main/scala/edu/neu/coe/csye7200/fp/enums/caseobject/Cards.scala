@@ -156,6 +156,6 @@ case class Card(suit: Suit, rank: Rank) extends Ordered[Card] {
 object Card {
 }
 
-object Cards extends App {
+object Cards extends App { // TODO upgrade to Scala 3
   println(List(Card(Clubs, Deuce), Card(Clubs, King), Card(Clubs, Ten), Card(Spades, Deuce)).sorted)
 }

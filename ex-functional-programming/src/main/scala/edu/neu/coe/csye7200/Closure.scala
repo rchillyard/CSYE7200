@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200
 
-object Closure extends App {
+object Closure extends App { // TODO upgrade to Scala 3
 
   // NOTE: this is suspicious
   // XXX I'm not sure what I intended here.

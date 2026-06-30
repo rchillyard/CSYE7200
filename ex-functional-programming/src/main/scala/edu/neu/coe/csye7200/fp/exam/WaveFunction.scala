@@ -37,7 +37,7 @@ case class SquareWellWaveFunction(l: Double) extends WaveFunction {
   override def toString(): String = s"SquareWellWaveFunction($l)"
 }
 
-object WaveFunctionTest extends App {
+object WaveFunctionTest extends App { // TODO upgrade to Scala 3
   val sp = SuperPosition(List(2.0 -> SquareWellWaveFunction(1), 1.0 -> SquareWellWaveFunction(2)))
   println(sp())
 

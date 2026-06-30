@@ -3,7 +3,7 @@ package edu.neu.coe.csye7200
 import scala.util._
 
 
-object FunctionalProgramming extends App {
+object FunctionalProgramming extends App { // TODO upgrade to Scala 3
 
   def evaluate_3_tenths = 1.0 / 10 + 2.0 / 10
 
@@ -38,7 +38,7 @@ case class MyWrapper[T](x: T) extends Wrapper[T] {
   def flatMap[U](f: T => Wrapper[U]): Wrapper[U] = f(x)
 }
 
-object MyWrapper extends App {
+object MyWrapper extends App { // TODO upgrade to Scala 3
   val myWrapper1: MyWrapper[Int] = MyWrapper[Int](0)
   val myWrapper2: Wrapper[String] = myWrapper1.map(_.toString)
   println(myWrapper2)

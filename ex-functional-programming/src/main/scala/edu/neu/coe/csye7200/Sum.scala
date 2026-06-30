@@ -5,7 +5,7 @@ package edu.neu.coe.csye7200
  * Sum has been replaced by FutureExercise
  */
 @deprecated
-object Sum extends App {
+object Sum extends App { // TODO upgrade to Scala 3
 
   import scala.concurrent.ExecutionContext.Implicits.global
   import scala.concurrent._

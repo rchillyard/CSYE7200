@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200
 
-object kthPrime extends App {
+object kthPrime extends App { // TODO upgrade to Scala 3
 
   def primeNumber(n: Int): Int = {
     @scala.annotation.tailrec

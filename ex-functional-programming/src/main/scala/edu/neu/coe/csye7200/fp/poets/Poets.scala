@@ -32,7 +32,7 @@ object Name {
   } yield Name(node.text, getLanguage(node.attribute("language")))
 }
 
-object Poets extends App {
+object Poets extends App { // TODO upgrade to Scala 3
 
   type PoetSeq = Seq[Poet]
 

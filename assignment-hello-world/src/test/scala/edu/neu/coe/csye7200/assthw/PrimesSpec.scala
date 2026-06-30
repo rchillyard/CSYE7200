@@ -62,6 +62,11 @@ class PrimesSpec extends AnyFlatSpec with should.Matchers with CancelOnNotImplem
   }
 
   it should "isPrime" in {
+    // edge cases
+    0L.isPrime shouldBe false
+    1L.isPrime shouldBe false
+    (-1L).isPrime shouldBe false
+    // small primes and composites
     2L.isPrime shouldBe true
     3L.isPrime shouldBe true
     4L.isPrime shouldBe false
@@ -69,6 +74,7 @@ class PrimesSpec extends AnyFlatSpec with should.Matchers with CancelOnNotImplem
     6L.isPrime shouldBe false
     11L.isPrime shouldBe true
     12L.isPrime shouldBe false
+    // Carmichael number: passes isProbablePrime but is composite
     561L.isPrime shouldBe false
     2147483649L.isPrime shouldBe false
   }
@@ -94,6 +100,9 @@ class PrimesSpec extends AnyFlatSpec with should.Matchers with CancelOnNotImplem
   it should "primes 1" in {
     val smallPrimes = primes takeWhile (_ < 1000) to List
     smallPrimes.length shouldBe 168
+    smallPrimes.head shouldBe 2L
+    smallPrimes(1) shouldBe 3L
+    smallPrimes.last shouldBe 997L
   }
 
   it should "primes 2" in {
@@ -112,6 +121,9 @@ class PrimesSpec extends AnyFlatSpec with should.Matchers with CancelOnNotImplem
     EulerPrime(1) shouldBe Some(41)
     EulerPrime(10) shouldBe Some(131)
     EulerPrime(50) shouldBe None
+    // boundary: n <= 0 should return None
+    EulerPrime(0) shouldBe None
+    EulerPrime(-1) shouldBe None
   }
 
   it should "eulerPrimes" in {
@@ -119,10 +131,18 @@ class PrimesSpec extends AnyFlatSpec with should.Matchers with CancelOnNotImplem
     eulerPrimes.head shouldBe Some(41)
   }
 
+  it should "isCongruent" in {
+    // 17 ≡ 2 (mod 5)  since 17 - 2 = 15
+    17L.isCongruent(2)(5) shouldBe true
+    17L.isCongruent(3)(5) shouldBe false
+    // 0 ≡ 0 (mod any positive)
+    0L.isCongruent(0)(7) shouldBe true
+  }
+
   it should "test whether the square of every prime greater than 3 is congruent to 1 modulo 24" in {
-    val matches = primes.drop(2).map(p => p * p).map(_.≡(1)(24))
-    val n = 1_000_000 // this is how many we're actually going to check in practice
-    matches.take(n).forall(_)
+    val matches: LazyList[Boolean] = primes.drop(2).map(p => p * p).map(_.≡(1)(24))
+    val n = 1_000 // sufficient to verify the property without excessive runtime
+    matches.take(n).forall(x => x) shouldBe true
   }
 
 }

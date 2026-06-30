@@ -5,7 +5,7 @@ import scala.collection.mutable.ListBuffer
 /**
  * Created by scalaprof on 9/19/16.
  */
-object ListAppendTest extends App {
+object ListAppendTest extends App { // TODO upgrade to Scala 3
 
   val propertyData = List(""""spark.shuffle.memoryFraction"="0.5"""", """"spark.yarn.executor.memoryOverhead"="712" """)
 

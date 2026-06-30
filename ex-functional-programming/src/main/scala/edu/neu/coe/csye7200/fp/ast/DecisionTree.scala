@@ -21,7 +21,7 @@ case class DecisionTree(ks: Seq[String]) extends Renderable {
 
 trait Renderable extends ((String, String) => String)
 
-object DecisionTree extends App {
+object DecisionTree extends App { // TODO upgrade to Scala 3
   val tree = DecisionTree(Seq("a", "b", "c", "d"))
   val w = tree("", "")
   println(w)

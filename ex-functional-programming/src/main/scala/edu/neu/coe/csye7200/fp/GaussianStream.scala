@@ -16,7 +16,7 @@ case class GaussianStream(r: Random) {
 
 }
 
-object GaussianStream extends App {
+object GaussianStream extends App { // TODO upgrade to Scala 3
 
   def methodBoxMuller(pairs: LazyList[Double]): LazyList[Double] = pairs match {
     case u #:: v #:: t =>

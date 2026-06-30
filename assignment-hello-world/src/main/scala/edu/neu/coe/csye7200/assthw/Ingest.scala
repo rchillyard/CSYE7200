@@ -41,7 +41,7 @@ class Ingest[T: Ingestible] extends (Source => Iterator[T]) {
    * @return an `Iterator` of elements of type `T`, where each element represents a transformed line from the source.
    */
   def apply(source: Source): Iterator[T] =
-    source.getLines().toSeq.map(e => implicitly[Ingestible[T]].fromStrings(e.split(",").toList)).iterator
+    source.getLines().toSeq.map(e => summon[Ingestible[T]].fromStrings(e.split(",").toList)).iterator
 }
 
 /**

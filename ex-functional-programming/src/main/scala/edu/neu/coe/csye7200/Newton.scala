@@ -23,7 +23,7 @@ case class Newton(f: Double => Double, dfbydx: Double => Double) {
 
 }
 
-object Newton extends App {
+object Newton extends App { // TODO upgrade to Scala 3
   val newton = Newton({ x => math.cos(x) - x }, { x => -math.sin(x) - 1 })
   newton.solve(10, 1E-10, 1.0) match {
     case Success(x) => println(s"the solution to math.cos(x) - x is $x")

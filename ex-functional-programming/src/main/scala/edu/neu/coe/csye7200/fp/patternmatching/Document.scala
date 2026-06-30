@@ -60,7 +60,7 @@ case class MapDocument[K, T](m: Map[K, Document[K, T]]) extends Document[K, T] {
 /**
  * Created by scalaprof on 9/10/16.
  */
-object DocumentMain extends App {
+object DocumentMain extends App { // TODO upgrade to Scala 3
 
   def ++[K, T](d1: Document[K, T], d2: Document[K, T]) = d1 ++ d2
 

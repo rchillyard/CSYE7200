@@ -25,7 +25,7 @@ class MergeSortLazy[X: Ordering] {
                     case (_, Nil) =>
                       result.reverse ++ l // NOTE: necessary to reverse result.
                     case (h1 :: t1, h2 :: t2) =>
-                        if (implicitly[Ordering[X]].compare(h1, h2) <= 0)
+                        if (Ordering[X].compare(h1, h2) <= 0)
                             merge(h1 :: result, t1, r) // NOTE: fast but result will be backwards
                         else
                             merge(h2 :: result, l, t2) // NOTE: fast but result will be backwards

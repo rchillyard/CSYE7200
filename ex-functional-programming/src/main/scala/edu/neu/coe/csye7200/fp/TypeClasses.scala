@@ -2,7 +2,7 @@ package edu.neu.coe.csye7200
 
 import edu.neu.coe.csye7200.TypeClasses.TypeClass2Int
 
-object TypeClasses extends App {
+object TypeClasses extends App { // TODO upgrade to Scala 3
 
   trait TypeClass2Int[T] extends TypeClass2[T, Int] {
     def tToU(t: T): Int

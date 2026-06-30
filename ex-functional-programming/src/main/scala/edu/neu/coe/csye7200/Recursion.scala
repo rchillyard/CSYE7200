@@ -5,7 +5,7 @@ import scala.annotation.tailrec
 /**
  * Created by scalaprof on 12/2/16.
  */
-object Recursion extends App {
+object Recursion extends App { // TODO upgrade to Scala 3
 
   def factorial(x: Int): Long = {
     @tailrec def inner(r: Long, i: Int): Long =

@@ -14,7 +14,7 @@ class MergeSortEager[X: Ordering] {
                     case (_, Nil) => result ++ l
                     case (Nil, _) => result ++ r
                     case (h1 :: t1, h2 :: t2) =>
-                        if (implicitly[Ordering[X]].compare(h1, h2) <= 0)
+                        if (Ordering[X].compare(h1, h2) <= 0)
                             merge(result :+ h1, t1, r) // NOTE slow but result will be in proper order.
                         else
                             merge(result :+ h2, l, t2) // NOTE slow but result will be in proper order.

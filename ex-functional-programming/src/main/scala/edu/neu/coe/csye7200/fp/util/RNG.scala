@@ -14,7 +14,7 @@ class RNG[+A](f: Long => A)(seed: Long) {
   def value = f(state)
 }
 
-object RNG extends App {
+object RNG extends App { // TODO upgrade to Scala 3
   def modulo(n: Int, m: Int) = (n + m) % m
 
   val random = new Random(0L)

@@ -10,7 +10,7 @@ import scala.util.{Failure, Success, Try}
  *         wordCountSpec can be used as an example if you don't know what the result will be like.
  *         To help you understand more about the difference among functions: http://homepage.cs.latrobe.edu.au/zhe/ZhenHeSparkRDDAPIExamples.html
  */
-object wordCount extends App {
+object wordCount extends App { // TODO upgrade to Scala 3
 
   val methodMap: Map[Int, String] = Map(
     1 -> "aggregateByKey",

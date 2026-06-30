@@ -56,7 +56,7 @@ import scala.util.Random
   //  (previously, you simply evaluated the mean for a specific list).
   // Invoke your method on a list derived from larger.
   // You must use the signature provided below (with a parametric type).
-  // NOTE: you will need to invoke implicitly[Numeric[X]] in order to get the sum as a Double.
+  // NOTE: you will need to invoke summon[Numeric[X]] in order to get the sum as a Double.
 
   def mean[X: Numeric](xs: List[X]): Double = ???
 

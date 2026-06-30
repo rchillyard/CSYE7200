@@ -11,7 +11,7 @@ abstract class BadParser extends JavaTokenParsers {
 
 object BadParser extends BadParser
 
-object BadParserMain extends App {
+object BadParserMain extends App { // TODO upgrade to Scala 3
   val p = BadParser
   val r = p.parseAll(p.name, "Martin Scala Odersky")
   val first = r match {

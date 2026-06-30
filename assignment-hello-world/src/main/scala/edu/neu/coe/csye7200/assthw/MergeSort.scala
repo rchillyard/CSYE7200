@@ -5,8 +5,8 @@ import scala.annotation.tailrec
 import scala.collection.mutable.Queue
 import scala.util.{Failure, Success, Try}
 
-@main 
-def runMergeSort(): Unit = println(MergeSort.doMain(100000))
+@main
+def runMergeSort(): Unit = MergeSort.doMain(1_000_000) : Unit
 
 /**
  * This is the most elegant version of MergeSort.
@@ -32,31 +32,50 @@ class MergeSort[X: Ordering]:
     case Nil | _ :: Nil =>
       Success(xs)
     case _ =>
-      @tailrec
-      def merge(result: Queue[X], l: List[X], r: List[X]): Try[List[X]] =
+      def mergeSimple(l: List[X], r: List[X]): List[X] =
         (l, r) match {
-          case (Nil, _) | (_, Nil) =>
-            OneList(l, r) match {
-              case OneList(x) =>
-                Success(result ++: x)
-              case _ =>
-                Failure(new Exception("MergeSort: OneList result unexpected: " + result + " l: " + l + " r: " + r + ""))
-            }
-          case _ =>
-            CompareLists(l, r) match {
-              case CompareLists(h, t, other) =>
-                merge(result += h, t, other)
-              case _ =>
-                Failure(new Exception("MergeSort: CompareLists result unexpected: " + result + " l: " + l + " r: " + r + ""))
-            }
+          case (Nil, _) => r
+          case (_, Nil) => l
+          case (hl :: tl, hr :: tr) =>
+            if Ordering[X].lt(hl,hr)
+            then hl :: mergeSimple(tl, r)
+            else hr :: mergeSimple(l, tr)
         }
 
-      for {
+      @tailrec
+      def merge(result: List[X], l: List[X], r: List[X]): List[X] =
+        (l, r) match
+          case (Nil, Nil) => result.reverse
+          case (Nil, _)   => result.reverse ++ r
+          case (_, Nil)   => result.reverse ++ l
+          case (h1 :: t1, h2 :: t2) =>
+            if Ordering[X].compare(h1, h2) <= 0
+            then merge(h1 :: result, t1, r)
+            else merge(h2 :: result, l, t2)
+
+      @tailrec
+      def mergeFast(result: Queue[X], l: List[X], r: List[X]): List[X] =
+        (l, r) match {
+          case OneList(x) =>
+            result ++: x
+          case CompareLists(h, t, other) =>
+            mergeFast(result += h, t, other)
+          case _ =>
+            throw new Exception("MergeSort: CompareLists result unexpected: " + result + " l: " + l + " r: " + r + "")
+        }
+
+      for
         (l, r) <- Try(xs.splitAt(xs.length / 2))
         (ls, rs) <- zipTry(sort(l), sort(r))
-        result <- merge(Queue.empty, ls, rs)
-      } yield result
+      yield merge(List.empty, ls, rs)
   }
+
+  def simpleSort(xs: List[X]): List[X] =
+    def merge(l: List[X], r: List[X]): List[X] = ???
+    if xs.length <= 1 then xs
+    else
+      val (l, r) = xs.splitAt(xs.length / 2)
+      merge(simpleSort(l), simpleSort(r))
 
 /**
  * Companion object that demonstrates the MergeSort algorithm by ordering a list
@@ -73,18 +92,23 @@ object MergeSort {
    * @return a sequence of integers sorted in ascending order.
    * @throws Any exception encountered during the sorting operation.
    */
-  def doMain(n: Int): Seq[Int] = {
+  def doMain(n: Int): Seq[Int] =
     val sorter = new MergeSort[Int]
     val list = (1 to n).toList.reverse
+    println(s"MergeSort of ${list.size} elements")
     sorter.sort(list) match {
-      case Success(result) => 
+      case Success(result) =>
+        if (assertSorted(result)) println("Sorted")
         result
       case Failure(e) => 
         throw e
     }
+
+  def assertSorted(xs: Seq[Int]): Boolean = {
+    val zipped = xs zip xs.tail
+    zipped.forall { case (a, b) => a <= b }
   }
 }
-
 
 /**
  * A case class for comparing two lists of type `X` using an implicit ordering.
@@ -118,9 +142,9 @@ object CompareLists {
    * @return an `Option` containing a tuple of the smallest head element, the updated first list,
    *         and the updated second list, or `None` if the input does not match the pattern
    */
-  def unapply[X](cl: CompareLists[X]): Option[(X, List[X], List[X])] = (cl.left, cl.right) match {
+  def unapply[X: Ordering](t: (List[X], List[X])): Option[(X, List[X], List[X])] = t match {
     case (l, r) =>
-      if (cl.ordering.compare(l.head, r.head) <= 0)
+      if (Ordering[X].compare(l.head, r.head) <= 0)
         Some((l.head, l.tail, r))
       else
         Some((r.head, r.tail, l))
@@ -148,11 +172,11 @@ object OneList {
    * @return an `Option` containing the non-empty list from the `OneList` instance if exactly one list is empty,
    *         or `None` if both lists are non-empty
    */
-  def unapply[X](cl: OneList[X]): Option[List[X]] = (cl.left,cl.right) match {
-    case (_, Nil) => 
-      Some(cl.left)
-    case (Nil, _) => 
-      Some(cl.right)
+  def unapply[X](t: (List[X], List[X])): Option[List[X]] = t match {
+    case (xs, Nil) =>
+      Some(xs)
+    case (Nil, xs) =>
+      Some(xs)
     case _ => 
       None
   }

@@ -4,7 +4,7 @@ import scala.LazyList._
 import scala.language.postfixOps
 import scala.util.Random
 
-object Euler extends App {
+object Euler extends App { // TODO upgrade to Scala 3
 
   def e(n: Int): Double = (from(1) map (1.0 / _)).scanLeft(1.0)(_ * _) take n sum
 
@@ -12,7 +12,7 @@ object Euler extends App {
 }
 
 
-object RandomStrings extends App {
+object RandomStrings extends App { // TODO upgrade to Scala 3
   val r = Random
 
   def randomString(r: Random): String = {

@@ -6,7 +6,7 @@ package edu.neu.coe.csye7200
 
 import scala.annotation.tailrec
 
-object PatternExample extends App {
+object PatternExample extends App { // TODO upgrade to Scala 3
   decode(List(1, 2, -1))
 
   val m = Map(1 -> "uno", 2 -> "dos", 3 -> "tres")

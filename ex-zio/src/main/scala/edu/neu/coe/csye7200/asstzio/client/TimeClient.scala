@@ -169,7 +169,7 @@ object TimeClient extends ZIOAppDefault {
 
   /**
    * Determines the opposite sign for a given string representing a sign.
-   * This is required for handling the Etc time zones (please see FYI of worldtimeapi.org).
+   * This is required for handling the Etc time zones (please see FYI of openmeteo.org).
    *
    * This method inspects the input string to determine if it starts with a
    * negative sign ("-"). If so, it returns "+"; otherwise, it returns "-".

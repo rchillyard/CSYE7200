@@ -16,7 +16,7 @@ class ConcordanceParser extends RegexParsers {
 
 case class PositionalString(s: String) extends Positional
 
-object ConcordanceParser extends App {
+object ConcordanceParser extends App { // TODO upgrade to Scala 3
 
   println(doMain(args))
 

@@ -27,7 +27,7 @@ object DoubleRing {
  *
  * Created by scalaprof on 10/28/16.
  */
-object SumOfSquares extends App {
+object SumOfSquares extends App { // TODO upgrade to Scala 3
   def sumOfSquares(xs: Seq[Long]) = xs.map(x => x * x).foldLeft[BigInt](BigInt(0))(_ + _)
 //  def sumOfSquares(n: Int): BigInt = sumOfSquares(Stream.from(1).map(_.toLong).take(n))
 

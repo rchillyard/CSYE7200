@@ -35,7 +35,7 @@ case class Successful[T](t: T) extends MyFuture[T] {
   def await: T = ???
 }
 
-object MyFutureApp extends App {
+object MyFutureApp extends App { // TODO upgrade to Scala 3
 
   def sum(is: IndexedSeq[Int]): Int =
     if (is.size <= 1)

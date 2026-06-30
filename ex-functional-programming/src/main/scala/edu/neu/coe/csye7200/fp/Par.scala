@@ -26,7 +26,7 @@ object Par {
 
 }
 
-object TestPar extends App {
+object TestPar extends App { // TODO upgrade to Scala 3
   println(sum(IndexedSeq(1, 2, 3)))
 
 }

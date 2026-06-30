@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200
 
-object PotHoles extends App {
+object PotHoles extends App { // TODO upgrade to Scala 3
 
   import scala.language.postfixOps
 

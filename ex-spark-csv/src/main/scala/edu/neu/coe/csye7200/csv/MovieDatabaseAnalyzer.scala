@@ -7,7 +7,7 @@ import scala.util.Try
 /**
  * @author scalaprof
  */
-object MovieDatabaseAnalyzer extends App {
+object MovieDatabaseAnalyzer extends App { // TODO upgrade to Scala 3
 
   implicit val spark: SparkSession = SparkSession
           .builder()

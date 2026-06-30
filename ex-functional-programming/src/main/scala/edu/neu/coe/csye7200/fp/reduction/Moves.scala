@@ -149,7 +149,7 @@ case class Moves3(s: Point) extends Moves {
   override def move(p: Point, which: Boolean): Point = if (p.y > p.x) Point(p.x, p.y - p.x) else Point(p.x - p.y, p.y)
 }
 
-object Moves3 extends App {
+object Moves3 extends App { // TODO upgrade to Scala 3
   def apply(x: Int, y: Int): Moves3 = apply(Point(x, y))
 }
 

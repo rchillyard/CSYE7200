@@ -4,7 +4,7 @@ import scala.io.Source
 import scala.util.Try
 import scala.util.parsing.combinator.JavaTokenParsers
 
-object BenchmarkParser extends App {
+object BenchmarkParser extends App { // TODO upgrade to Scala 3
 
   val p: BenchmarkParser = new BenchmarkParser()
   private val inFilename = args.headOption.getOrElse("/Users/rhillyard/IdeaProjects/INFO6205/savedLogs/benchmarkClaudeInstr.txt")

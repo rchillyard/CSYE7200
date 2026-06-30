@@ -43,7 +43,7 @@ case class Decisions2(a: Int, b: Int, c: Int, d: Int) extends (() => String) {
 
 }
 
-object Decisions extends App {
+object Decisions extends App { // TODO upgrade to Scala 3
   val d1 = Decisions(1, 3, 2, 5)
   println(d1.apply())
 }

@@ -1,4 +1,4 @@
-name := s"""Functional Composition (Scala ${scalaVersion.value})"""
+name := "Functional Composition"
 // Scala 3 — inherits scalacOptions from root build.sbt
 
 version := "1.0"

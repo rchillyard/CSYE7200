@@ -22,7 +22,7 @@ case class ThreeSum(xs: Seq[Int]) extends NumberTriples[Int] {
   def triplesZeroSum: Seq[(Int, Int, Int)] = triplesSum(xs)(0)
 }
 
-object ThreeSum extends App {
+object ThreeSum extends App { // TODO upgrade to Scala 3
   val xs = Seq(1, 4, -2, -3, 5, 0, -1, 7, -4, 2)
   val q = ThreeSum(xs).triplesZeroSum
   if (q.size == 8)

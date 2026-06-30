@@ -4,7 +4,7 @@
 
 package edu.neu.coe.csye7200
 
-object Junk3 extends App {
+object Junk3 extends App { // TODO upgrade to Scala 3
 
   def and(a: Boolean, b: () => Boolean): Boolean = if (a) b() else false
 

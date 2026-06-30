@@ -11,7 +11,7 @@ import org.apache.spark.sql.Row
 /**
  * @author scalaprof
  */
-object PerceptronClassifier extends App {
+object PerceptronClassifier extends App { // TODO upgrade to Scala 3
 
 	val conf = new SparkConf().setAppName("spam").setMaster("local[*]")
 	val sc = new SparkContext(conf)

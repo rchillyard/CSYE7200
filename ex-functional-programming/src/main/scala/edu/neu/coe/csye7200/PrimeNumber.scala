@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200
 
-object PrimeNumber extends App {
+object PrimeNumber extends App { // TODO upgrade to Scala 3
   def primeStream(s: LazyList[Int]): LazyList[Int] =
     LazyList.cons(s.head, primeStream(s.tail filter {
       _ % s.head != 0

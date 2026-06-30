@@ -13,7 +13,7 @@ import scala.concurrent.duration._
 import scala.language.postfixOps
 import scala.util.{Failure, Success}
 
-object ConcurrencyExample2 extends App {
+object ConcurrencyExample2 extends App { // TODO upgrade to Scala 3
 
   type pass = Int
   type fail = Int

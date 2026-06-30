@@ -3,7 +3,7 @@ package edu.neu.coe.csye7200
 /**
  * Created by scalaprof on 2/17/17.
  */
-object EvaluationExercise extends App {
+object EvaluationExercise extends App { // TODO upgrade to Scala 3
 
   var count: Int = 0
   val a = {

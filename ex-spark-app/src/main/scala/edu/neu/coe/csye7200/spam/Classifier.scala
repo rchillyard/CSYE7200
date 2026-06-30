@@ -4,7 +4,7 @@ import org.apache.spark.ml.classification.LogisticRegression
 import org.apache.spark.ml.feature.HashingTF
 import org.apache.spark.sql.SparkSession
 
-object Classifier extends App {
+object Classifier extends App { // TODO upgrade to Scala 3
 
   val spark = SparkSession.builder
           .appName("spam")

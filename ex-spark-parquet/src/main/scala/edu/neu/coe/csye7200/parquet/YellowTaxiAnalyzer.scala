@@ -28,7 +28,7 @@ import scala.util.{Failure, Success}
  * NOTE: The parser demonstrates handling complex, nested Parquet structures, which requires
  * overriding the default mappings for converting and grouping data.
  */
-object YellowTaxiAnalyzer extends App {
+object YellowTaxiAnalyzer extends App { // TODO upgrade to Scala 3
 
   implicit val spark: SparkSession = SparkSession
           .builder()

@@ -73,7 +73,7 @@ case class Pets[+X <: Pet with Mammal, -Y <: Sound](xs: Seq[X]) {
   def sounders(y: Y): Seq[X] = xs filter (_.sound == y)
 }
 
-object Pets extends App {
+object Pets extends App { // TODO upgrade to Scala 3
 
   def create[X <: Pet with Mammal, Y <: Sound](xs: X*): Pets[X, Y] = Pets(xs)
 
