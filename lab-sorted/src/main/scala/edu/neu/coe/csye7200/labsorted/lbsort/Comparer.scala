@@ -20,7 +20,7 @@ trait Comparer[T] extends (((T, T)) => Comparison) {
    */
   //noinspection ConvertExpressionToSAM
   def toOrdering: Ordering[T] =
-  // TO BE IMPLEMENTED  (hint: this Comparer can be referenced as self)
+    // TO BE IMPLEMENTED  (hint: this Comparer can be referenced as self)
     ???
 
   /**
@@ -31,7 +31,7 @@ trait Comparer[T] extends (((T, T)) => Comparison) {
    * @return true if the first element is greater than the second element, false otherwise.
    */
   def >(tt: (T, T)): Boolean =
-  // TO BE IMPLEMENTED 
+    // TO BE IMPLEMENTED 
     ???
 
   /**
@@ -51,8 +51,8 @@ trait Comparer[T] extends (((T, T)) => Comparison) {
    * @return true if the two elements are considered equal based on the logic of this `Comparer`, false otherwise.
    */
   def ==(tt: (T, T)): Boolean = {
-  // TO BE IMPLEMENTED 
-    ???
+    // TO BE IMPLEMENTED 
+        ???
   }
 
   /**
@@ -108,6 +108,7 @@ trait Comparer[T] extends (((T, T)) => Comparison) {
    *
    * @param f A function that takes a `Comparison` and returns a new `Comparison`. This function is applied to the output
    *          of the current comparison function.
+   *
    * @return A new comparer where the comparison logic has been transformed by the provided function `f`.
    */
   def map(f: Comparison => Comparison): Comparer[T] =

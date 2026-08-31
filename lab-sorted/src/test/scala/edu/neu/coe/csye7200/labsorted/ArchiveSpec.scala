@@ -1,10 +1,11 @@
 package edu.neu.coe.csye7200.labsorted
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import edu.neu.coe.csye7200.labsorted.Archive.flatWhen
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
-class ArchiveSpec extends AnyFlatSpec with should.Matchers {
+class ArchiveSpec extends AnyFlatSpec with should.Matchers with CancelOnNotImplemented {
 
   behavior of "Archive class"
 
@@ -44,13 +45,17 @@ class ArchiveSpec extends AnyFlatSpec with should.Matchers {
 
   it should "flatWhen true" in {
     val sb = new StringBuilder()
-    flatWhen(condition = true) {sb.append("X"); Some(1)} shouldBe Some(1)
+    flatWhen(condition = true) {
+      sb.append("X"); Some(1)
+    } shouldBe Some(1)
     sb.toString() shouldBe "X"
   }
 
   it should "flatWhen false" in {
     val sb = new StringBuilder()
-    flatWhen(condition = false) {sb.append("X"); Some(1)} shouldBe None
+    flatWhen(condition = false) {
+      sb.append("X"); Some(1)
+    } shouldBe None
     sb.isEmpty shouldBe true
   }
 }

@@ -1,10 +1,10 @@
 package edu.neu.coe.csye7200.asstwc.fp
 
 import edu.neu.coe.csye7200.asstwc.fp.Crawler.acquireAll
-import edu.neu.coe.csye7200.asstwc.fp.FP._
-import scala.concurrent._
+import edu.neu.coe.csye7200.asstwc.fp.FP.*
+import scala.concurrent.*
 import scala.language.postfixOps
-import scala.util._
+import scala.util.*
 import scala.util.control.NonFatal
 
 /**
@@ -30,6 +30,7 @@ class Crawler[U: Ordering](maxHops: Int, parallelism: Int = 8) {
    * @param acquire   a function that takes a sequence of elements and returns a function to asynchronously
    *                  acquire additional elements. The acquire function also takes a failure handler for
    *                  managing exceptions during the process.
+   *
    * @param predicate a condition function that determines whether an element should be further processed.
    * @param ec        the implicit ExecutionContext used to handle asynchronous operations.
    * @return a Future containing the final sequence of elements that satisfy the given predicate after processing.
@@ -43,13 +44,14 @@ class Crawler[U: Ordering](maxHops: Int, parallelism: Int = 8) {
      * It terminates when either:
      * - the number of `hops` remaining reaches zero; or
      * - the work component of `ur0` is empty.
-     * When it terminates, it returns the result component of `ur0`, wrapped in a `Future`.
-     * Otherwise, it dequeues a number of `U` elements from the work component of `ur0` and
-     * (if not empty) invokes `inner2` with sequence of `U` objects.
+     *   When it terminates, it returns the result component of `ur0`, wrapped in a `Future`.
+     *   Otherwise, it dequeues a number of `U` elements from the work component of `ur0` and
+     *   (if not empty) invokes `inner2` with sequence of `U` objects.
      *
      * @param ur0  the current state of the result (a `Set[U]`) and the remaining work (a `Queue[U]`).
      * @param hops the number of hops allowed at this point.
      *             A "hop" is the following of an edge in the graph being traversed.
+     *
      * @return a `Set[U]` wrapped in a `Future`.
      */
     def inner1(ur0: ResultWork[U], hops: Int): Future[Set[U]] =
@@ -95,6 +97,7 @@ class Crawler[U: Ordering](maxHops: Int, parallelism: Int = 8) {
    * @param f                a function to transform each input element into a Try-wrapped output element.
    * @param acquire          a function that takes a sequence of processed elements and creates an asynchronous operation
    *                         for acquiring more elements, accepting a failure handler as a parameter.
+   *
    * @param predicate        a condition function to determine if an element satisfies criteria for further processing.
    * @param executionContext the implicit ExecutionContext used for handling asynchronous operations.
    * @tparam T the type of input elements in the initial sequence.

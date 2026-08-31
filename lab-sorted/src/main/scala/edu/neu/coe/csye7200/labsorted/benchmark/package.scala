@@ -22,5 +22,6 @@ package object benchmark {
       1 to n foreach (_ => f)
       (System.nanoTime() - start) / n.toDouble
     }
-  }
+}
+
 

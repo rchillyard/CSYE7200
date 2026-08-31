@@ -19,7 +19,7 @@ public class BubbleSortJava<X> {
     /**
      * Sort the sub-array xs:from:to using bubble sort.
      *
-     * @param xs   sort the array xs from "from" to "to".
+     * @param xs sort the array xs from "from" to "to".
      */
     public void sort(X[] xs) {
         sort(xs, 0, xs.length);
@@ -57,7 +57,7 @@ public class BubbleSortJava<X> {
     private boolean swapStableConditional(X[] xs, int i) {
         final X v = xs[i - 1];
         final X w = xs[i];
-        boolean result = comparator.compare(w,v) < 0;
+        boolean result = comparator.compare(w, v) < 0;
         if (result) {
             xs[i] = v;
             xs[i - 1] = w;

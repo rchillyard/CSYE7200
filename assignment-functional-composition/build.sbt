@@ -1,12 +1,12 @@
-name := s"""FunctionalComposition (Scala ${scalaVersion.value})"""
-// Using scalaVersion "2.13" (if you want to change it, go to build.sbt at the root of the project)
+name := "Functional Composition"
+// Scala 3 — inherits scalacOptions from root build.sbt
 
 version := "1.0"
 
-Compile / doc / scalacOptions ++= Seq("-implicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
-
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test"
-
-val sprayGroup = "io.spray"
-val sprayJsonVersion = "1.3.5"
-libraryDependencies ++= List("spray-json") map { c => sprayGroup %% c % sprayJsonVersion }
+libraryDependencies ++= Seq(
+  "com.phasmidsoftware" % "tableparser-core_2.13" % Versions.tableParser2, // Needed for FP object.
+  "io.circe"            %% "circe-core"       % Versions.circe,
+  "io.circe"            %% "circe-generic"    % Versions.circe,
+  "io.circe"            %% "circe-parser"     % Versions.circe,
+  "org.scalatest"       %% "scalatest"        % Versions.scalatest % Test
+)

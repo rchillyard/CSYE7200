@@ -3,8 +3,8 @@ package edu.neu.coe.csye7200.asstwc
 import scala.util.Try
 
 /**
-  * @author scalaprof
-  */
+ * @author scalaprof
+ */
 object HTMLParser {
 
   import java.io.ByteArrayInputStream

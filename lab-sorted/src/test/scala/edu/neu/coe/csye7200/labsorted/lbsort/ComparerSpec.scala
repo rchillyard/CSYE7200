@@ -1,5 +1,6 @@
 package edu.neu.coe.csye7200.labsorted.lbsort
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import edu.neu.coe.csye7200.labsorted.lbsort.Comparison.*
 import org.scalatest.concurrent.{Futures, ScalaFutures}
 import org.scalatest.flatspec.AnyFlatSpec
@@ -7,20 +8,22 @@ import org.scalatest.matchers.should.Matchers
 import scala.language.postfixOps
 
 /**
-  * @author scalaprof
-  */
-class ComparerSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutures {
+ * @author scalaprof
+ */
+class ComparerSpec extends AnyFlatSpec with Matchers with CancelOnNotImplemented with Futures with ScalaFutures {
 
   behavior of "Comparer"
 
   it should "compare Ints (1)" in {
-    val comparer: Comparer[Int] = Ordering[Int]
+    import scala.language.implicitConversions
+    given comparer: Comparer[Int] = Ordering[Int]
     comparer(1, 2) shouldBe less
     comparer(1, 1) shouldBe Same
     comparer(2, 1) shouldBe more
   }
   it should "evaluate operators on Int" in {
-    val comparer: Comparer[Int] = Ordering[Int]
+    import scala.language.implicitConversions
+    given comparer: Comparer[Int] = Ordering[Int]
     comparer.>(1, 2) shouldBe false
     comparer.>(1, 1) shouldBe false
     comparer.>(2, 1) shouldBe true
@@ -41,7 +44,7 @@ class ComparerSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutu
     comparer.!=(2, 1) shouldBe true
   }
   it should "map with function" in {
-    val comparer: Comparer[Int] = Comparer.intComparer.map(_ flip)
+    given comparer: Comparer[Int] = Comparer.intComparer.map(_ flip)
     comparer((1, 2)) shouldBe Comparison.more
   }
   it should "invert" in {
@@ -53,11 +56,22 @@ class ComparerSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutu
   private val c2a = Composite(2, "a")
   private val c1z = Composite(1, "z")
 
+  private val intComparer: Comparer[Int] = implicitly[Comparer[Int]]
+
+  // NOTE: if the compiler error here is getting in your way, just comment out this entire unit test.
+  // When you come back to lab-sorted, then you need to actually fix the error. Think about why the previous line works but this line does not.
+  // NOTE lazy, so that the unwritten exercise is reached from inside a test rather
+  // than from the constructor. A NotImplementedError thrown while the spec is being
+  // built aborts the whole suite before CancelOnNotImplemented can see it; thrown
+  // from a test, it becomes a cancellation like every other unwritten exercise.
+  private lazy val stringComparer: Comparer[String] = {
+    // TO BE IMPLEMENTED 
+        ???
+  }
+
   it should "unMap" in {
-    val comparer1a: Comparer[Composite] = implicitly[Comparer[Int]].unMap(_.i)
-    // NOTE: if the compiler error here is getting in your way, just comment out this entire unit test.
-    // When you come back to lab-sorted, then you need to actually fix the error. Think about why the previous line works but this line does not.
-    val comparer1b: Comparer[Composite] = implicitly[Comparer[String]].unMap(_.s)
+    val comparer1a: Comparer[Composite] = intComparer.unMap(_.i)
+    val comparer1b: Comparer[Composite] = stringComparer.unMap(_.s)
     val comparer: Comparer[Composite] = comparer1b orElse comparer1a
     comparer(c1a, c1z) shouldBe less
     comparer(c1a, c1z) shouldBe less
@@ -76,12 +90,12 @@ class ComparerSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutu
   }
 
   it should "compose" in {
-    val comparer1: Comparer[Int] = implicitly[Comparer[Int]]
-    val comparer2: Comparer[String] = implicitly[Comparer[String]]
+    val comparer1: Comparer[Int] = intComparer
+    val comparer2: Comparer[String] = stringComparer
     val comparer3: Comparer[(Int, String)] = comparer1 compose comparer2
     (c1a, c1z) match {
       case (CompositeExtractor(ia, sa), CompositeExtractor(iz, sz)) =>
-        comparer3((ia,  sa), (iz, sz)) shouldBe less
+        comparer3((ia, sa), (iz, sz)) shouldBe less
       case _ =>
         fail("logic error")
     }
@@ -94,8 +108,10 @@ class ComparerSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutu
 
   }
   it should "compose using orElse" in {
-    val comparer1: Comparer[Composite] = Composite.OrderingCompositeString
-    val comparer2: Comparer[Composite] = Composite.OrderingCompositeInt
+    import scala.language.implicitConversions
+    given comparer1: Comparer[Composite] = Composite.OrderingCompositeString
+    given comparer2: Comparer[Composite] = Composite.OrderingCompositeInt
+
     val comparer3 = comparer1 orElse comparer2
     comparer3(c1a, c1z) shouldBe less
     comparer3(c1a, c2a) shouldBe less
@@ -121,6 +137,7 @@ class ComparerSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutu
   }
   it should "sort List[String]" in {
     val list = List("b", "c", "a")
+    // NOTE this will not compile until you have defined Comparer[String] (see the TO BE IMPLEMENTED code)
     val sorted = Sorted(list)
     sorted() shouldBe List("a", "b", "c")
   }
@@ -130,6 +147,7 @@ class ComparerSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutu
     sorted() shouldBe List(1.5, 2.4, 3.0)
   }
   it should "sort List[Char] given an explicit Comparer" in {
+    import scala.language.implicitConversions
     val charComparer: Comparer[Char] = Ordering[Char]
     val list = List('b', 'c', 'a')
     val sorted = Sorted(list)(charComparer.invert)
@@ -138,6 +156,7 @@ class ComparerSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutu
   private val c2b = Composite(2, "b")
   private val c3c = Composite(3, "c")
   it should "sort List[Composite] by Int then String" in {
+    import scala.language.implicitConversions
     val list = List(c3c, c1a, c1z, c2b)
     val comparer1: Comparer[Composite] = Composite.OrderingCompositeInt
     val comparer2: Comparer[Composite] = Composite.OrderingCompositeString
@@ -145,6 +164,7 @@ class ComparerSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutu
     sorted() shouldBe List(c1a, c1z, c2b, c3c)
   }
   it should "sort List[Composite] by String then Int" in {
+    import scala.language.implicitConversions
     val list = List(c3c, c1a, c1z, c2b)
     val comparer1: Comparer[Composite] = Composite.OrderingCompositeString
     val comparer2: Comparer[Composite] = Composite.OrderingCompositeInt
@@ -197,3 +217,4 @@ object Composite {
 object CompositeExtractor {
   def unapply(c: Composite): Option[(Int, String)] = Some((c.i, c.s))
 }
+

@@ -47,3 +47,4 @@ object Parallel {
     time
   }
 }
+

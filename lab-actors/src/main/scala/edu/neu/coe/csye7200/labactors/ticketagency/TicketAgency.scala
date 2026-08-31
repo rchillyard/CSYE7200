@@ -1,12 +1,16 @@
 package edu.neu.coe.csye7200.labactors.ticketagency
 
-import akka.actor.typed.{ActorRef, Behavior}
 import akka.actor.typed.scaladsl.Behaviors
+import akka.actor.typed.{ActorRef, Behavior}
 
 case class Clients(id: Long, card: CreditCard)
+
 case class Ticket(row: Int, seat: Int, price: Int)
+
 case class CreditCard(name: String, number: Long)
+
 case class Transaction(ts: Seq[Ticket], customer: Clients, total: Int)
+
 case class Pool(ts: Seq[Ticket], tentative: Seq[Transaction], xs: Seq[Transaction])
 
 trait PoolMessage {
@@ -16,13 +20,21 @@ trait PoolMessage {
 trait Confirmation
 
 final case class Buyer(creditCard: CreditCard, replyTo: ActorRef[Authenticated])
+
 final case class Authenticated(id: String, from: ActorRef[Buyer])
+
 case class Availability(ts: Seq[Ticket], from: ActorRef[Confirmation]) extends PoolMessage
+
 case class Hold(x: Transaction, from: ActorRef[Confirmation]) extends PoolMessage
+
 case class Confirm(x: Transaction, from: ActorRef[Confirmation]) extends PoolMessage
+
 case class Stop(from: ActorRef[Confirmation]) extends PoolMessage
+
 case class Query(replyTo: ActorRef[Clients])
+
 case object OK extends Confirmation
+
 case class Failed(msg: String) extends Confirmation
 
 object Clients {
@@ -76,7 +88,7 @@ object TicketAgency {
       //#create-actors
 
       Behaviors.receiveMessage { message =>
-        val replyTo: ActorRef[PoolMessage] = context.spawn( Pool(message.tickets), "ticketAgency")
+        val replyTo: ActorRef[PoolMessage] = context.spawn(Pool(message.tickets), "ticketAgency")
 //        client ! Buyer(message.name, replyTo)
 
         Behaviors.same

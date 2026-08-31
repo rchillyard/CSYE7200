@@ -1,9 +1,10 @@
 package edu.neu.coe.csye7200.shuntingyard
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class ShuntingYardParserSpec extends AnyFlatSpec with Matchers {
+class ShuntingYardParserSpec extends AnyFlatSpec with Matchers with CancelOnNotImplemented {
 
   behavior of "ShuntingYardParser"
 

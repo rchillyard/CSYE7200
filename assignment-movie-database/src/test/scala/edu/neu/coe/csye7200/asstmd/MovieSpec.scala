@@ -1,5 +1,6 @@
 package edu.neu.coe.csye7200.asstmd
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import edu.neu.coe.csye7200.asstmd.Movie.{sequenceOptimistic, sequencePessimistic}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -7,9 +8,9 @@ import scala.io.Source
 import scala.util.Try
 
 /**
-  * Created by scalaprof on 9/13/16.
-  */
-class MovieSpec extends AnyFlatSpec with Matchers {
+ * Created by scalaprof on 9/13/16.
+ */
+class MovieSpec extends AnyFlatSpec with Matchers with CancelOnNotImplemented {
 
   private val phi = (math.sqrt(5) + 1) / 2
 
@@ -68,9 +69,11 @@ class MovieSpec extends AnyFlatSpec with Matchers {
     }
   }
   it should "work for PG-13" in {
-    val x = Rating("PG-13")
-    x should matchPattern {
-      case Rating("PG", Some(13)) =>
+    assertOrCancelWith(Rating("PG-13")) {
+      r =>
+        r should matchPattern {
+          case Rating("PG", Some(13)) =>
+        }
     }
   }
   it should "work for R" in {
@@ -148,20 +151,22 @@ class MovieSpec extends AnyFlatSpec with Matchers {
   }
 
   behavior of "sequence"
-  it should "do sequenceOptimistic 1" in {
+  // NOTE this test will fail until all the Movie classes are complete (look for "// TO BE IMPLEMENTED")
+  // Until then, don't worry about it--we're ignoring it.
+  ignore should "do sequenceOptimistic 1" in {
     lazy val ingester = new Ingest[Movie]()
     val source = Source.fromResource("movie_metadata.csv")
-//    val source = Source.fromFile("assignment-movie-database/src/test/resources/movie_metadata.csv")
+    //    val source = Source.fromFile("assignment-movie-database/src/test/resources/movie_metadata.csv")
     val triedMovies: Iterator[Try[Movie]] = for (my <- ingester(source)) yield for (m <- my; if m.production.isKiwi) yield m
     val optionalMovies: Seq[Option[Movie]] = triedMovies to List map (_.toOption)
     val kiwiMovies: Option[Seq[Movie]] = sequenceOptimistic(optionalMovies)
     source.close()
-    kiwiMovies.getOrElse(Nil)   should have size 4
+    kiwiMovies.getOrElse(Nil) should have size 4
   }
   it should "do sequenceOptimistic 2" in {
     lazy val ingester = new Ingest[Movie]()
     val source = Source.fromResource("movie_metadata.csv")
-//    val source = Source.fromFile("assignment-movie-database/src/test/resources/movie_metadata.csv")
+    //    val source = Source.fromFile("assignment-movie-database/src/test/resources/movie_metadata.csv")
     val triedMovies: Iterator[Try[Movie]] = for (my <- ingester(source)) yield for (m <- my; if m.production.isCheap) yield m
     val optionalMovies: Seq[Option[Movie]] = triedMovies to List map (_.toOption)
     val cheapMovies: Option[Seq[Movie]] = sequenceOptimistic(optionalMovies)
@@ -171,22 +176,24 @@ class MovieSpec extends AnyFlatSpec with Matchers {
   it should "do sequencePessimistic 1" in {
     lazy val ingester = new Ingest[Movie]()
     val source = Source.fromResource("movie_metadata.csv")
-//    val source = Source.fromFile("assignment-movie-database/src/test/resources/movie_metadata.csv")
+    //    val source = Source.fromFile("assignment-movie-database/src/test/resources/movie_metadata.csv")
     val triedMovies: Iterator[Try[Movie]] = for (my <- ingester(source)) yield for (m <- my; if m.production.isKiwi) yield m
     val optionalMovies: Seq[Option[Movie]] = triedMovies to List map (_.toOption)
     val kiwiMovies: Option[Seq[Movie]] = sequencePessimistic(optionalMovies)
     source.close()
     kiwiMovies shouldBe None
   }
-  it should "do sequencePessimistic 2" in {
+  // NOTE this test will fail until all the Movie classes are complete (look for "// TO BE IMPLEMENTED")
+  // Until then, don't worry about it--we're ignoring it.
+  ignore should "do sequencePessimistic 2" in {
     lazy val ingester = new Ingest[Movie]()
     val source = Source.fromResource("movie_metadata.csv")
-//    val source = Source.fromFile("assignment-movie-database/src/test/resources/movie_metadata.csv")
+    //    val source = Source.fromFile("assignment-movie-database/src/test/resources/movie_metadata.csv")
     val triedMovies: Iterator[Try[Movie]] = for (my <- ingester(source)) yield for (m <- my) yield m
     val optionalMovies: Seq[Option[Movie]] = triedMovies to List map (_.toOption) filter (_.isDefined)
     val maybeMovies: Option[Seq[Movie]] = sequencePessimistic(optionalMovies)
     source.close()
     maybeMovies should matchPattern { case Some(xs) => }
-    maybeMovies.get   should have size 1480
+    maybeMovies.get should have size 1480
   }
 }

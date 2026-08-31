@@ -1,5 +1,6 @@
 package edu.neu.coe.csye7200.asstwc.fp
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import edu.neu.coe.csye7200.asstwc.{WebCrawler, WebCrawlerException}
 import java.net.URL
 import java.util.concurrent.TimeoutException
@@ -13,9 +14,9 @@ import scala.util.control.NonFatal
 import scala.util.{Failure, Success, Try}
 
 /**
-  * TODO implement me properly
-  */
-class FPSpec extends flatspec.AnyFlatSpec with should.Matchers with Futures with ScalaFutures {
+ * TODO implement me properly
+ */
+class FPSpec extends flatspec.AnyFlatSpec with should.Matchers with Futures with ScalaFutures with CancelOnNotImplemented {
 
   import edu.neu.coe.csye7200.asstwc.fp.FP.*
   import scala.concurrent.ExecutionContext.Implicits.global
@@ -61,10 +62,10 @@ class FPSpec extends flatspec.AnyFlatSpec with should.Matchers with Futures with
 
   behavior of "SequenceForgiving"
   it should "work" in {
-      val xys: Seq[Try[Int]] = Seq(Try(1), Success(2), Failure(WebCrawlerException("dummy")))
-      val xsy: Try[Seq[Int]] = sequenceForgiveSubsequent(xys) { case _: WebCrawlerException => true; case _ => false }
-      xsy should matchPattern { case Success(_) => }
-      xsy.get should have size 2
+    val xys: Seq[Try[Int]] = Seq(Try(1), Success(2), Failure(WebCrawlerException("dummy")))
+    val xsy: Try[Seq[Int]] = sequenceForgiveSubsequent(xys) { case _: WebCrawlerException => true; case _ => false }
+    xsy should matchPattern { case Success(_) => }
+    xsy.get should have size 2
   }
 
   behavior of "LiftTry"
@@ -88,57 +89,57 @@ class FPSpec extends flatspec.AnyFlatSpec with should.Matchers with Futures with
     zip(one, fail) should matchPattern { case Failure(_) => }
   }
 
-    "zip(Future,Future)" should "succeed" in {
-        val one = Future(1)
-        val two = Future(2)
-        val fail = Future.failed(new NoSuchElementException)
-        whenReady(zip(one, two)) { x => x should matchPattern { case (1, 2) => } }
-        zip(fail, two).failed.futureValue shouldBe a[NoSuchElementException]
-        zip(one, fail).failed.futureValue shouldBe a[NoSuchElementException]
-    }
+  "zip(Future,Future)" should "succeed" in {
+    val one = Future(1)
+    val two = Future(2)
+    val fail = Future.failed(new NoSuchElementException)
+    whenReady(zip(one, two)) { x => x should matchPattern { case (1, 2) => } }
+    zip(fail, two).failed.futureValue shouldBe a[NoSuchElementException]
+    zip(one, fail).failed.futureValue shouldBe a[NoSuchElementException]
+  }
 
-    behavior of "OptionToTry"
-    it should "work1" in {
-        optionToTry(Some(1), WebCrawlerException("junk")) should matchPattern { case Success(1) => }
-        optionToTry(None, WebCrawlerException("junk")) should matchPattern { case Failure(WebCrawlerException("junk", null)) => }
-    }
+  behavior of "OptionToTry"
+  it should "work1" in {
+    optionToTry(Some(1), WebCrawlerException("junk")) should matchPattern { case Success(1) => }
+    optionToTry(None, WebCrawlerException("junk")) should matchPattern { case Failure(WebCrawlerException("junk", null)) => }
+  }
 
-    it should "work2" in {
-        optionToTry(Some(1)) should matchPattern { case Success(1) => }
-        val xy = optionToTry(None)
-        xy should matchPattern { case Failure(_) => }
-        xy.toEither.isLeft shouldBe true
-    }
+  it should "work2" in {
+    optionToTry(Some(1)) should matchPattern { case Success(1) => }
+    val xy = optionToTry(None)
+    xy should matchPattern { case Failure(_) => }
+    xy.toEither.isLeft shouldBe true
+  }
 
-    behavior of "asEither"
-    it should "work" in {
-        asEither(Success(1)) shouldBe Right(1)
-        asEither(Failure(WebCrawlerException("junk"))) should matchPattern { case Left(WebCrawlerException("junk", null)) => }
-    }
+  behavior of "asEither"
+  it should "work" in {
+    asEither(Success(1)) shouldBe Right(1)
+    asEither(Failure(WebCrawlerException("junk"))) should matchPattern { case Left(WebCrawlerException("junk", null)) => }
+  }
 
-    behavior of "Sequence"
+  behavior of "Sequence"
 
-    it should "work1" in {
-        sequence(Seq(Some(1), Some(2))) shouldBe Some(Seq(1, 2))
-        sequence(Seq(Some(1), None)) shouldBe None
-    }
+  it should "work1" in {
+    sequence(Seq(Some(1), Some(2))) shouldBe Some(Seq(1, 2))
+    sequence(Seq(Some(1), None)) shouldBe None
+  }
 
-    it should "work3" in {
-        sequence(Seq(Success(1))) shouldBe Success(Seq(1))
-        sequence(Seq(Success(1), Failure(WebCrawlerException("junk")))) shouldBe Failure(WebCrawlerException("junk"))
-    }
+  it should "work3" in {
+    sequence(Seq(Success(1))) shouldBe Success(Seq(1))
+    sequence(Seq(Success(1), Failure(WebCrawlerException("junk")))) shouldBe Failure(WebCrawlerException("junk"))
+  }
 
-    it should "work4" in {
-        val xys: LazyList[Success[Int]] = LazyList.continually(Success(1)).take(3)
-        val xsy: Try[LazyList[Int]] = sequence(xys)
-        xsy should matchPattern { case Success(_) => }
-        xsy.get should have size 3
-    }
+  it should "work4" in {
+    val xys: LazyList[Success[Int]] = LazyList.continually(Success(1)).take(3)
+    val xsy: Try[LazyList[Int]] = sequence(xys)
+    xsy should matchPattern { case Success(_) => }
+    xsy.get should have size 3
+  }
 
-    it should "work5" in {
-        asOption(Right(1)) should matchPattern { case Some(1) => }
-        asOption(Left(WebCrawlerException("junk"))) should matchPattern { case None => }
-    }
+  it should "work5" in {
+    asOption(Right(1)) should matchPattern { case Some(1) => }
+    asOption(Left(WebCrawlerException("junk"))) should matchPattern { case None => }
+  }
 
   behavior of "SequenceLax"
 
@@ -151,102 +152,102 @@ class FPSpec extends flatspec.AnyFlatSpec with should.Matchers with Futures with
   behavior of "guardedValue"
 
   it should "work" in {
-    guardedValue(1)(_>0)(0) shouldBe 1
-    guardedValue(-1)(_>0)(0) shouldBe 0
+    guardedValue(1)(_ > 0)(0) shouldBe 1
+    guardedValue(-1)(_ > 0)(0) shouldBe 0
   }
 
   behavior of "sequence of Iterable"
 
-    it should "sequence" in {
-        val try1 = Success(1)
-        val try2 = Success(2)
-        val try3 = Failure(MonadOpsException(""))
-        sequence(Seq(try1, try2)) shouldBe Success(Seq(1, 2))
-        val result: Try[Iterable[Int]] = sequence(Seq(try1, try3))
-        result should matchPattern { case Failure(_) => }
-    }
+  it should "sequence" in {
+    val try1 = Success(1)
+    val try2 = Success(2)
+    val try3 = Failure(MonadOpsException(""))
+    sequence(Seq(try1, try2)) shouldBe Success(Seq(1, 2))
+    val result: Try[Iterable[Int]] = sequence(Seq(try1, try3))
+    result should matchPattern { case Failure(_) => }
+  }
 
-    it should "sequenceForgivingWith" in {
-        val try2 = Success(1)
-        val try3 = Success(2)
-        val try1 = Failure(MonadOpsException(""))
-        val sb = new mutable.StringBuilder()
-        val handleException: PartialFunction[Throwable, Try[Option[Int]]] = {
-            case NonFatal(x) => sb.append(s"forgiving: $x"); Success(None)
-            case x => Failure(x)
-        }
-        val result: Try[Iterable[Int]] = sequenceForgivingWith(Seq(try1, try2, try3))(handleException)
-        result should matchPattern { case Success(List(1, 2)) => }
-        sb.toString shouldBe "forgiving: edu.neu.coe.csye7200.asstwc.fp.MonadOpsException: "
+  it should "sequenceForgivingWith" in {
+    val try2 = Success(1)
+    val try3 = Success(2)
+    val try1 = Failure(MonadOpsException(""))
+    val sb = new mutable.StringBuilder()
+    val handleException: PartialFunction[Throwable, Try[Option[Int]]] = {
+      case NonFatal(x) => sb.append(s"forgiving: $x"); Success(None)
+      case x => Failure(x)
     }
+    val result: Try[Iterable[Int]] = sequenceForgivingWith(Seq(try1, try2, try3))(handleException)
+    result should matchPattern { case Success(List(1, 2)) => }
+    sb.toString shouldBe "forgiving: edu.neu.coe.csye7200.asstwc.fp.MonadOpsException: "
+  }
 
-    it should "sequenceForgivingTransform" in {
-        val try2 = Success(1)
-        val try3 = Success(2)
-        val try1 = Failure(MonadOpsException(""))
-        val sb = new mutable.StringBuilder()
-        val handleException: PartialFunction[Throwable, Try[Option[Int]]] = {
-            case NonFatal(x) => sb.append(s"forgiving: $x"); Success(None)
-            case x => Failure(x)
-        }
-        val result: Try[Iterable[Int]] = sequenceForgivingTransform(Seq(try1, try2, try3))(x => Success(Some(x + 1)), handleException)
-        result should matchPattern { case Success(List(2, 3)) => }
-        sb.toString shouldBe "forgiving: edu.neu.coe.csye7200.asstwc.fp.MonadOpsException: "
+  it should "sequenceForgivingTransform" in {
+    val try2 = Success(1)
+    val try3 = Success(2)
+    val try1 = Failure(MonadOpsException(""))
+    val sb = new mutable.StringBuilder()
+    val handleException: PartialFunction[Throwable, Try[Option[Int]]] = {
+      case NonFatal(x) => sb.append(s"forgiving: $x"); Success(None)
+      case x => Failure(x)
     }
-    it should "sequenceForgiveSubsequent 0" in {
-        val try2 = Success(1)
-        val try3 = Success(2)
-        val try1 = Failure(MonadOpsException(""))
-        val result: Try[Iterable[Int]] = sequenceForgiving(Seq(try1, try2, try3))
-        result should matchPattern { case Success(List(1, 2)) => }
+    val result: Try[Iterable[Int]] = sequenceForgivingTransform(Seq(try1, try2, try3))(x => Success(Some(x + 1)), handleException)
+    result should matchPattern { case Success(List(2, 3)) => }
+    sb.toString shouldBe "forgiving: edu.neu.coe.csye7200.asstwc.fp.MonadOpsException: "
+  }
+  it should "sequenceForgiveSubsequent 0" in {
+    val try2 = Success(1)
+    val try3 = Success(2)
+    val try1 = Failure(MonadOpsException(""))
+    val result: Try[Iterable[Int]] = sequenceForgiving(Seq(try1, try2, try3))
+    result should matchPattern { case Success(List(1, 2)) => }
+  }
+
+  it should "sequenceForgiveSubsequent 1" in {
+    val try1 = Success(1)
+    val try2 = Success(2)
+    val try3 = Failure(MonadOpsException(""))
+    val result: Try[Iterable[Int]] = sequenceForgiving(Seq(try1, try2, try3))
+    result should matchPattern { case Success(List(1, 2)) => }
+  }
+
+  it should "sequenceForgiveSubsequent 2" in {
+    val try1 = Success(1)
+    val try2 = Success(2)
+    val try3 = Failure(new OutOfMemoryError(""))
+    val result: Try[Iterable[Int]] = sequenceForgiving(Seq(try1, try2, try3))
+    result should matchPattern { case Failure(_) => }
+  }
+
+
+  behavior of "sequenceImpatient"
+  val goodURL = "http://www1.coe.neu.edu/~rhillyard/indexSafe.html"
+  val badURL = "http://www1.coe.neu.edu/junk"
+
+  it should "work for 1" in {
+    whenReady(sequenceImpatient(Seq(Future(1)))(100)) {
+      xys => xys shouldBe Seq(Success(1))
     }
-
-    it should "sequenceForgiveSubsequent 1" in {
-        val try1 = Success(1)
-        val try2 = Success(2)
-        val try3 = Failure(MonadOpsException(""))
-        val result: Try[Iterable[Int]] = sequenceForgiving(Seq(try1, try2, try3))
-        result should matchPattern { case Success(List(1, 2)) => }
-    }
-
-    it should "sequenceForgiveSubsequent 2" in {
-        val try1 = Success(1)
-        val try2 = Success(2)
-        val try3 = Failure(new OutOfMemoryError(""))
-        val result: Try[Iterable[Int]] = sequenceForgiving(Seq(try1, try2, try3))
-        result should matchPattern { case Failure(_) => }
-    }
-
-
-    behavior of "sequenceImpatient"
-    val goodURL = "http://www1.coe.neu.edu/~rhillyard/indexSafe.html"
-    val badURL = "http://www1.coe.neu.edu/junk"
-
-    it should "work for 1" in {
-        whenReady(sequenceImpatient(Seq(Future(1)))(100)) {
-            xys => xys shouldBe Seq(Success(1))
-        }
-    }
+  }
   // NOTE: this test works except when run by sbt
-    ignore should "work for 1, goodURL, 1/0 (less patient)" taggedAs Slow in {
-        whenReady(sequenceImpatient(Seq(Future(1), WebCrawler.fetchURLContent(new URL(goodURL)), Future(1 / 0)))(0.5)) {
-          xys =>
-            xys.length shouldBe 3
-            xys.head shouldBe Success(1)
-            xys.tail.head should matchPattern { case Failure(_: TimeoutException) => }
-            xys.tail.tail.head should matchPattern { case Failure(_: java.lang.ArithmeticException) => }
-        }
+  ignore should "work for 1, goodURL, 1/0 (less patient)" taggedAs Slow in {
+    whenReady(sequenceImpatient(Seq(Future(1), WebCrawler.fetchURLContent(new URL(goodURL)), Future(1 / 0)))(0.5)) {
+      xys =>
+        xys.length shouldBe 3
+        xys.head shouldBe Success(1)
+        xys.tail.head should matchPattern { case Failure(_: TimeoutException) => }
+        xys.tail.tail.head should matchPattern { case Failure(_: java.lang.ArithmeticException) => }
     }
+  }
   // NOTE: this test works except when run by sbt
-    ignore should "work for 1, goodURL, 1/0 (more patient)" taggedAs Slow in {
-        whenReady(sequenceImpatient(Seq(Future(1), WebCrawler.fetchURLContent(new URL(goodURL)), Future(1 / 0)))(200)) {
-            xys =>
-                xys.length shouldBe 3
-                xys.head shouldBe Success(1)
-                xys.tail.head should matchPattern { case Success(_) => }
-                xys.tail.tail.head should matchPattern { case Failure(_: java.lang.ArithmeticException) => }
-        }
+  ignore should "work for 1, goodURL, 1/0 (more patient)" taggedAs Slow in {
+    whenReady(sequenceImpatient(Seq(Future(1), WebCrawler.fetchURLContent(new URL(goodURL)), Future(1 / 0)))(200)) {
+      xys =>
+        xys.length shouldBe 3
+        xys.head shouldBe Success(1)
+        xys.tail.head should matchPattern { case Success(_) => }
+        xys.tail.tail.head should matchPattern { case Failure(_: java.lang.ArithmeticException) => }
     }
+  }
 
   behavior of "LiftOption"
   it should "work" in {

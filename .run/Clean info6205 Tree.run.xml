@@ -1,9 +1,8 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Clean info6205 Tree" type="Application" factoryName="Application">
-    <option name="ALTERNATIVE_JRE_PATH" value="11.0.4" />
+    <option name="ALTERNATIVE_JRE_PATH" value="homebrew-21 (3)" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="edu.neu.coe.csye7200.util.CleanTree" />
-    <module name="CSYE7200.LabParser" />
     <option name="PROGRAM_PARAMETERS" value="$PROJECT_DIR$/../INFO6205/src $PROJECT_DIR$/../DSAIPG/Java/src -huskySort:admin:life:madhava:MySet:HashCodeSortTest &quot;SOLUTION&quot; SKELETON" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/lab-parser" />
     <extension name="coverage">

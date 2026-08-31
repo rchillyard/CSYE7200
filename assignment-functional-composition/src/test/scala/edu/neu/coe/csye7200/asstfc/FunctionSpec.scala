@@ -1,10 +1,11 @@
 package edu.neu.coe.csye7200.asstfc
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import scala.util.{Try, _}
+import scala.util.{Try, *}
 
-class FunctionSpec extends AnyFlatSpec with Matchers {
+class FunctionSpec extends AnyFlatSpec with Matchers with CancelOnNotImplemented {
 
   behavior of "map2"
 
