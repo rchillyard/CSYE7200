@@ -29,9 +29,30 @@ libraryDependencies ++= Seq(
 
 Test / fork := true
 
-// Uncomment if running on JDK 17+ instead of JDK 11:
-// Test / javaOptions ++= Seq(
-//   "--add-opens=java.base/java.nio=ALL-UNNAMED",
-//   "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
-//   "--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED"
-// )
+// Needed on JDK 17+, and harmless on JDK 11 thanks to
+// -XX:+IgnoreUnrecognizedVMOptions, so they are set unconditionally:
+// JAVA_11_HOME is unset on CI and on most machines. Without these, Spark aborts
+// at start-up (StorageUtils cannot reach sun.nio.ch.DirectBuffer) and, once past
+// that, Kryo cannot build a serializer for java.lang.invoke.SerializedLambda.
+//
+// This is the list spark-submit adds for itself on JDK 17+
+// (org.apache.spark.launcher.JavaModuleOptions); a forked test JVM gets no such
+// help, so we repeat it here. This is the only module whose tests actually start
+// a SparkContext -- the three ex-spark-* modules have theirs ignored.
+Test / javaOptions ++= Seq(
+  "-XX:+IgnoreUnrecognizedVMOptions",
+  "--add-opens=java.base/java.lang=ALL-UNNAMED",
+  "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
+  "--add-opens=java.base/java.lang.reflect=ALL-UNNAMED",
+  "--add-opens=java.base/java.io=ALL-UNNAMED",
+  "--add-opens=java.base/java.net=ALL-UNNAMED",
+  "--add-opens=java.base/java.nio=ALL-UNNAMED",
+  "--add-opens=java.base/java.util=ALL-UNNAMED",
+  "--add-opens=java.base/java.util.concurrent=ALL-UNNAMED",
+  "--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED",
+  "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+  "--add-opens=java.base/sun.nio.cs=ALL-UNNAMED",
+  "--add-opens=java.base/sun.security.action=ALL-UNNAMED",
+  "--add-opens=java.base/sun.util.calendar=ALL-UNNAMED",
+  "--add-opens=java.security.jgss/sun.security.krb5=ALL-UNNAMED"
+)

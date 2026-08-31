@@ -49,6 +49,18 @@ class NumberSpec extends AnyFlatSpec with should.Matchers {
     target.isValid shouldBe false
   }
 
+  // NOTE Number(Double, Factor) guards against NaN by returning the invalid
+  // Number. The guard read `x == Double.NaN`, which is false for every x
+  // including NaN itself -- IEEE 754 gives NaN no equals -- so it never fired
+  // and a NaN was wrapped up as a perfectly valid-looking Number.
+  it should "yield false for NaN" in {
+    Number(Double.NaN, Scalar).isValid shouldBe false
+  }
+
+  it should "yield true for an ordinary Double" in {
+    Number(1.5, Scalar).isValid shouldBe true
+  }
+
   behavior of "parse"
   it should "work for 1" in {
     val xy: Try[Number] = Number.parse("1")

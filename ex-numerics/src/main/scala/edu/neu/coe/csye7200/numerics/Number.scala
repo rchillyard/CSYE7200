@@ -388,7 +388,14 @@ object Number {
    * @param factor the appropriate factor
    * @return a Number based on x.
    */
-  def apply(x: Double, factor: Factor): Number = if (x == Double.NaN) apply(factor) else apply(Some(x), factor)
+  // NOTE this used to read `x == Double.NaN`, which is false for every x, NaN
+  // included, because IEEE 754 gives NaN no equals -- not even to itself. The
+  // guard never fired, so a NaN became a Number reporting isValid = true.
+  // Spelled out rather than as `x.isNaN` to match Rational.approximateAny, where
+  // that shorter form silently resolves through an implicit conversion; there is
+  // no such conversion in scope here, but the two should be read together.
+  def apply(x: Double, factor: Factor): Number =
+    if (java.lang.Double.isNaN(x)) apply(factor) else apply(Some(x), factor)
 
   /**
    * Method to construct an invalid Number.

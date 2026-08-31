@@ -1,10 +1,11 @@
 package edu.neu.coe.csye7200.labsorted
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import edu.neu.coe.csye7200.labsorted.Archive.flatWhen
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
-class ArchiveSpec extends AnyFlatSpec with should.Matchers {
+class ArchiveSpec extends AnyFlatSpec with should.Matchers with CancelOnNotImplemented {
 
   behavior of "Archive class"
 

@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200.asstwc.fp
 
-import edu.neu.coe.csye7200.CancelOnNotImplemented
+import edu.neu.coe.csye7200.{CancelOnNotImplemented, CancelWhenOffline}
 import edu.neu.coe.csye7200.asstwc.WebCrawler.{createURL, fetchAndParseLinks, isParseableURL}
 import edu.neu.coe.csye7200.asstwc.fp.FP.{flatten, sequence}
 import java.net.URL
@@ -17,7 +17,10 @@ import scala.util.*
 /**
  * @author scalaprof
  */
-class CrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with ScalaFutures with TryValues with Inside with CancelOnNotImplemented {
+class CrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with ScalaFutures with TryValues with Inside with CancelOnNotImplemented with CancelWhenOffline {
+
+  def requiredHosts: Seq[String] = Seq("www1.coe.neu.edu")
+
 
   val goodURL = "http://www1.coe.neu.edu/~rhillyard/indexSafe.html"
 

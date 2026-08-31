@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200.fp.util
 
-import scala.util.{Failure, Try}
+import scala.util.{Failure, Success, Try}
 
 /**
  * Classes which provide chaining of Try operations where each operation is (typically) a function which takes
@@ -30,6 +30,8 @@ object Trial {
   def none[V, T]: Trial[V, T] = Trial.apply(_ => Failure(new Exception("null trial")))
 
   def lift[V, T](f: V => T): Trial[V, T] = Trial(Lift(f))
+
+  def trial(b: Boolean): Try[Unit] = if (b) Success(()) else Failure(new Exception("trial failed"))
 }
 
 /**

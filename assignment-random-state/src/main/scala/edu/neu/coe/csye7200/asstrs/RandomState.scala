@@ -48,7 +48,7 @@ trait RandomState[T] {
    */
   // Hint: This a recursively method and it concatenate current element with following elements.
   // 12 points
-  def toStream: LazyList[T] = {
+  def toLazyList: LazyList[T] = {
 // TO BE IMPLEMENTED 
         ???
   }

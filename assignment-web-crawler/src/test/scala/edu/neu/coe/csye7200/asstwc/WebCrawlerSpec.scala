@@ -1,6 +1,6 @@
 package edu.neu.coe.csye7200.asstwc
 
-import edu.neu.coe.csye7200.CancelOnNotImplemented
+import edu.neu.coe.csye7200.{CancelOnNotImplemented, CancelWhenOffline}
 import edu.neu.coe.csye7200.asstwc.WebCrawler.{fetchAndParseLinks, isParseableURL}
 import edu.neu.coe.csye7200.asstwc.fp.FP.flatten
 import edu.neu.coe.csye7200.asstwc.fp.{Crawler, FP}
@@ -20,7 +20,15 @@ import scala.util.control.NonFatal
 /**
  * @author scalaprof
  */
-class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with ScalaFutures with TryValues with Inside with CancelOnNotImplemented {
+class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with ScalaFutures with TryValues with Inside with CancelOnNotImplemented with CancelWhenOffline {
+
+  // NOTE www1.coe.neu.edu resolves on the Northeastern network and not from a CI
+  // runner, so without this the whole spec is red anywhere else. Note that tagging
+  // is not enough on its own: "filterAndFlatten should work" below is untagged, and
+  // fails an ordinary assertion because the crawler swallows the network error and
+  // returns nothing.
+  def requiredHosts: Seq[String] = Seq("www1.coe.neu.edu", "www.google.com")
+
 
   import scala.concurrent.ExecutionContext.Implicits.global
 

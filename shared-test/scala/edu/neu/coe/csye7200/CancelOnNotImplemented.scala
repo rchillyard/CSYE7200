@@ -1,9 +1,12 @@
 package edu.neu.coe.csye7200
 
-import org.scalatest.exceptions.TestFailedException
+// NOTE cancel, fail and succeed are NOT imported from Assertions. TestSuite
+// extends Suite which extends Assertions, so this trait inherits them; importing
+// them as well is redundant and every compiler warns about the unused import.
 import org.scalatest.{Canceled, Failed, Outcome, TestSuite}
-import scala.concurrent.duration._
+import org.scalatest.exceptions.TestFailedException
 import scala.concurrent.{Await, Future}
+import scala.concurrent.duration._
 import scala.reflect.ClassTag
 import scala.util.{Failure, Success, Try}
 
@@ -12,6 +15,19 @@ import scala.util.{Failure, Success, Try}
  * Canceled outcome rather than a Failed outcome, so that student-facing
  * test runs show grey cancellations instead of red failures for unimplemented
  * methods.
+ *
+ * NOTE this file lives in `shared-test`, outside any module, and is added to the
+ * test sources of the modules that need it by `sharedTestSources` in build.sbt.
+ * It is shared as *source* rather than as an artifact because it cannot be: the
+ * modules that mix it in are not all on the same Scala version. `core` is on
+ * Scala 3, and the nine modules which `dependsOn(core % "test->test")` inherit it
+ * from there -- but `ex-functional-programming` is pinned to 2.13 and
+ * `lab-parser` and `assignment-spark-word-count` to 2.12, so none of them can
+ * consume a Scala 3 test artifact. Sharing the source lets each compile it with
+ * its own compiler. There were four identical copies before.
+ *
+ * If you edit this file, it is compiled by every one of those modules, so it must
+ * stay source-compatible with Scala 2.12, 2.13 and 3.
  *
  * Also provides tryOrCancel, tryOrCancelWith, futureOrCancel, futureOrCancelWith,
  * assertThrowsOrCancel, assertTryThrowsOrCancel, and assertFutureThrowsOrCancel
@@ -24,8 +40,34 @@ trait CancelOnNotImplemented extends TestSuite {
     super.withFixture(test) match {
       case Failed(e: NotImplementedError) =>
         Canceled(cancelMessage(e))
+      // NOTE also recognise a NotImplementedError arriving wrapped. ScalaFutures'
+      // whenReady reports a failed Future by throwing a TestFailedException with
+      // the original as its cause, so an unwritten exercise reached through a
+      // Future looked like an ordinary failure -- "The future returned an
+      // exception of type: scala.NotImplementedError" -- and stayed red while
+      // every other unwritten exercise went grey. Looking at the cause chain
+      // covers all forty-odd whenReady sites at once, and any added later.
+      case Failed(e) =>
+        notImplementedCause(e) match {
+          case Some(nie) => Canceled(cancelMessage(nie))
+          case None => Failed(e)
+        }
       case other => other
     }
+
+  /**
+   * Finds a NotImplementedError in the cause chain of the given Throwable.
+   *
+   * @param e the Throwable to examine.
+   * @return the NotImplementedError, if one lies at or beneath e.
+   */
+  @scala.annotation.tailrec
+  private def notImplementedCause(e: Throwable): Option[NotImplementedError] = e match {
+    case null => None
+    case nie: NotImplementedError => Some(nie)
+    case _ if e.getCause eq e => None // a cause chain may be self-referential
+    case _ => notImplementedCause(e.getCause)
+  }
 
   /**
    * Unwraps a Try, returning succeed if the value is present,

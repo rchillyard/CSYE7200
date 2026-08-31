@@ -404,6 +404,33 @@ class RationalSpec extends flatspec.AnyFlatSpec with should.Matchers with Privat
   it should "work for NaN" in {
     Rational.NaN.toString shouldBe "NaN"
   }
+
+  behavior of "Rational(Double) at the edges"
+
+  // NOTE `x == Double.NaN` is false for every x, NaN included, because IEEE 754
+  // says NaN equals nothing. So the guard in approximateAny never fired, and NaN
+  // fell all the way through the chain -- past the two infinity cases, and past
+  // `x > 0`, which is also false for NaN -- into approximatePositive, and so to
+  // approximate, whose `require(x >= 0 && x <= 1)` finally rejected it. The
+  // symptom was therefore an IllegalArgumentException advising the caller to
+  // "call doubleToRational instead", from a method whose documented job is to
+  // approximate "regardless of the value of the Double".
+  it should "give NaN for NaN" in {
+    Rational(Double.NaN).isNaN shouldBe true
+  }
+
+  it should "give infinity for the infinities" in {
+    Rational(Double.PositiveInfinity) shouldBe Rational.infinity
+    Rational(Double.NegativeInfinity) shouldBe Rational.infinity.negate
+  }
+
+  // These were checked on the same occasion and are fine: approximatePositive
+  // scales by a power of two taken from getExponent, and that survives the
+  // subnormals. Kept because it is the neighbouring edge of the same method.
+  it should "handle the smallest doubles" in {
+    Rational(Double.MinPositiveValue).isNaN shouldBe false
+    Rational(-Double.MinPositiveValue).isNaN shouldBe false
+  }
   it should "work for Infinity" in {
     Rational.infinity.toString shouldBe "+ve infinity"
   }

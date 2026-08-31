@@ -187,7 +187,21 @@ object Rational {
    * @return a Rational such that the difference between the result and x is less than epsilon.
    */
   def approximateAny(x: Double)(implicit epsilon: Tolerance): Rational =
-    if (x == Double.NaN) NaN
+    // NOTE this used to read `x == Double.NaN`, which is false for every x, NaN
+    // included: IEEE 754 gives NaN no equals, not even to itself. So the guard
+    // never fired, and NaN went on to fail `isPosInfinity`, `isNegInfinity` and
+    // `x > 0` alike -- every comparison with NaN is false -- reaching
+    // approximatePositive and then approximate, whose require rejected it. A
+    // method documented to work "regardless of the value of the Double" threw.
+    //
+    // NOTE and it must be written this way round. `x.isNaN` does not compile to
+    // what you would expect here: isNaN is not a member of scala.Double but of
+    // RichDouble, so it needs an implicit conversion -- and doubleToRational,
+    // below in this object, is a nearer implicit than Predef's doubleWrapper.
+    // `x.isNaN` therefore means `Rational(x).isNaN`, which calls this method
+    // again, and the stack overflows. The two lines below are safe only because
+    // Rational has no isPosInfinity or isNegInfinity to hijack them.
+    if (java.lang.Double.isNaN(x)) NaN
     else if (x.isPosInfinity) infinity
     else if (x.isNegInfinity) infinity.negate
     else if (x > 0) approximatePositive(x)

@@ -200,9 +200,13 @@ class MergeSortSpec extends AnyFlatSpec with should.Matchers {
     result.lastOption shouldBe Some(N)
   }
 
-  // NOTE for some reason, this no longer throws a StackOverflowError
-  ignore should "fail for doMain" in {
-    a [StackOverflowError] should be thrownBy MergeSortStackOverflow.doMain(N)
+  // The point of the class: merge is not tail-recursive, so it recurses once per element
+  // of the merged list and a long enough list exhausts the stack. Both this and the test
+  // above depend on the stack size, which build.sbt pins at 4m for exactly that reason --
+  // at that size 10,000 elements sort with room to spare and 150,000 already overflow, so
+  // a million is well clear of the boundary from either side.
+  it should "fail for doMain" in {
+    a [StackOverflowError] should be thrownBy MergeSortStackOverflow.doMain(1000000)
   }
 
   behavior of "MergeSortEager"

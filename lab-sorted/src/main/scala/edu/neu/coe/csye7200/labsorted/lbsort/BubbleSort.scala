@@ -32,7 +32,11 @@ case class BubbleSort[X]()(using xo: Ordering[X]) {
 
   /**
    * Method which conditionally swaps the values of two Elements: x and y.
-   * If x and y are initially in their correct order (not inverted), then no action is taken.
+   *
+   * NOTE the sense of the comparison. A swap happens when x is LESS than y, so
+   * each pass drives the larger values towards the head and the linked list ends
+   * up in descending order. That is deliberate: Element.toRevSeq reverses the
+   * list on the way out, so the Seq returned by BubbleSort.sort is ascending.
    *
    * @param x an Element[X].
    * @param y an Element[X].

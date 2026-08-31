@@ -33,7 +33,7 @@ class RandomStateSpec extends AnyFlatSpec with Matchers with CancelOnNotImplemen
     // e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   }
   "7th element of RandomState(0)" should "match case RandomState(5082315122564986995L)" in {
-    val lrs = RandomState(0).toStream.slice(6, 7)
+    val lrs = RandomState(0).toLazyList.slice(6, 7)
     (lrs head) should matchPattern { case 5082315122564986995L => }
   }
   "longToDouble" should "work" in {
@@ -45,11 +45,11 @@ class RandomStateSpec extends AnyFlatSpec with Matchers with CancelOnNotImplemen
     value shouldBe 3.7812576126163456E-4 +- 1E-6
   }
   "0..1 stream" should "have mean = 0.5" in {
-    val xs = RandomState(0).map(RandomState.longToDouble).map(RandomState.doubleToUniformDouble).toStream take 1001 toList;
+    val xs = RandomState(0).map(RandomState.longToDouble).map(RandomState.doubleToUniformDouble).toLazyList take 1001 toList;
     meanU(xs) shouldBe 0.5 +- 5E-3
   }
   "BetterRandomState" should "have mean = 0.5" in {
-    val xs = BetterRandomState(0, BetterRandomState.hDouble).toStream take 1001 toList;
+    val xs = BetterRandomState(0, BetterRandomState.hDouble).toLazyList take 1001 toList;
     mean(xs) shouldBe 0.5 +- 5E-3
   }
   "map" should "work" in {

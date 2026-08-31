@@ -1,7 +1,7 @@
 package edu.neu.coe.csye7200.numerics
 
 
-import org.scalacheck.Prop.forAll
+import org.scalacheck.Prop.{forAll, propBoolean}
 import org.scalacheck.Properties
 import scala.util.control.NonFatal
 
@@ -34,13 +34,23 @@ class RationalPropertySpec extends Properties("Rational") {
     }
   }
 
+  // NOTE the precondition is not decoration. This property says that x and 1/x
+  // multiply back to 1, which cannot hold when 1/x is not a number that exists:
+  // 1.0 / x overflows to Infinity for every |x| below about 5.56E-309, which is
+  // to say for the subnormals and the smallest normals, and 1.0 / 0.0 is Infinity
+  // too. ScalaCheck draws 100 doubles per run and reaches one of those only
+  // occasionally, so this failed perhaps one run in ten -- seen first as
+  // "Falsified after 83 passed tests, ARG_0: 1.303231388552603E-309".
+  // Rational is not at fault; the property was simply asserting something untrue.
   property("Double") = forAll { (x: Double) =>
     import org.scalactic.Tolerance.*
     import org.scalactic.TripleEquals.*
-    // TODO check this is OK. Might need to be Rational(BigDecimal.valueOf(x))
-    val r = Rational(x)
-    val s = Rational(1.0 / x)
-    (r * s).toDouble === 1.0 +- 1E-7
+    val reciprocal = 1.0 / x
+    (!x.isNaN && x != 0.0 && !reciprocal.isInfinite) ==> {
+      val r = Rational(x)
+      val s = Rational(reciprocal)
+      (r * s).toDouble === 1.0 +- 1E-7
+    }
   }
 
 }

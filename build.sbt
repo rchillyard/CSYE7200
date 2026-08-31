@@ -36,8 +36,23 @@ javaOptions ++= Seq("-Xms512M", "-Xmx2048M")
 Test / parallelExecution := false
 Test / testOptions += Tests.Filter(s => s.endsWith("Test") || s.endsWith("Spec"))
 
+// ── Shared test sources ──────────────────────────────────────────────────
+// CancelOnNotImplemented lives in shared-test rather than in any one module,
+// and is compiled by each module that needs it.
+//
+// It cannot simply live in `core` and be depended upon. The nine modules which
+// dependsOn(core % "test->test") do inherit it from there, but the three which
+// carry their own Scala version cannot: ex-functional-programming is pinned to
+// 2.13, and lab-parser and assignment-spark-word-count to 2.12, so none of them
+// can consume a Scala 3 test artifact. Sharing the source sidesteps that -- each
+// module compiles it with its own compiler. Previously there were four identical
+// copies, which is what this replaces.
+lazy val sharedTestSources = Seq(
+  Test / unmanagedSourceDirectories += (ThisBuild / baseDirectory).value / "shared-test" / "scala"
+)
+
 // ── Module definitions ───────────────────────────────────────────────────
-lazy val core    = project in file("core")
+lazy val core    = (project in file("core")).settings(sharedTestSources)
 
 lazy val asstfc  = (project in file("assignment-functional-composition")).dependsOn(core % "compile->compile;test->test")
 lazy val assthw  = (project in file("assignment-hello-world")).dependsOn(core % "compile->compile;test->test")
@@ -47,18 +62,18 @@ lazy val asstrs  = (project in file("assignment-random-state")).dependsOn(core %
 lazy val asstwc  = (project in file("assignment-web-crawler")).dependsOn(core % "compile->compile;test->test")
 lazy val asstsw  = (project in file("assignment-spark-word-count")).settings(
   scalaVersion := Versions.scala2_12
-)
+).settings(sharedTestSources)
 lazy val exconc   = (project in file("ex-concordance")).settings(
   scalaVersion := Versions.scala2_13
 )
 lazy val exfp      = (project in file("ex-functional-programming")).settings(
   scalaVersion := Versions.scala2_13
-)
+).settings(sharedTestSources)
 lazy val ex99      = (project in file("lab-scala-99")).dependsOn(core % "compile->compile;test->test")
 lazy val labparser  = (project in file("lab-parser")).settings(
   // scala-parser-combinators has no artifact for 2.13+, so this remains on 2.12
   scalaVersion := Versions.scala2_12
-)
+).settings(sharedTestSources)
 lazy val labsort    = (project in file("lab-sorted")).dependsOn(core % "compile->compile;test->test")
 lazy val labactors  = (project in file("lab-actors")).dependsOn(core % "compile->compile;test->test")
 lazy val exmr       = project in file("ex-map-reduce")

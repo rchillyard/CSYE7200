@@ -60,7 +60,11 @@ class ComparerSpec extends AnyFlatSpec with Matchers with CancelOnNotImplemented
 
   // NOTE: if the compiler error here is getting in your way, just comment out this entire unit test.
   // When you come back to lab-sorted, then you need to actually fix the error. Think about why the previous line works but this line does not.
-  private val stringComparer: Comparer[String] = {
+  // NOTE lazy, so that the unwritten exercise is reached from inside a test rather
+  // than from the constructor. A NotImplementedError thrown while the spec is being
+  // built aborts the whole suite before CancelOnNotImplemented can see it; thrown
+  // from a test, it becomes a cancellation like every other unwritten exercise.
+  private lazy val stringComparer: Comparer[String] = {
     // TO BE IMPLEMENTED 
         ???
   }
