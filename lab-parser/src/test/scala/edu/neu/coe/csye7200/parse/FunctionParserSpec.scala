@@ -4,7 +4,7 @@
 
 package edu.neu.coe.csye7200.parse
 
-import com.phasmid.laScala.values.{DateScalar, QuotedStringScalar, Scalar}
+import com.phasmidsoftware.lascala.values.{DateScalar, QuotedStringScalar, Scalar}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import scala.util.Success

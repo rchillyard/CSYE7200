@@ -1,21 +1,10 @@
 name := s"""Parser (Scala ${scalaVersion.value})"""
-// Scala 2.12 — see root build.sbt
-// Note: retaining 2.12 as there is no LaScala for 2.13+.
+// Inherits Scala 3 and scalacOptions from root ThisBuild settings.
 
 version := "1.0"
 
-// Scala 2.12 compiler options (override ThisBuild Scala 3 defaults)
-scalacOptions := Seq(
-  "-deprecation",
-  "-feature",
-  "-unchecked",
-  "-Ywarn-unused",
-  "-Ywarn-value-discard",
-  "-Ywarn-dead-code"
-)
-
 libraryDependencies ++= Seq(
-//  "com.typesafe.scala-logging" %% "scala-logging"            % Versions.scalaLogging,
+  "com.phasmidsoftware"        %% "lascala"                  % Versions.lascala,
   "ch.qos.logback"              % "logback-core"             % Versions.logback % Runtime,
   "ch.qos.logback"              % "logback-classic"          % Versions.logback % Runtime,
   "org.slf4j"                   % "slf4j-api"                % Versions.slf4j,

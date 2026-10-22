@@ -10,7 +10,7 @@ class MergeSortFuncSpec extends AnyFlatSpec with should.Matchers {
   it should "work for doMain" in {
     // Expected time: 182 mSec
     val N = 128 * 1024 // DP Quicksort performs this sort in ...?
-    val result: Seq[Int] = MergeSort.doMain(N)
+    val result: Seq[Int] = doMain(N)
     result.headOption shouldBe Some(1)
     result.lastOption shouldBe Some(N)
   }

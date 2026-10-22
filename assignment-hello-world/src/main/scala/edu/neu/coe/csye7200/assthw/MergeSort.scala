@@ -2,23 +2,49 @@ package edu.neu.coe.csye7200.assthw
 
 import edu.neu.coe.csye7200.assthw.Tries.zipTry
 import scala.annotation.tailrec
-import scala.collection.mutable.Queue
+import scala.collection.mutable.{ArrayBuffer}
 import scala.util.{Failure, Success, Try}
 
+type Merger[X] = (List[X], List[X]) => Ordering[X] => List[X]
+
 @main
-def runMergeSort(): Unit = MergeSort.doMain(1_000_000) : Unit
+def runMergeSortMutable(): Unit =
+  val name = "Mutable MergeSort"
+  println(if MergeSort.doMain(1_000_000)(MergeSort.mergeMutable) then name + " OK" else name + "Not OK") : Unit
+
+@main
+def runMergeSortImmutable(): Unit =
+  val name = "Immutable MergeSort"
+  println(if MergeSort.doMain(1_000_000)(MergeSort.mergeImmutable) then name + " OK" else name + "Not OK"): Unit
+
+@main
+def runMergeSortUnsafe(): Unit =
+  val name = "Unsafe MergeSort"
+  println(if MergeSort.doMain(1_000)(MergeSort.mergeSimple) then name + " OK" else name + "Not OK"): Unit
 
 /**
- * This is the most elegant version of MergeSort.
- * There are no explicit reversal operations.
- * Instead, the <code>result</code> parameter of the merge method is a Queue.
+ * Performs a merge sort, delegating the merge step to a pluggable `merger` strategy.
  *
- * NOTE however, that this implementation is not quite as fast as the Lazy version.
- * NOTE that this implementation (using a mutable Queue) is faster than using an immutable Queue, albeit not referentially transparent.
+ * See [[MergeSort.mergeSimple]] (not tail-recursive; only safe for short lists -- see its
+ * own doc), [[MergeSort.mergeImmutable]] (tail-recursive, `List`-based, currently the
+ * fastest of the three), and [[MergeSort.mergeMutable]] (tail-recursive, backed by a
+ * mutable `ArrayBuffer`).
  *
+ * NOTE: `mergeMutable` was assumed to be the fastest merger -- avoiding `mergeImmutable`'s
+ * explicit final reversal -- but measured benchmarks (1M elements) show it's actually
+ * slower than `mergeImmutable`, even after switching its accumulator from `Queue` to
+ * `ArrayBuffer`. The per-element append plus the final buffer-to-list conversion appear to
+ * cost more than `List`'s cons-then-reverse, which allocates nothing but cons cells and
+ * never touches an array. Moral: measure before trusting an assumption about mutable vs.
+ * immutable performance.
+ *
+ * @param merger the Merger instance used to merge sorted sublists.
  * @tparam X underlying type that must support Ordering via an implicit value.
  */
-class MergeSort[X: Ordering]:
+class MergeSort[X](merger: Merger[X])(using Ordering[X]):
+
+  def sort(l: List[X]): Try[List[X]] =
+    mergesort(l)
 
   /**
    * Sorts a given list of elements using the MergeSort algorithm. The algorithm divides
@@ -28,54 +54,16 @@ class MergeSort[X: Ordering]:
    * @param xs the list of elements to be sorted, where the element type X is required to have an implicit Ordering.
    * @return a new list containing all elements of the input list xs in ascending order as defined by the implicit Ordering.
    */
-  def sort(xs: List[X]): Try[List[X]] = xs match {
+  def mergesort(xs: List[X]): Try[List[X]] = xs match {
     case Nil | _ :: Nil =>
       Success(xs)
     case _ =>
-      def mergeSimple(l: List[X], r: List[X]): List[X] =
-        (l, r) match {
-          case (Nil, _) => r
-          case (_, Nil) => l
-          case (hl :: tl, hr :: tr) =>
-            if Ordering[X].lt(hl,hr)
-            then hl :: mergeSimple(tl, r)
-            else hr :: mergeSimple(l, tr)
-        }
-
-      @tailrec
-      def merge(result: List[X], l: List[X], r: List[X]): List[X] =
-        (l, r) match
-          case (Nil, Nil) => result.reverse
-          case (Nil, _)   => result.reverse ++ r
-          case (_, Nil)   => result.reverse ++ l
-          case (h1 :: t1, h2 :: t2) =>
-            if Ordering[X].compare(h1, h2) <= 0
-            then merge(h1 :: result, t1, r)
-            else merge(h2 :: result, l, t2)
-
-      @tailrec
-      def mergeFast(result: Queue[X], l: List[X], r: List[X]): List[X] =
-        (l, r) match {
-          case OneList(x) =>
-            result ++: x
-          case CompareLists(h, t, other) =>
-            mergeFast(result += h, t, other)
-          case _ =>
-            throw new Exception("MergeSort: CompareLists result unexpected: " + result + " l: " + l + " r: " + r + "")
-        }
-
       for
         (l, r) <- Try(xs.splitAt(xs.length / 2))
-        (ls, rs) <- zipTry(sort(l), sort(r))
-      yield merge(List.empty, ls, rs)
+        (ls, rs) <- zipTry(mergesort(l), mergesort(r))
+        sorted <- Try(merger(ls, rs)(summon[Ordering[X]]))
+      yield sorted
   }
-
-  def simpleSort(xs: List[X]): List[X] =
-    def merge(l: List[X], r: List[X]): List[X] = ???
-    if xs.length <= 1 then xs
-    else
-      val (l, r) = xs.splitAt(xs.length / 2)
-      merge(simpleSort(l), simpleSort(r))
 
 /**
  * Companion object that demonstrates the MergeSort algorithm by ordering a list
@@ -85,46 +73,111 @@ class MergeSort[X: Ordering]:
 object MergeSort {
 
   /**
+   * Merges two sorted lists into a single sorted list.
+   * This function assumes that both input lists are already sorted according to their natural ordering
+   * or a custom ordering defined by the implicit `Ordering[X]` in scope.
+   * The result is a new sorted list containing all elements from both input lists.
+   *
+   * NOTE: This function is not tail-recursive and may cause stack overflow for very large lists.
+   * NOTE: a `StackOverflowError` cannot be handled by the `Try` mechanism because it is a fatal error.
+   *
+   * @param l the first sorted list to merge
+   * @param r the second sorted list to merge
+   * @return a new sorted list containing all elements from `l` and `r` in sorted order
+   */
+  def mergeSimple[X: Ordering](l: List[X], r: List[X]): List[X] =
+    (l, r) match {
+      case (Nil, _) => r
+      case (_, Nil) => l
+      case (hl :: tl, hr :: tr) =>
+        if Ordering[X].lt(hl, hr)
+        then hl :: mergeSimple(tl, r) // NOTE: not tail recursive
+        else hr :: mergeSimple(l, tr) // NOTE: not tail recursive
+    }
+
+  /**
+   * Merges two sorted lists into a single sorted list.
+   * This function assumes that both input lists are already sorted according to
+   * their natural ordering or a custom ordering defined by the implicit `Ordering[X]` in scope.
+   * The function is implemented in a tail-recursive manner.
+   *
+   * @param l the first sorted list to merge
+   * @param r the second sorted list to merge
+   * @return a new sorted list containing all elements from `l` and `r` in sorted order
+   */
+  def mergeImmutable[X: Ordering](l: List[X], r: List[X]): List[X] =
+    @tailrec
+    def inner(result: List[X], l: List[X], r: List[X]): List[X] =
+      (l, r) match
+        case (Nil, Nil) => result.reverse
+        case (Nil, _) => result.reverse ++ r
+        case (_, Nil) => result.reverse ++ l
+        case (h1 :: t1, h2 :: t2) =>
+          if Ordering[X].compare(h1, h2) <= 0
+          then inner(h1 :: result, t1, r)
+          else inner(h2 :: result, l, t2)
+    inner(List.empty,l, r)
+
+  /**
+   * Merges two sorted lists into a single sorted list in a mutable and tail-recursive manner.
+   * This function assumes that both input lists are already sorted according to their natural ordering
+   * or a custom ordering defined by the implicit `Ordering[X]` in scope.
+   *
+   * @param l the first sorted list to merge
+   * @param r the second sorted list to merge
+   * @return a new sorted list containing all elements from `l` and `r` in sorted order
+   */
+  def mergeMutable[X: Ordering](l: List[X], r: List[X]): List[X] =
+    @tailrec
+    def inner(result: ArrayBuffer[X], l: List[X], r: List[X]): List[X] =
+      (l, r) match {
+        case OneList(x) =>
+          result ++: x
+        case CompareLists(h, t, other) =>
+          inner(result += h, t, other)
+        case _ =>
+          throw new Exception("MergeSort: CompareLists result unexpected: " + result + " l: " + l + " r: " + r + "")
+      }
+    inner(ArrayBuffer.empty[X], l, r)
+
+  /**
    * Executes a sorting operation on a list of integers from 1 to `n` in descending order,
    * utilizing the MergeSort algorithm to return the list sorted in ascending order.
    *
-   * @param n the number of integers, starting from 1 up to `n`, to be included in the list that will be sorted.
-   * @return a sequence of integers sorted in ascending order.
-   * @throws Any exception encountered during the sorting operation.
+   * @param size the number of integers, starting from 1 up to `size`, to be included in the list that will be sorted.
+   * @param merger the function used to merge two sorted lists into a single sorted list.
+   * @return true if all 10 timed runs produced a correctly-sorted result, false if any run's result failed the sortedness check
+   *         (a run that throws, other than a fatal error such as StackOverflowError, is caught and also counts as false).
    */
-  def doMain(n: Int): Seq[Int] =
-    val sorter = new MergeSort[Int]
-    val list = (1 to n).toList.reverse
-    println(s"MergeSort of ${list.size} elements")
-    sorter.sort(list) match {
-      case Success(result) =>
-        if (assertSorted(result)) println("Sorted")
-        result
-      case Failure(e) => 
-        throw e
+  def doMain(size: Int)(merger: (List[Int], List[Int]) => Ordering[Int] => List[Int]): Boolean = {
+    val sorter = new MergeSort[Int](merger)
+    val list = (1 to size).toList.reverse
+    println(s"MergeSort of $size elements")
+    import Timer._
+    given foldable: Foldable[Boolean] = new Foldable[Boolean] {
+      def combine: (Boolean, Boolean) => Boolean =
+        (x, y) => x && y
+      def zero = true
     }
+    10.times{
+      // sort uses merge sort
+      sorter.mergesort(list) match {
+        case Success(result) =>
+          assertSorted(result)
+        case Failure(e) =>
+          System.err.println(e.getLocalizedMessage)
+          false
+      }
+    }
+  }
 
-  def assertSorted(xs: Seq[Int]): Boolean = {
+  private def assertSorted(xs: Seq[Int]): Boolean =
     val zipped = xs zip xs.tail
     zipped.forall { case (a, b) => a <= b }
-  }
 }
 
 /**
- * A case class for comparing two lists of type `X` using an implicit ordering.
- *
- * @param left     the first list of elements to be compared
- * @param right    the second list of elements to be compared
- * @param ordering an implicit `Ordering` instance for elements of type `X`
- *                 that defines how the elements in the lists are compared
- *
- *                 This class is primarily used to compare elements of two lists and provides
- *                 structural equality for easy manipulation and comparison of lists.
- */
-case class CompareLists[X](left: List[X], right: List[X])(using val ordering: Ordering[X])
-
-/**
- * Companion object for the `CompareLists` case class. Provides a custom extractor pattern
+ * Extractor object for two non-Nil lists. Provides a custom extractor pattern
  * for splitting and comparing elements from two lists based on their ordering.
  *
  * The `unapply` method attempts to extract the smallest head element between the two
@@ -143,6 +196,8 @@ object CompareLists {
    *         and the updated second list, or `None` if the input does not match the pattern
    */
   def unapply[X: Ordering](t: (List[X], List[X])): Option[(X, List[X], List[X])] = t match {
+    case (Nil, _) => None
+    case (_, Nil) => None
     case (l, r) =>
       if (Ordering[X].compare(l.head, r.head) <= 0)
         Some((l.head, l.tail, r))
@@ -152,16 +207,7 @@ object CompareLists {
 }
 
 /**
- * Represents a pair of lists, only one of which is non-empty.
- *
- * @param left  a list of elements of type `X`
- * @param right a list of elements of type `X`
- * @tparam X the type of elements contained in both lists
- */
-case class OneList[X](left: List[X], right: List[X])
-
-/**
- * Companion object for the `OneList` case class.
+ * Extractor for a single list.
  * Provides an `unapply` method for extracting the non-empty list from a `OneList` instance.
  */
 object OneList {

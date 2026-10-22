@@ -4,31 +4,33 @@ import scala.io.Source
 import scala.util.Try
 import scala.util.parsing.combinator.JavaTokenParsers
 
-object BenchmarkParser extends App { // TODO upgrade to Scala 3
+object BenchmarkParser {
 
-  val p: BenchmarkParser = new BenchmarkParser()
-  private val inFilename = args.headOption.getOrElse("/Users/rhillyard/IdeaProjects/INFO6205/savedLogs/benchmarkClaudeInstr.txt")
-  val source = Source.fromFile(inFilename)
-  if (source != null) println(s"Opening $inFilename")
-  else throw new RuntimeException(s"$inFilename does not exist")
-  val ws: Iterator[String] = for {line <- source.getLines() if line.contains("@")} yield line
-  val (ss, ls): (Iterator[String], Iterator[String]) = ws.partition(w => w.contains("StatPack"))
-  val (q1, q2) = p.getLogEntries(ls)
-  val xs = p.getInstrumentation(ss)
+  def main(args: Array[String]): Unit = {
+    val p: BenchmarkParser = new BenchmarkParser()
+    val inFilename = args.headOption.getOrElse("/Users/rhillyard/IdeaProjects/INFO6205/savedLogs/benchmarkClaudeInstr.txt")
+    val source = Source.fromFile(inFilename)
+    if (source != null) println(s"Opening $inFilename")
+    else throw new RuntimeException(s"$inFilename does not exist")
+    val ws: Iterator[String] = for {line <- source.getLines() if line.contains("@")} yield line
+    val (ss, ls): (Iterator[String], Iterator[String]) = ws.partition(w => w.contains("StatPack"))
+    val (q1, q2) = p.getLogEntries(ls)
+    val xs = p.getInstrumentation(ss)
 
-  import java.io._
+    import java.io._
 
-  private val outFilename = "output.csv"
-  val pw = new PrintWriter(new File(outFilename))
-  pw.write("N\tKind\tAlgorithm\tvalue\n")
-  pw.write((q1 map (_.render)) mkString "\n")
-  pw.write("\n")
-  pw.write((q2 map (_.render)) mkString "\n")
-  pw.write("\n")
-  pw.write((xs map (_.render)) mkString "\n")
-  pw.write("\n")
-  pw.close()
-  println(s"$outFilename written")
+    val outFilename = "output.csv"
+    val pw = new PrintWriter(new File(outFilename))
+    pw.write("N\tKind\tAlgorithm\tvalue\n")
+    pw.write((q1 map (_.render)) mkString "\n")
+    pw.write("\n")
+    pw.write((q2 map (_.render)) mkString "\n")
+    pw.write("\n")
+    pw.write((xs map (_.render)) mkString "\n")
+    pw.write("\n")
+    pw.close()
+    println(s"$outFilename written")
+  }
 }
 
 class BenchmarkParser extends JavaTokenParsers {
@@ -38,7 +40,7 @@ class BenchmarkParser extends JavaTokenParsers {
       (xsy, xy) => for (xs <- xsy; x <- xy) yield xs :+ x
     }
     lsy match {
-      case scala.util.Success(xs) => xs.partition{ e: LogEntry => e.kind == "Raw" }
+      case scala.util.Success(xs) => xs.partition{ (e: LogEntry) => e.kind == "Raw" }
       case scala.util.Failure(x) => throw x
     }
   }

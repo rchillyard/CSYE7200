@@ -12,6 +12,7 @@ object Versions {
   // Scala libraries
 //  val scalaLogging = "3.9.6"
   val parserCombinators = "2.4.0"
+  val lascala = "2.0.0"
   val xml = "2.4.0"
 
   // Akka

@@ -4,7 +4,7 @@
 
 package edu.neu.coe.csye7200.parse
 
-import com.phasmid.laScala.values.Scalar
+import com.phasmidsoftware.lascala.values.Scalar
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -31,21 +31,21 @@ class SQLParserSpec extends AnyFlatSpec with Matchers {
     val expected = InvocationSelect(List[Invocation](), Scalar("t"), None, None, None)
     val r: p.ParseResult[Invocation] = p.parseAll(p.select, w0)
     r should matchPattern { case p.Success(`expected`, _) => }
-    println(r.get.render())
+    println(r.get.render)
   }
 
   it should "parse " + w1 in {
     val expected = InvocationSelect(List(InvocationColumn(InvocationP(Left("a")), None)), "t", None, None, None)
     val r = p.parseAll(p.select, w1)
     r should matchPattern { case p.Success(`expected`, _) => }
-    println(r.get.render())
+    println(r.get.render)
   }
 
   it should "parse " + w2 in {
     val expected = InvocationSelect(List(InvocationColumn(InvocationP(Left("a")), Some("b"))), "t", None, None, None)
     val r = p.parseAll(p.select, w2)
     r should matchPattern { case p.Success(`expected`, _) => }
-    println(r.get.render())
+    println(r.get.render)
   }
 
   it should "parse " + w3 in {

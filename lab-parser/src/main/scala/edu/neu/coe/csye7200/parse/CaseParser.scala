@@ -4,8 +4,8 @@
 
 package edu.neu.coe.csye7200.parse
 
-import com.phasmid.laScala.values.Scalar
-import com.phasmid.laScala.{Prefix, Renderable}
+import com.phasmidsoftware.lascala.values.Scalar
+import com.phasmidsoftware.lascala.{Layout, Renderable}
 import edu.neu.coe.csye7200.parse.CaseParser.{rAnd, rBetween, rCase, rElse, rEnd, rOr, rThen, rWhen, sAnd, sOr}
 import edu.neu.coe.csye7200.parse.SQLParser.rLimit
 
@@ -87,8 +87,12 @@ abstract class AbstractCaseParser extends AbstractFunctionParser {
   val sLt = "<"
 }
 
-case class BooleanTerm(op: BooleanOp, e: Expression) extends Renderable {
-  def render(indent: Int)(implicit tab: Int => Prefix): String = op.toString + " " + InvocationBase.renderExpression(e, indent + 1)
+case class BooleanTerm(op: BooleanOp, e: Expression)
+
+object BooleanTerm {
+  given Renderable[BooleanTerm] = new Renderable[BooleanTerm] {
+    def render(t: BooleanTerm, indent: Int)(using Layout): String = t.op.toString + " " + InvocationBase.renderExpression(t.e, indent + 1)
+  }
 }
 
 trait BooleanOp

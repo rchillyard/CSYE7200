@@ -4,7 +4,7 @@
 
 package edu.neu.coe.csye7200.parse
 
-import com.phasmid.laScala.values.Scalar
+import com.phasmidsoftware.lascala.values.Scalar
 import edu.neu.coe.csye7200.parse.SQLParser.{rAs, rFrom, rLimit, rOrderBy, rSelect, rWhere}
 
 import scala.language.implicitConversions
