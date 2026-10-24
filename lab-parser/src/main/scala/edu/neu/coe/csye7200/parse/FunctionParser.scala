@@ -4,7 +4,7 @@
 
 package edu.neu.coe.csye7200.parse
 
-import com.phasmid.laScala.values.{DateScalar, QuotedStringScalar, Scalar}
+import com.phasmidsoftware.lascala.values.{DateScalar, QuotedStringScalar, Scalar}
 import edu.neu.coe.csye7200.parse.FunctionParser.{rConcat, rIn, rIsNull, rLike, rNot}
 
 import scala.language.implicitConversions
@@ -66,7 +66,7 @@ abstract class AbstractFunctionParser extends JavaTokenParsers {
     * @return a Parser of Invocation
     */
   def fPn: Parser[Invocation] = identifier ~ parameterSet ^^ {
-    case f ~ ps => InvocationFPn(f.render(), ps.toList)
+    case f ~ ps => InvocationFPn(f.render, ps.toList)
   }
 
   /**

@@ -269,3 +269,4 @@ trait Monadic[+X] extends Functor[X] {
     */
   def toSeq: Seq[X]
 }
+

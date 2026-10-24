@@ -43,3 +43,11 @@ lab-parser/src/test/scala/edu/neu/coe/csye7200/util/CleanSpec.scala
 badOutput.txt
 
 output.txt
+
+**/logFile
+
+ex-functional-programming/Short Final Exam.download.xls.txt
+
+*/output
+
+output/

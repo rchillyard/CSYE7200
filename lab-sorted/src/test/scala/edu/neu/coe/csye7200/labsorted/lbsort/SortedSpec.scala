@@ -1,5 +1,6 @@
 package edu.neu.coe.csye7200.labsorted.lbsort
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import org.scalatest.concurrent.{Futures, ScalaFutures}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -7,9 +8,9 @@ import scala.language.postfixOps
 import scala.util.Random
 
 /**
-  * @author scalaprof
-  */
-class SortedSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutures {
+ * @author scalaprof
+ */
+class SortedSpec extends AnyFlatSpec with Matchers with CancelOnNotImplemented with Futures with ScalaFutures {
 
   behavior of "Sorted"
 
@@ -23,6 +24,7 @@ class SortedSpec extends AnyFlatSpec with Matchers with Futures with ScalaFuture
   }
   it should "sort List[String]" in {
     val list = List("b", "c", "a")
+    // NOTE this will not compile until you have defined Comparer[String] (see the TO BE IMPLEMENTED code)
     val sorted = Sorted(list)
     sorted() shouldBe List("a", "b", "c")
   }
@@ -32,6 +34,7 @@ class SortedSpec extends AnyFlatSpec with Matchers with Futures with ScalaFuture
     sorted() shouldBe List(1.5, 2.4, 3.0)
   }
   it should "sort List[Char] given an explicit Comparer" in {
+    import scala.language.implicitConversions
     val charComparer: Comparer[Char] = Ordering[Char]
     val list = List('b', 'c', 'a')
     val sorted = Sorted(list)(charComparer.invert)
@@ -40,6 +43,7 @@ class SortedSpec extends AnyFlatSpec with Matchers with Futures with ScalaFuture
   private val c2b = Composite(2, "b")
   private val c3c = Composite(3, "c")
   it should "sort List[Composite] by Int then String" in {
+    import scala.language.implicitConversions
     val list = List(c3c, c1a, c1z, c2b)
     val comparer1: Comparer[Composite] = Composite.OrderingCompositeInt
     val comparer2: Comparer[Composite] = Composite.OrderingCompositeString
@@ -47,6 +51,7 @@ class SortedSpec extends AnyFlatSpec with Matchers with Futures with ScalaFuture
     sorted() shouldBe List(c1a, c1z, c2b, c3c)
   }
   it should "sort List[Composite] by String then Int" in {
+    import scala.language.implicitConversions
     val list = List(c3c, c1a, c1z, c2b)
     val comparer1: Comparer[Composite] = Composite.OrderingCompositeString
     val comparer2: Comparer[Composite] = Composite.OrderingCompositeInt
@@ -91,3 +96,4 @@ class SortedSpec extends AnyFlatSpec with Matchers with Futures with ScalaFuture
     Sorted.merge(l1, l2) shouldBe List(1, 3, 4, 5, 8, 9, 10, 11, 12, 14, 15, 16)
   }
 }
+

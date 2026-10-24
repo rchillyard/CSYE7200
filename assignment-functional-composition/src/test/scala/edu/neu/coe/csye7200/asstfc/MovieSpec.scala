@@ -1,14 +1,15 @@
 package edu.neu.coe.csye7200.asstfc
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import scala.io.{Codec, Source}
-import scala.util._
+import scala.util.*
 
 /**
   * Created by scalaprof on 9/13/16.
   */
-class MovieSpec extends AnyFlatSpec with Matchers {
+class MovieSpec extends AnyFlatSpec with Matchers with CancelOnNotImplemented {
 
   val phi: Double = (math.sqrt(5) + 1) / 2
 

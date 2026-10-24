@@ -19,7 +19,7 @@ case class Archive[T: Ordering](archive: IndexedSeq[T], journal: Seq[T]) {
    * @return a new <code>Archive[T]</code> which includes all the old entries together with <code>t</code>.
    */
   def insert(t: T): Archive[T] =
-  // TO BE IMPLEMENTED  implement me. [7]
+    // TO BE IMPLEMENTED  implement me. [7]
     ???
 
   /**
@@ -50,10 +50,11 @@ object Archive {
    * @param archive An instance of <code>Seq[P]</code> which you must ordered and index before passing into the constructor.
    * @tparam P the underlying type of the elements.
    *           Must provide implicit evidence of <code>Ordering[P]</code>.
+   *
    * @return a newly constructed instance of <code>Archive[P]</code>.
    */
   def apply[P: Ordering](archive: Seq[P]): Archive[P] =
-  // TO BE IMPLEMENTED  implement me [8]
+    // TO BE IMPLEMENTED  implement me [8]
     ???
 
   /**
@@ -71,10 +72,10 @@ object Archive {
    */
   private def binarySearch[P: Ordering](p: P, ps: IndexedSeq[P])(from: Int, to: Int): Option[Int] = flatWhen(from < to) {
     val bs: (Int, Int) => Option[Int] =
-    // TO BE IMPLEMENTED  implement an expression for bs [5]
+      // TO BE IMPLEMENTED  implement an expression for bs [5]
         ???
     val po: Ordering[P] =
-    // TO BE IMPLEMENTED  implement me [3]
+      // TO BE IMPLEMENTED  implement me [3]
         ???
     val mid = (from + to) / 2
     po.compare(p, ps(mid)) match {

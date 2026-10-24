@@ -4,15 +4,16 @@
 
 package edu.neu.coe.csye7200.labsorted.lbsort
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import edu.neu.coe.csye7200.labsorted.util.RandomState
 import org.scalatest.concurrent.{Futures, ScalaFutures}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 /**
-  * @author scalaprof
-  */
-class SortingSpec extends AnyFlatSpec with Matchers with Futures with ScalaFutures {
+ * @author scalaprof
+ */
+class SortingSpec extends AnyFlatSpec with Matchers with CancelOnNotImplemented with Futures with ScalaFutures {
 
   behavior of "Insertion Sort"
 

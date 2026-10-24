@@ -1,15 +1,13 @@
-name := s"""LabParser (Scala ${scalaVersion.value})"""
-// Using scalaVersion "2.12" (if you want to change it, go to build.sbt at the root of the project)
+name := s"""Parser (Scala ${scalaVersion.value})"""
+// Inherits Scala 3 and scalacOptions from root ThisBuild settings.
 
 version := "1.0"
 
-Compile / doc / scalacOptions ++= Seq("-Vimplicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
-
 libraryDependencies ++= Seq(
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
-  "ch.qos.logback" % "logback-core" % "1.5.18",
-  "ch.qos.logback" % "logback-classic" % "1.5.18" % "runtime",
-  "org.scala-lang.modules" %% "scala-parser-combinators" % "2.4.0",
-  "org.scalatest" %% "scalatest" % "3.2.19" % "test",
-  "org.slf4j" % "slf4j-api" % "1.7.25"
+  "com.phasmidsoftware"        %% "lascala"                  % Versions.lascala,
+  "ch.qos.logback"              % "logback-core"             % Versions.logback % Runtime,
+  "ch.qos.logback"              % "logback-classic"          % Versions.logback % Runtime,
+  "org.slf4j"                   % "slf4j-api"                % Versions.slf4j,
+  "org.scala-lang.modules"     %% "scala-parser-combinators" % Versions.parserCombinators,
+  "org.scalatest"              %% "scalatest"                % Versions.scalatest % Test
 )

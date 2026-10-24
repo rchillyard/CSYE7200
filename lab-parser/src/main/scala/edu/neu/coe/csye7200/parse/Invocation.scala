@@ -4,8 +4,8 @@
 
 package edu.neu.coe.csye7200.parse
 
-import com.phasmid.laScala.values.{QuotedStringScalar, Scalar}
-import com.phasmid.laScala.{Prefix, Renderable}
+import com.phasmidsoftware.lascala.values.{QuotedStringScalar, Scalar}
+import com.phasmidsoftware.lascala.{Layout, Renderable}
 import edu.neu.coe.csye7200.util.Logger
 
 import scala.util._
@@ -16,7 +16,7 @@ import scala.util._
   * Created by scalaprof on 1/11/17.
   *
   */
-sealed trait Invocation extends Renderable {
+sealed trait Invocation {
 
   def name: String
 
@@ -96,16 +96,12 @@ abstract class InvocationBase(n: String, es: List[Expression]) extends Invocatio
   //    case _ => true
   //  }).forall(b => b)
 
-  import Renderable.renderableTraversable
-
-  def render(indent: Int)(implicit tab: Int => Prefix): String = name + es.render(indent + 1)
-
   /**
     * If you want the more compact form of String, then just comment this override out.
     *
     * @return
     */
-  override def toString: String = render(0)
+  override def toString: String = Invocation.invocationRenderable.render(this, 0)
 }
 
 object InvocationBase {
@@ -117,9 +113,9 @@ object InvocationBase {
     */
   def unapply(arg: Invocation): Option[(String, Seq[Expression])] = Some((arg.name, arg.xs))
 
-  def renderExpression(e: Expression, indent: Int)(implicit tab: Int => Prefix): String = e match {
-    case Left(l) => l.render(indent + 1)
-    case Right(r) => s"(\n${tab(indent + 1)}" + r.render(indent + 1) + ")"
+  def renderExpression(e: Expression, indent: Int)(using layout: Layout): String = e match {
+    case Left(l) => Renderable[Scalar].render(l, indent + 1)
+    case Right(r) => "(" + layout.nl(indent + 1) + Invocation.invocationRenderable.render(r, indent + 1) + ")"
   }
 
   /**
@@ -199,9 +195,6 @@ case class InvocationPF(x: Expression, f: Invocation) extends InvocationBase("In
   //    case InvocationFPn(n, xs) => InvocationFPn(n, x +: xs).asClosure(implicitly[ClassTag[T]], implicitly[ClassTag[R]], functionLibrary)
   //    case _ => throw ParserException(s"Logic error: asClosure not implemented for InvocationPF($x,$f)") // CHECK
   //  }
-
-  override def render(indent: Int = 0)(implicit tab: Int => Prefix): String =
-    name + "(\n" + tab(indent + 1) + x.render(indent + 1) + " " + f.render(indent + 1) + ")"
 }
 
 /**
@@ -269,9 +262,6 @@ case class InvocationBooleanExpression(first: Expression, terms: List[BooleanTer
 
   //  override def asClosure[T: ClassTag, R: ClassTag](implicit functionLibrary: FunctionLibrary): Try[InvocationClosure[R]] =
   //    terms.foldLeft[Invocation](InvocationP(first))(accumulate).asClosure(implicitly[ClassTag[T]], implicitly[ClassTag[R]], functionLibrary)
-
-  override def render(indent: Int)(implicit tab: Int => Prefix): String =
-    s"$name(${terms.foldLeft(first.render(indent + 1))(_ + " " + _.render(indent + 1))})"
 }
 
 case class InvocationBoolean(op: BooleanOp, x: Expression, y: Expression) extends InvocationBase(op.toString, List(x, y)) // CHECK
@@ -292,6 +282,17 @@ object InvocationComparison {
 }
 
 object Invocation {
+
+  given invocationRenderable: Renderable[Invocation] = new Renderable[Invocation] {
+    def render(i: Invocation, indent: Int)(using layout: Layout): String = i match {
+      case InvocationPF(x, f) =>
+        i.name + "(" + layout.nl(indent + 1) + Renderable[Expression].render(x, indent + 1) + " " + render(f, indent + 1) + ")"
+      case InvocationBooleanExpression(first, terms) =>
+        s"${i.name}(${terms.foldLeft(Renderable[Expression].render(first, indent + 1))(_ + " " + Renderable[BooleanTerm].render(_, indent + 1))})"
+      case _ =>
+        i.name + Renderable[List[Expression]].render(i.xs.toList, indent + 1)
+    }
+  }
   val logger: Logger = Logger(classOf[Invocation])
 
   //  private def validateThis(i: Invocation)(implicit functionLibrary: FunctionLibrary): Boolean = {

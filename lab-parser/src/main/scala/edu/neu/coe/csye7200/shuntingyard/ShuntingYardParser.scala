@@ -8,7 +8,7 @@ import scala.util.parsing.combinator.JavaTokenParsers
  * into a list of tokens that can represent parentheses, operators, or integers.
  * The class extends `JavaTokenParsers` to leverage its base functionality for parsing.
  *
- * You find JavaTokenParsers in "org.scala-lang.modules" %% "scala-parser-combinators" % "2.4.0".
+ * You find JavaTokenParsers in "org.scala-lang.modules" %% "scala-parser-combinators" % Versions.parserCombinators.
  */
 class ShuntingYardParser extends JavaTokenParsers {
 

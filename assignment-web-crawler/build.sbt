@@ -2,15 +2,16 @@ name := "WebCrawler"
 
 version := "1.0"
 
-Compile / doc / scalacOptions ++= Seq("-implicits", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused")
+// Scala 3 — inherits scalacOptions from root build.sbt
+// Note: tagsoup (1.2.1) is unmaintained but retained as no drop-in
+// Scala 3 replacement exists. Consider replacing with jsoup if this
+// module is actively developed.
+
 scalacOptions ++= Seq("-encoding", "UTF-8")
 
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "3.2.19" % "test",
-  "org.scala-lang.modules" %% "scala-xml" % "2.4.0",
-  "org.scala-lang.modules" %% "scala-parallel-collections" % "1.2.0",
-  "org.ccil.cowan.tagsoup" % "tagsoup" % "1.2.1"
+  "org.scalatest"            %% "scalatest"                  % Versions.scalatest % Test,
+  "org.scala-lang.modules"   %% "scala-xml"                  % Versions.xml,
+  "org.scala-lang.modules"   %% "scala-parallel-collections" % "1.2.0",
+  "org.ccil.cowan.tagsoup"    % "tagsoup"                    % "1.2.1"
 )
-
-// In build.sbt - only run actual test classes
-Test / testOptions += Tests.Filter(name => name.endsWith("Test") || name.endsWith("Spec"))

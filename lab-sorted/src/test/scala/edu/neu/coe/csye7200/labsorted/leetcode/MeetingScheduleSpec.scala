@@ -1,11 +1,12 @@
 package edu.neu.coe.csye7200.labsorted.leetcode
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import edu.neu.coe.csye7200.labsorted.lbsort.Comparison
 import org.scalatest.PrivateMethodTester
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
-class MeetingScheduleSpec extends AnyFlatSpec with should.Matchers with PrivateMethodTester {
+class MeetingScheduleSpec extends AnyFlatSpec with should.Matchers with PrivateMethodTester with CancelOnNotImplemented {
 
   behavior of "MeetingSchedule"
 

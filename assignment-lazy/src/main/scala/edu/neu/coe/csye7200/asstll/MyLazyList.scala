@@ -15,7 +15,6 @@ import scala.annotation.tailrec
   */
 case class MyLazyList[X](x: X, lazyTail: () => ListLike[X]) extends LazyListLike[X] {
 
-
   /**
     * Concatenate this ListLike with ys.
     *

@@ -4,7 +4,7 @@
 
 package edu.neu.coe.csye7200.parse
 
-import com.phasmid.laScala.values.{QuotedStringScalar, Scalar}
+import com.phasmidsoftware.lascala.values.{QuotedStringScalar, Scalar}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -125,7 +125,7 @@ class InvocationSpec extends AnyFlatSpec with Matchers {
   //    val variables = List(lqss("A"), lqss("B"), lqss("C"), lqss("D"), lqss("E"), lqss("F"), lqss("G"), lqss("H"), lqss("I"), lqss("J"))
   //    val invocation = InvocationPn1(variables)
   //    val c2y: Try[Closure[_, Seq[String]]] = for (c1 <- invocation.asClosure[String, Seq[String]]; c2 <- c1.asClosure[String]) yield c2
-  //    c2y foreach (_.render() shouldBe "Closure(RenderableFunction[List(),scala.collection.Seq](0,  mkList), )")
+  //    c2y foreach (_.render shouldBe "Closure(RenderableFunction[List(),scala.collection.Seq](0,  mkList), )")
   //    val by: Try[Seq[String]] = for (c2 <- c2y; b <- c2()) yield b
   //    by should matchPattern { case Success(Seq("A", "B", "C", "D", "E", "F", "G", "H", "I", "J")) => }
   //  }
@@ -195,7 +195,7 @@ class InvocationSpec extends AnyFlatSpec with Matchers {
   //    implicit val functionLibrary = FunctionLibrary.create(getValue) + ("and" -> ifAnd) + ("or" -> ifOr)
   //    val i = InvocationBoolean(And, Left(true), Left(true))
   //    val by: Try[Closure[_, Boolean]] = for (c1 <- i.asClosure[String, Boolean]; _ = Spy.log(s"c1: $c1"); c2 <- c1.asClosure[String]; _ = Spy.log(s"c2: $c2")) yield c2
-  //    by foreach (_.render() shouldBe "Closure(RenderableFunction[List(Boolean, scala.Function0),Boolean](2, => and(a?)(=>b?)), \n  Left(true),\n  Left(true)\n)")
+  //    by foreach (_.render shouldBe "Closure(RenderableFunction[List(Boolean, scala.Function0),Boolean](2, => and(a?)(=>b?)), \n  Left(true),\n  Left(true)\n)")
   //    Spy.log(s"by: $by")
   //    for (b <- by) yield b() should matchPattern { case Success(true) => }
   //    //    by should matchPattern { case Success(true) => }
@@ -311,36 +311,36 @@ class InvocationSpec extends AnyFlatSpec with Matchers {
 
   behavior of "render"
   it should "work for InvocationBooleanExpression" in {
-    InvocationBooleanExpression(Left(Scalar("x")), List(BooleanTerm(And, Left("y")))).render(0) shouldBe "boolean(Left(x) AND y)"
+    InvocationBooleanExpression(Left(Scalar("x")), List(BooleanTerm(And, Left("y")))).render shouldBe "boolean(Left(x) AND y)"
   }
   it should "work for InvocationBoolean" in {
-    InvocationBoolean(And, Left(Scalar("x")), Left(Scalar("y"))).render(0) shouldBe "AND(\n    Left(x),\n    Left(y)\n  )"
+    InvocationBoolean(And, Left(Scalar("x")), Left(Scalar("y"))).render shouldBe "AND(\n    Left(x),\n    Left(y)\n  )"
   }
   it should "work for InvocationComparison" in {
-    InvocationComparison(Left(Scalar("x")), ">", Left(Scalar("y"))).render() shouldBe "compare(\n    Left(gt),\n    Left(x),\n    Left(y)\n  )"
+    InvocationComparison(Left(Scalar("x")), ">", Left(Scalar("y"))).render shouldBe "compare(\n    Left(gt),\n    Left(x),\n    Left(y)\n  )"
   }
   it should "work for InvocationFP" in {
-    InvocationFP("concat", Left(Scalar("x"))).render() shouldBe "concat(Left(x))"
+    InvocationFP("concat", Left(Scalar("x"))).render shouldBe "concat(Left(x))"
   }
   it should "work for InvocationP" in {
-    InvocationP(Left(Scalar("x"))).render() shouldBe "identity(Left(x))"
+    InvocationP(Left(Scalar("x"))).render shouldBe "identity(Left(x))"
   }
   it should "work for InvocationFPn" in {
-    InvocationFPn("hello", List(Left(Scalar("x")), Left(Scalar("y")))).render() shouldBe "hello(\n    Left(x),\n    Left(y)\n  )"
+    InvocationFPn("hello", List(Left(Scalar("x")), Left(Scalar("y")))).render shouldBe "hello(\n    Left(x),\n    Left(y)\n  )"
   }
   it should "work for InvocationPn1" in {
-    InvocationPn1(List(Left(Scalar("x")), Left(Scalar("y")))).render() shouldBe "varargs(\n    Left(x),\n    Left(y)\n  )"
+    InvocationPn1(List(Left(Scalar("x")), Left(Scalar("y")))).render shouldBe "varargs(\n    Left(x),\n    Left(y)\n  )"
   }
   it should "work for InvocationPF" in {
-    InvocationPF(Right(InvocationLookup("x")), InvocationFP("concat", Left(Scalar("y")))).render() shouldBe "InvocationPF(\n  Right(lookup(Left(x))) concat(Left(y)))"
+    InvocationPF(Right(InvocationLookup("x")), InvocationFP("concat", Left(Scalar("y")))).render shouldBe "InvocationPF(\n  Right(lookup(Left(x))) concat(Left(y)))"
   }
   it should "work for InvocationWhenThen" in {
-    InvocationWhenThen(InvocationBooleanExpression(Left(Scalar("x")), List(BooleanTerm(And, Left("y")))), Left(Scalar("x"))).render() shouldBe "whenThen(\n    Right(boolean(Left(x) AND y)),\n    Left(x)\n  )"
+    InvocationWhenThen(InvocationBooleanExpression(Left(Scalar("x")), List(BooleanTerm(And, Left("y")))), Left(Scalar("x"))).render shouldBe "whenThen(\n    Right(boolean(Left(x) AND y)),\n    Left(x)\n  )"
   }
   it should "work for InvocationCaseClause with Else" in {
-    InvocationCaseClause(List(InvocationWhenThen(InvocationBooleanExpression(Left(Scalar("x")), List(BooleanTerm(And, Left("y")))), Left(Scalar("x")))), Some(Left(Scalar("y")))).render() shouldBe "case(\n    Right(whenThen(\n          Right(boolean(Left(x) AND y)),\n          Left(x)\n        )),\n    Left(y)\n  )"
+    InvocationCaseClause(List(InvocationWhenThen(InvocationBooleanExpression(Left(Scalar("x")), List(BooleanTerm(And, Left("y")))), Left(Scalar("x")))), Some(Left(Scalar("y")))).render shouldBe "case(\n    Right(whenThen(\n          Right(boolean(Left(x) AND y)),\n          Left(x)\n        )),\n    Left(y)\n  )"
   }
   it should "work for InvocationCaseClause without Else" in {
-    InvocationCaseClause(List(InvocationWhenThen(InvocationBooleanExpression(Left(Scalar("x")), List(BooleanTerm(And, Left("y")))), Left(Scalar("x")))), None).render() shouldBe "case(Right(whenThen(\n          Right(boolean(Left(x) AND y)),\n          Left(x)\n        )))"
+    InvocationCaseClause(List(InvocationWhenThen(InvocationBooleanExpression(Left(Scalar("x")), List(BooleanTerm(And, Left("y")))), Left(Scalar("x")))), None).render shouldBe "case(Right(whenThen(\n          Right(boolean(Left(x) AND y)),\n          Left(x)\n        )))"
   }
 }

@@ -41,12 +41,21 @@ case class WebCrawler(maxHops: Int, parallelism: Int = 8) extends
    * @param args a sequence of input strings representing URLs to start the crawling process.
    * @return Unit, as this method performs a side effect of crawling and printing the results.
    */
-  def doMain(args: Seq[String]): Seq[URL] = {
+//  def doMain(args: Seq[String]): Seq[URL] = {
+//    import scala.concurrent.ExecutionContext.Implicits.global
+//    val usf = doCrawl(args)(createURL)(fetchAndParseLinks, isParseableURL)
+//    // NOTE that we do not attempt to handle any (unhandled) exceptions here:
+//    // let them bubble up to the caller.
+//    val us: Seq[URL] = Await.result(usf, Duration("360 second"))
+//  }
+
+  def doMain(args: Seq[String]): Try[Seq[URL]] = {
     import scala.concurrent.ExecutionContext.Implicits.global
     val usf = doCrawl(args)(createURL)(fetchAndParseLinks, isParseableURL)
-    // NOTE that we do not attempt to handle any (unhandled) exceptions here:
-    // let them bubble up to the caller.
-    Await.result(usf, Duration("360 second"))
+    Try(Await.result(usf, 6.seconds)).recoverWith {
+      case e: java.util.concurrent.ExecutionException =>
+        Failure(Option(e.getCause).getOrElse(e))
+    }
   }
 }
 
@@ -336,11 +345,14 @@ object WebCrawler {
 
   // Ensure that there's at least one URL to crawl...
   val urls = (args toList).padTo(1, "http://www1.coe.neu.edu/~rhillyard/index.html")
-  val result = WebCrawler(5).doMain(urls)
-  println(s"WebCrawler: total URLs retrieved: ${result.size}")
-  result foreach println
-
-  println(s"WebCrawler: total time (mSecs): ${timer.lap._1}")
+  val result: Try[Seq[URL]] = WebCrawler(5).doMain(urls)
+  result match {
+    case Success(us) => 
+      println(s"WebCrawler: total URLs retrieved: ${us.size}")
+      result foreach println
+    case Failure(e) => 
+      println(s"WebCrawler: error: ${e.getMessage}")
+  }
 }
 
 /**

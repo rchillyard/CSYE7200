@@ -1,10 +1,11 @@
 package edu.neu.coe.csye7200.labsorted.hackerRank
 
-import edu.neu.coe.csye7200.labsorted.hackerRank.BigSorting._
+import edu.neu.coe.csye7200.CancelOnNotImplemented
+import edu.neu.coe.csye7200.labsorted.hackerRank.BigSorting.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class BigSortingTest extends AnyFlatSpec with Matchers {
+class BigSortingTest extends AnyFlatSpec with Matchers with CancelOnNotImplemented {
 
   behavior of "BigSorting"
 

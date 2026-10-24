@@ -11,14 +11,14 @@ import scala.annotation.tailrec
   println(factorial(47).toString.length)
 }
 
-  object Factorial {
-    def factorial(n: Int): BigInt = {
-      @tailrec
-      def inner(r: BigInt, i: Int): BigInt = i match {
-        case 0 => r
-        case _ => inner(r * i, i - 1)
-      }
-
-      inner(1, n)
+object Factorial {
+  def factorial(n: Int): BigInt = {
+    @tailrec
+    def inner(r: BigInt, i: Int): BigInt = i match {
+      case 0 => r
+      case _ => inner(r * i, i - 1)
     }
+
+    inner(1, n)
   }
+}

@@ -4,10 +4,11 @@
 
 package edu.neu.coe.csye7200.asstll
 
+import edu.neu.coe.csye7200.CancelOnNotImplemented
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class MappedListSpec extends AnyFlatSpec with Matchers {
+class MappedListSpec extends AnyFlatSpec with Matchers with CancelOnNotImplemented {
 
   behavior of "MappedList constructor"
   it should "produce a single 1" in {

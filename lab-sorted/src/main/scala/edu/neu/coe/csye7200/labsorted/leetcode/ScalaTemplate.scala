@@ -36,7 +36,7 @@ object Solution {
 
     // The following are (optional) assertions that the solver wants to assert before returning the result.
 //    import edu.neu.coe.csye7200.labsorted.leetcode.ScalaTemplate.TestableInt
-        import edu.neu.coe.csye7200.labsorted.leetcode.ScalaTemplate.*
+    import edu.neu.coe.csye7200.labsorted.leetcode.ScalaTemplate.*
     noMeetings.totalRooms shouldBe 0
     justLunchMeeting.totalRooms shouldBe 1
     scumeAndLunch.totalRooms shouldBe 2
@@ -88,9 +88,9 @@ object Solution {
  */
 object ScalaTemplate {
 
-  extension (actual: Int) 
+  extension (actual: Int)
     def shouldBe(expected: Int): Unit = if (actual != expected) System.err.println(s"$actual should be $expected")
-  
+
   extension (actual: String) {
     def shouldBe(expected: String): Unit = if (actual != expected) System.err.println(s"$actual should be $expected")
   }
